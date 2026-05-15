@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register - VibeHost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+<div class="page">
+  <div class="card">
+    <div class="brand">VH</div>
+    <h1>Start your VibeHost trial</h1>
+    <p>Create your business website profile. Domain, email and full dashboard unlock after subscription.</p>
+
+    <div class="socials">
+      <a href="#" class="google">Continue with Google</a>
+      <a href="#" class="facebook">Continue with Facebook</a>
+    </div>
+
+    <div class="divider">or register with email</div>
+
+    <form method="POST" enctype="multipart/form-data">
+      <label>Business name</label>
+      <input name="business_name" required placeholder="Example: Kasera Beauty Salon">
+
+      <label>Owner full name</label>
+      <input name="owner_name" required placeholder="Your full name">
+
+      <label>Business category</label>
+      <select name="category" required>
+        <option value="">Choose category</option>
+        <option>Salon & Beauty</option>
+        <option>Restaurant & Food</option>
+        <option>Transport & Shuttle</option>
+        <option>Guesthouse & Accommodation</option>
+        <option>Construction</option>
+        <option>Cleaning Services</option>
+        <option>Retail Shop</option>
+        <option>Health & Wellness</option>
+        <option>Other Business</option>
+      </select>
+
+      <div class="grid">
+        <div>
+          <label>Region</label>
+          <select name="region" required>
+            <option value="">Choose region</option>
+            <option>Khomas</option>
+            <option>Erongo</option>
+            <option>Oshana</option>
+            <option>Ohangwena</option>
+            <option>Omusati</option>
+            <option>Oshikoto</option>
+            <option>Otjozondjupa</option>
+            <option>Kunene</option>
+            <option>Hardap</option>
+            <option>Karas</option>
+            <option>Kavango East</option>
+            <option>Kavango West</option>
+            <option>Zambezi</option>
+            <option>Omaheke</option>
+          </select>
+        </div>
+        <div>
+          <label>Town</label>
+          <input name="town" required placeholder="Windhoek">
+        </div>
+      </div>
+
+      <label>Email address</label>
+      <input type="email" name="email" required placeholder="info@business.com">
+
+      <label>Phone number</label>
+      <input name="phone" required placeholder="+264">
+
+      <label>WhatsApp number</label>
+      <input name="whatsapp" placeholder="+264">
+
+      <label>Choose template</label>
+      <select name="template_name">
+        <option value="modern">Modern Professional</option>
+        <option value="luxury">Luxury Premium</option>
+        <option value="simple">Simple Clean</option>
+        <option value="restaurant">Restaurant/Food</option>
+        <option value="booking">Booking Business</option>
+      </select>
+
+      <label>Brand color</label>
+      <input type="color" name="primary_color" value="#111827">
+
+      <label>Upload business logo</label>
+      <input type="file" name="logo" accept="image/*">
+
+      <button type="submit">Create Free Trial Website</button>
+    </form>
+
+    <p class="note">Free trial includes preview website, basic profile, WhatsApp button and enquiry form.</p>
+  </div>
+</div>
+</body>
+</html>

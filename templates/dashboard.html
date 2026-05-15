@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - VibeHost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/register.css">
+</head>
+<body>
+<div class="page">
+  <div class="card">
+    <div class="brand">VH</div>
+    <h1>{{ business.business_name }}</h1>
+    <p>Welcome, {{ business.owner_name }}. Your free trial website profile is ready.</p>
+
+    {% if business.logo_url %}
+      <img src="{{ business.logo_url }}" style="width:90px;height:90px;border-radius:24px;object-fit:cover;margin:15px 0;">
+    {% endif %}
+
+    <div class="dash-grid">
+      <div><b>Category</b><span>{{ business.category }}</span></div>
+      <div><b>Email</b><span>{{ business.email }}</span></div>
+      <div><b>Phone</b><span>{{ business.phone }}</span></div>
+      <div><b>WhatsApp</b><span>{{ business.whatsapp }}</span></div>
+    </div>
+
+    
+    <a class="main-btn" href="/site/{{ business.id }}">View Website Preview</a>
+    <a class="main-btn" href="/dashboard/{{ business.id }}/upgrade" style="background:#d4af37;color:#111827">Upgrade Plan</a>
+    <a class="main-btn" href="/">View Homepage</a>
+        
+  </div>
+</div>
+</body>
+</html>
