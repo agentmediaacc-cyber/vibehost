@@ -5,65 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ business.business_name }} Dashboard | VibeHost</title>
   <style>
-    :root{
-      --bg:#f3f5f8;
-      --ink:#101828;
-      --muted:#667085;
-      --line:#d0d5dd;
-      --card:#ffffff;
-      --deep:#111827;
-      --green:#157f3d;
-      --gold:#c89b2b;
-      --mist:#edf2f7;
-      --shadow:0 24px 70px rgba(15,23,42,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Georgia,"Times New Roman",serif;background:radial-gradient(circle at top right,#fff4d8,transparent 18%),linear-gradient(180deg,#f6f7fb 0%,#eef2f7 100%);color:var(--ink)}
-    a{text-decoration:none;color:inherit}
-    .hero{padding:28px 18px 86px;background:linear-gradient(135deg,#17202e,#223554 52%,#977126);color:#fff}
-    .wrap{max-width:1220px;margin:0 auto}
-    .topbar{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
-    .brand{display:flex;gap:16px;align-items:center}
-    .logo{width:68px;height:68px;border-radius:22px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:20px;font-weight:700}
-    .logo img{width:100%;height:100%;object-fit:cover}
-    .badge{display:inline-flex;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);font-size:13px;letter-spacing:.04em}
-    h1{font-size:clamp(44px,8vw,84px);line-height:.92;letter-spacing:-.06em;margin:24px 0 14px}
-    .hero-copy{max-width:780px;color:#e8edf6;font-size:18px;line-height:1.7}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
-    .hero-actions a{padding:15px 18px;border-radius:18px;font-weight:700}
-    .hero-actions .primary{background:#f4deb0;color:#1d1c1a}
-    .hero-actions .secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
-    .main{max-width:1220px;margin:-58px auto 0;padding:0 18px 42px}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-    .stack{display:grid;gap:18px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:24px;box-shadow:var(--shadow)}
-    .card h2{margin:0 0 8px;font-size:30px;letter-spacing:-.04em}
-    .card p{margin:0;color:var(--muted);line-height:1.65}
-    .url-box{margin-top:18px;padding:18px;border-radius:20px;background:#f8fafc;border:1px solid #d8dee8;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-    .url-box code{font-size:18px;color:#0f172a;word-break:break-all}
-    .url-box a{padding:12px 16px;border-radius:14px;background:#111827;color:#fff;font-weight:700}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-    .stat{padding:18px;border-radius:20px;background:var(--mist);border:1px solid #dbe3ed}
-    .stat b{display:block;font-size:24px;margin-bottom:6px}
-    .actions-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}
-    .action{padding:18px;border-radius:20px;background:#fff;border:1px solid #d8dee8}
-    .action b{display:block;font-size:18px;margin-bottom:8px}
-    .support-line{margin-top:16px;font-size:14px;color:var(--muted)}
-    .checklist{display:grid;gap:12px;margin-top:18px}
-    .check{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:flex-start;padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dde5ef}
-    .check i{width:36px;height:36px;border-radius:999px;background:#dff5e6;color:var(--green);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700}
-    .plan{padding:18px;border-radius:24px;background:linear-gradient(135deg,#17202e,#364767);color:#fff;margin-top:18px}
-    .plan p{color:#dbe3f1}
-    .plan a{display:inline-flex;margin-top:14px;padding:13px 16px;border-radius:14px;background:#f4deb0;color:#1d1c1a;font-weight:700}
-    @media(max-width:980px){
-      .grid,.stats,.actions-grid{grid-template-columns:1fr}
-      .topbar{display:block}
-    }
-    @media(max-width:640px){
-      .hero{padding-bottom:74px}
-      .main{margin-top:-46px}
-      h1{font-size:42px}
-    }
+    :root{--bg:#f3f5f8;--ink:#101828;--muted:#667085;--line:#d0d5dd;--card:#ffffff;--mist:#edf2f7;--shadow:0 24px 70px rgba(15,23,42,.10)}
+    *{box-sizing:border-box} body{margin:0;font-family:Georgia,"Times New Roman",serif;background:radial-gradient(circle at top right,#fff4d8,transparent 18%),linear-gradient(180deg,#f6f7fb 0%,#eef2f7 100%);color:var(--ink)} a{text-decoration:none;color:inherit}
+    .hero{padding:28px 18px 86px;background:linear-gradient(135deg,#17202e,#223554 52%,#977126);color:#fff}.wrap{max-width:1220px;margin:0 auto}.topbar{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.brand{display:flex;gap:16px;align-items:center}.logo{width:68px;height:68px;border-radius:22px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:20px;font-weight:700}.logo img{width:100%;height:100%;object-fit:cover}.badge{display:inline-flex;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);font-size:13px;letter-spacing:.04em}
+    h1{font-size:clamp(44px,8vw,84px);line-height:.92;letter-spacing:-.06em;margin:24px 0 14px}.hero-copy{max-width:780px;color:#e8edf6;font-size:18px;line-height:1.7}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.hero-actions a{padding:15px 18px;border-radius:18px;font-weight:700}.hero-actions .primary{background:#f4deb0;color:#1d1c1a}.hero-actions .secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .main{max-width:1220px;margin:-58px auto 0;padding:0 18px 42px}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.stack{display:grid;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:24px;box-shadow:var(--shadow)}.card h2{margin:0 0 8px;font-size:30px;letter-spacing:-.04em}.card p{margin:0;color:var(--muted);line-height:1.65}
+    .url-box{margin-top:18px;padding:18px;border-radius:20px;background:#f8fafc;border:1px solid #d8dee8;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.url-box code{font-size:18px;color:#0f172a;word-break:break-all}.url-box a{padding:12px 16px;border-radius:14px;background:#111827;color:#fff;font-weight:700}
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.stat{padding:18px;border-radius:20px;background:var(--mist);border:1px solid #dbe3ed}.stat b{display:block;font-size:24px;margin-bottom:6px}.checklist{display:grid;gap:12px;margin-top:18px}.check{display:grid;grid-template-columns:36px 1fr;gap:12px;align-items:flex-start;padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dde5ef}.check i{width:36px;height:36px;border-radius:999px;background:#dff5e6;color:#157f3d;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700}
+    .tool{padding:16px;border-radius:18px;background:#fff;border:1px solid #d8dee8}.tool b{display:block;margin-bottom:6px}.tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.support-line{margin-top:16px;font-size:14px;color:var(--muted)}
+    @media(max-width:980px){.grid,.stats,.tools{grid-template-columns:1fr}.topbar{display:block}} @media(max-width:640px){.hero{padding-bottom:74px}.main{margin-top:-46px}h1{font-size:42px}}
   </style>
 </head>
 <body>
@@ -71,25 +21,16 @@
     <div class="wrap">
       <div class="topbar">
         <div class="brand">
-          <div class="logo">
-            {% if business.logo_url %}
-            <img src="{{ business.logo_url }}" alt="{{ business.business_name }} logo">
-            {% else %}
-            VH
-            {% endif %}
-          </div>
+          <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" alt="{{ business.business_name }} logo">{% else %}VH{% endif %}</div>
           <div class="badge">Website created successfully</div>
         </div>
         <div class="badge">Dashboard for business #{{ business.id }}</div>
       </div>
-
       <h1>{{ business.business_name }}</h1>
-      <p class="hero-copy">
-        This dashboard is loaded from the saved Neon records for your business profile, website record and subscription. The live link below is the real stored URL for this created website.
-      </p>
+      <p class="hero-copy">This dashboard is loaded from the saved Neon records for the business profile, website, subscription and owner account. The live link below is the real stored URL for this created website.</p>
       <div class="hero-actions">
         <a class="primary" href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">Open Live Website</a>
-        <a class="secondary" href="/site/{{ business.subdomain }}" target="_blank">Open Local Test Route</a>
+        <a class="secondary" href="/owner/dashboard">Open Owner Dashboard</a>
       </div>
     </div>
   </section>
@@ -99,98 +40,51 @@
       <div class="stack">
         <section class="card">
           <h2>Live Website</h2>
-          <p>Your site record is active and points at the stored live URL below. This is not a demo preview URL.</p>
-          <div class="url-box">
-            <code>{{ site.live_url if site and site.live_url else "Live URL missing" }}</code>
-            <a href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">Open Live Website</a>
-          </div>
+          <p>Your live public website uses the saved business data, not demo placeholders.</p>
+          <div class="url-box"><code>{{ site.live_url if site and site.live_url else "Live URL missing" }}</code><a href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">Open Live Website</a></div>
           <div class="stats">
-            <div class="stat">
-              <b>{{ site.template_name if site and site.template_name else business.website_type }}</b>
-              <span>Template type</span>
-            </div>
-            <div class="stat">
-              <b>{{ subscription.plan_name if subscription and subscription.plan_name else "free_trial" }}</b>
-              <span>Current trial plan</span>
-            </div>
-            <div class="stat">
-              <b>{{ subscription.status if subscription and subscription.status else "trial" }}</b>
-              <span>Status</span>
-            </div>
-            <div class="stat">
-              <b>{{ business.subdomain }}.namvibe.com</b>
-              <span>Live subdomain</span>
-            </div>
+            <div class="stat"><b>{{ site.template_name if site and site.template_name else business.website_type }}</b><span>Template type</span></div>
+            <div class="stat"><b>{{ subscription.plan_name if subscription and subscription.plan_name else "free_trial" }}</b><span>Current plan</span></div>
+            <div class="stat"><b>{{ subscription.status if subscription and subscription.status else "trial" }}</b><span>Status</span></div>
+            <div class="stat"><b>{{ trial.days_left }}</b><span>Trial days left</span></div>
           </div>
         </section>
 
         <section class="card">
-          <h2>Business Tools</h2>
-          <p>These next actions should point the owner toward the real operational setup after the website has been created.</p>
-          <div class="actions-grid">
-            <div class="action"><b>Edit products or services</b><span>Build out the catalog or service list for the selected template.</span></div>
-            <div class="action"><b>Gallery</b><span>Add business images, promotional artwork and trust-building visuals.</span></div>
-            <div class="action"><b>Bookings</b><span>Manage incoming booking requests and customer enquiries.</span></div>
-            <div class="action"><b>Invoices</b><span>Prepare quotations, invoices and customer payment records.</span></div>
-            <div class="action"><b>Adverts</b><span>Plan homepage promotions, campaign visuals and featured offers.</span></div>
-            <div class="action"><b>Customer messages</b><span>Handle enquiries coming from WhatsApp, contact forms and booking flow.</span></div>
-            <div class="action"><b>Reports</b><span>Track activity, demand signals and the next growth actions for the website.</span></div>
-            <div class="action"><b>Upgrade</b><span>Move from trial to a paid plan when the business is ready.</span></div>
+          <h2>Owner Account</h2>
+          <p>The owner login was created during the website setup flow.</p>
+          <div class="checklist">
+            <div class="check"><i>1</i><div><strong>Login email</strong><br>{{ owner.email if owner else "Not found" }}</div></div>
+            <div class="check"><i>2</i><div><strong>Trial expires</strong><br>{{ trial.expires.strftime('%d %b %Y') if trial and trial.expires else "Not set" }}</div></div>
+            <div class="check"><i>3</i><div><strong>Open owner dashboard</strong><br>Manage products, enquiries, invoices, quotations and website content from the secure admin layer.</div></div>
           </div>
-          <div class="support-line">Developer support: {{ support_phone }} · <a href="{{ support_whatsapp_url }}" target="_blank">WhatsApp</a></div>
         </section>
       </div>
 
       <div class="stack">
         <section class="card">
-          <h2>Setup Checklist</h2>
-          <p>Use this checklist to finish the first wave of setup on the created business website.</p>
+          <h2>Next Setup Checklist</h2>
           <div class="checklist">
-            <div class="check">
-              <i>1</i>
-              <div><strong>Confirm branding</strong><br>Review logo, colors and site description on the live website.</div>
-            </div>
-            <div class="check">
-              <i>2</i>
-              <div><strong>Add products or services</strong><br>Populate the content modules that match the selected template.</div>
-            </div>
-            <div class="check">
-              <i>3</i>
-              <div><strong>Upload gallery media</strong><br>Replace any starter placeholders with real business visuals.</div>
-            </div>
-            <div class="check">
-              <i>4</i>
-              <div><strong>Test contact flow</strong><br>Verify phone, email and WhatsApp actions open the right channels.</div>
-            </div>
-            <div class="check">
-              <i>5</i>
-              <div><strong>Share the live link</strong><br>Start sending the real subdomain to customers and partners.</div>
-            </div>
+            <div class="check"><i>1</i><div><strong>Open owner dashboard</strong><br>Sign in and review the protected SaaS admin area.</div></div>
+            <div class="check"><i>2</i><div><strong>Edit your website content</strong><br>Update hero copy, brand colors, phone, region and logo.</div></div>
+            <div class="check"><i>3</i><div><strong>Add products or services</strong><br>Use the trial to publish up to three active items.</div></div>
+            <div class="check"><i>4</i><div><strong>Create first invoice or quotation</strong><br>Test the document tools and customer flow.</div></div>
           </div>
         </section>
 
         <section class="card">
-          <h2>Saved Data Summary</h2>
-          <p>The page is reading from business and site rows instead of demo state.</p>
-          <div class="checklist">
-            <div class="check">
-              <i>A</i>
-              <div><strong>Business owner</strong><br>{{ business.owner_name or "Not provided" }}</div>
-            </div>
-            <div class="check">
-              <i>B</i>
-              <div><strong>Town and region</strong><br>{{ business.town or "Not set" }}, {{ business.region or "Not set" }}</div>
-            </div>
-            <div class="check">
-              <i>C</i>
-              <div><strong>Contact</strong><br>{{ business.email or "No email" }} / {{ business.phone or "No phone" }}</div>
-            </div>
+          <h2>Business Tools</h2>
+          <div class="tools">
+            <div class="tool"><b>Website editor</b><span>Update business and website content.</span></div>
+            <div class="tool"><b>Products/services</b><span>Manage catalog or service items.</span></div>
+            <div class="tool"><b>Orders/enquiries</b><span>Track status from new to completed.</span></div>
+            <div class="tool"><b>Invoices</b><span>Create invoice records with item lines.</span></div>
+            <div class="tool"><b>Quotations</b><span>Send quotations before customer approval.</span></div>
+            <div class="tool"><b>Gallery and adverts</b><span>Prepare public-facing media and promotions.</span></div>
+            <div class="tool"><b>Customer accounts</b><span>Future-ready owner/customer account workflows.</span></div>
+            <div class="tool"><b>Reports and upgrade</b><span>See trial status and upgrade when ready.</span></div>
           </div>
-          <div class="plan">
-            <h3 style="margin:0 0 8px;font-size:28px;letter-spacing:-.04em">Trial plan active</h3>
-            <p>{{ subscription.status if subscription and subscription.status else "trial" }} status is currently applied to this business.</p>
-            <a href="/dashboard/{{ business.id }}/upgrade">Upgrade Plan</a>
-          </div>
+          <div class="support-line">Developer support: {{ support_phone }} · <a href="{{ support_whatsapp_url }}" target="_blank">WhatsApp</a></div>
         </section>
       </div>
     </div>

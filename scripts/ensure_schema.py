@@ -30,7 +30,7 @@ def main():
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS business_profiles (
-                        id BIGSERIAL PRIMARY KEY,
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                         business_name TEXT,
                         owner_name TEXT,
                         category TEXT,
@@ -51,8 +51,8 @@ def main():
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS business_sites (
-                        id BIGSERIAL PRIMARY KEY,
-                        business_id BIGINT REFERENCES business_profiles(id) ON DELETE CASCADE,
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id UUID REFERENCES business_profiles(id) ON DELETE CASCADE,
                         site_title TEXT,
                         template_name TEXT,
                         primary_color TEXT,
@@ -77,10 +77,109 @@ def main():
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS subscriptions (
-                        id BIGSERIAL PRIMARY KEY,
-                        business_id BIGINT REFERENCES business_profiles(id) ON DELETE CASCADE,
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id UUID REFERENCES business_profiles(id) ON DELETE CASCADE,
                         plan_name TEXT,
                         status TEXT,
+                        trial_started_at TIMESTAMPTZ,
+                        trial_expires_at TIMESTAMPTZ,
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS business_owners (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id UUID REFERENCES business_profiles(id) ON DELETE CASCADE,
+                        owner_name TEXT,
+                        email TEXT UNIQUE NOT NULL,
+                        password_hash TEXT,
+                        role TEXT DEFAULT 'owner',
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS business_products (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id UUID,
+                        name TEXT,
+                        description TEXT,
+                        category TEXT,
+                        price NUMERIC DEFAULT 0,
+                        image_url TEXT,
+                        stock_quantity INTEGER DEFAULT 0,
+                        status TEXT DEFAULT 'active',
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS business_orders (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id UUID,
+                        customer_name TEXT,
+                        customer_email TEXT,
+                        customer_phone TEXT,
+                        order_type TEXT,
+                        message TEXT,
+                        status TEXT DEFAULT 'new',
+                        total_amount NUMERIC DEFAULT 0,
+                        source TEXT DEFAULT 'website',
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS business_documents (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        business_id TEXT,
+                        document_type TEXT CHECK (document_type IN ('invoice','quotation')),
+                        document_number TEXT,
+                        customer_name TEXT,
+                        customer_email TEXT,
+                        customer_phone TEXT,
+                        notes TEXT,
+                        subtotal NUMERIC DEFAULT 0,
+                        tax NUMERIC DEFAULT 0,
+                        total NUMERIC DEFAULT 0,
+                        status TEXT DEFAULT 'draft',
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS business_document_items (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        document_id UUID,
+                        item_name TEXT,
+                        quantity NUMERIC DEFAULT 1,
+                        unit_price NUMERIC DEFAULT 0,
+                        total NUMERIC DEFAULT 0,
+                        created_at TIMESTAMPTZ DEFAULT NOW()
+                    )
+                    """
+                )
+
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS free_tool_users (
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                        email TEXT UNIQUE,
+                        password_hash TEXT,
+                        full_name TEXT,
+                        provider TEXT DEFAULT 'email',
+                        plan_name TEXT DEFAULT 'free',
                         created_at TIMESTAMPTZ DEFAULT NOW()
                     )
                     """
@@ -119,7 +218,7 @@ def main():
                 cur.execute(
                     """
                     CREATE TABLE IF NOT EXISTS website_templates (
-                        id BIGSERIAL PRIMARY KEY,
+                        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                         name TEXT,
                         slug TEXT UNIQUE,
                         category TEXT,
@@ -163,7 +262,57 @@ def main():
                     "ALTER TABLE business_sites ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
                     "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS plan_name TEXT",
                     "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS status TEXT",
+                    "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS trial_started_at TIMESTAMPTZ",
+                    "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS trial_expires_at TIMESTAMPTZ",
                     "ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE business_owners ADD COLUMN IF NOT EXISTS owner_name TEXT",
+                    "ALTER TABLE business_owners ADD COLUMN IF NOT EXISTS email TEXT",
+                    "ALTER TABLE business_owners ADD COLUMN IF NOT EXISTS password_hash TEXT",
+                    "ALTER TABLE business_owners ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'owner'",
+                    "ALTER TABLE business_owners ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS business_id UUID",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS name TEXT",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS description TEXT",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS category TEXT",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS price NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS image_url TEXT",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS stock_quantity INTEGER DEFAULT 0",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'",
+                    "ALTER TABLE business_products ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS business_id UUID",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS customer_name TEXT",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS customer_email TEXT",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS customer_phone TEXT",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS order_type TEXT",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS message TEXT",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new'",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS total_amount NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'website'",
+                    "ALTER TABLE business_orders ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS business_id TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS document_type TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS document_number TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS customer_name TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS customer_email TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS customer_phone TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS notes TEXT",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS subtotal NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS tax NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS total NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft'",
+                    "ALTER TABLE business_documents ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS document_id UUID",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS item_name TEXT",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS quantity NUMERIC DEFAULT 1",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS unit_price NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS total NUMERIC DEFAULT 0",
+                    "ALTER TABLE business_document_items ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS email TEXT",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS password_hash TEXT",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS full_name TEXT",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS provider TEXT DEFAULT 'email'",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS plan_name TEXT DEFAULT 'free'",
+                    "ALTER TABLE free_tool_users ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()",
                     "ALTER TABLE site_services ADD COLUMN IF NOT EXISTS business_id TEXT",
                     "ALTER TABLE site_services ADD COLUMN IF NOT EXISTS site_id TEXT",
                     "ALTER TABLE site_services ADD COLUMN IF NOT EXISTS title TEXT",
@@ -188,33 +337,16 @@ def main():
                 for statement in alter_statements:
                     cur.execute(statement)
 
-                cur.execute(
-                    """
-                    DO $$
-                    BEGIN
-                        IF NOT EXISTS (
-                            SELECT 1
-                            FROM pg_constraint
-                            WHERE conname = 'business_profiles_subdomain_key'
-                        ) THEN
-                            ALTER TABLE business_profiles
-                            ADD CONSTRAINT business_profiles_subdomain_key UNIQUE (subdomain);
-                        END IF;
-                    END $$;
-                    """
-                )
-
                 for name, slug, category, description in TEMPLATES:
                     cur.execute(
                         """
                         INSERT INTO website_templates (name, slug, category, description, active)
-                        VALUES (%s, %s, %s, %s, TRUE)
+                        VALUES (%s,%s,%s,%s,TRUE)
                         ON CONFLICT (slug) DO UPDATE
-                        SET
-                            name = EXCLUDED.name,
-                            category = EXCLUDED.category,
-                            description = EXCLUDED.description,
-                            active = TRUE
+                        SET name=EXCLUDED.name,
+                            category=EXCLUDED.category,
+                            description=EXCLUDED.description,
+                            active=TRUE
                         """,
                         (name, slug, category, description),
                     )

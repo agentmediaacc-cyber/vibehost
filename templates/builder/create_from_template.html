@@ -5,191 +5,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create {{ template_meta.name }} Site | VibeHost</title>
   <style>
-    :root{
-      --bg:#f2f4f7;
-      --card:#ffffff;
-      --ink:#121826;
-      --muted:#667085;
-      --line:#d0d5dd;
-      --deep:#0f172a;
-      --bronze:#b7791f;
-      --mist:#eef2ff;
-      --shadow:0 24px 70px rgba(15,23,42,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:radial-gradient(circle at top left,#eef2ff,transparent 28%),linear-gradient(180deg,#f7f8fb 0%,#edf1f6 100%);color:var(--ink)}
-    a{text-decoration:none;color:inherit}
-    .app{display:grid;grid-template-columns:minmax(340px,520px) 1fr;min-height:100vh}
-    .panel{padding:24px;background:rgba(255,255,255,.76);backdrop-filter:blur(14px);border-right:1px solid rgba(208,213,221,.8);overflow-y:auto}
-    .preview{padding:24px;display:flex;flex-direction:column;gap:16px}
-    .hero{background:linear-gradient(135deg,#111827,#1d4ed8 62%,#d4a72c);color:#fff;border-radius:28px;padding:22px;box-shadow:var(--shadow)}
-    .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#dbeafe}
-    h1{margin:10px 0 14px;font-size:38px;line-height:1;letter-spacing:-.05em}
-    .hero p{margin:0;color:#e5eefc;line-height:1.65}
-    .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .hero-meta span{padding:10px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:13px}
-    form{display:grid;gap:18px;margin-top:20px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
-    .card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.03em}
-    .card p{margin:0 0 16px;color:var(--muted);line-height:1.55}
-    label{display:block;font-size:14px;font-weight:700;margin:0 0 8px}
-    input,textarea,select{width:100%;padding:14px 15px;border:1px solid #cfd4dc;border-radius:16px;background:#fff;font:inherit;color:var(--ink)}
-    textarea{min-height:108px;resize:vertical}
-    input[type="color"]{padding:6px;height:52px}
-    .grid-2,.grid-3{display:grid;gap:12px}
-    .grid-2{grid-template-columns:1fr 1fr}
-    .grid-3{grid-template-columns:repeat(3,1fr)}
-    .domain{display:flex;align-items:center;gap:10px}
-    .domain span{white-space:nowrap;color:var(--muted);font-weight:700}
-    .submit{border:0;border-radius:18px;padding:16px 18px;background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;font-size:16px;font-weight:800;cursor:pointer}
-    .preview-top{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow)}
-    .preview-top h3{margin:0 0 6px;font-size:24px;letter-spacing:-.03em}
-    .preview-top p{margin:0;color:var(--muted);line-height:1.55;max-width:620px}
-    .preview-actions{display:flex;flex-wrap:wrap;gap:10px}
-    .preview-actions a{padding:13px 16px;border-radius:16px;font-weight:800}
-    .preview-actions .ghost{background:#fff;border:1px solid var(--line)}
-    .preview-actions .dark{background:#111827;color:#fff}
-    iframe{width:100%;height:calc(100vh - 118px);border:0;border-radius:28px;background:#fff;box-shadow:var(--shadow)}
-    .note{font-size:13px;color:var(--muted);line-height:1.55;margin-top:10px}
-    @media(max-width:1120px){
-      .app{grid-template-columns:1fr}
-      iframe{height:760px}
-    }
-    @media(max-width:720px){
-      .panel,.preview{padding:16px}
-      .grid-2,.grid-3{grid-template-columns:1fr}
-      .preview-top{display:block}
-      .preview-actions{margin-top:12px}
-      h1{font-size:32px}
-    }
+    :root{--bg:#f2f4f7;--card:#ffffff;--ink:#121826;--muted:#667085;--line:#d0d5dd;--shadow:0 24px 70px rgba(15,23,42,.10)}
+    *{box-sizing:border-box} body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:radial-gradient(circle at top left,#eef2ff,transparent 28%),linear-gradient(180deg,#f7f8fb 0%,#edf1f6 100%);color:var(--ink)} a{text-decoration:none;color:inherit}
+    .app{display:grid;grid-template-columns:minmax(360px,560px) 1fr;min-height:100vh}.panel{padding:24px;background:rgba(255,255,255,.76);backdrop-filter:blur(14px);border-right:1px solid rgba(208,213,221,.8);overflow-y:auto}.preview{padding:24px;display:flex;flex-direction:column;gap:16px}
+    .hero{background:linear-gradient(135deg,#111827,#1d4ed8 62%,#d4a72c);color:#fff;border-radius:28px;padding:22px;box-shadow:var(--shadow)}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#dbeafe}h1{margin:10px 0 14px;font-size:38px;line-height:1;letter-spacing:-.05em}.hero p{margin:0;color:#e5eefc;line-height:1.65}.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.hero-meta span{padding:10px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:13px}
+    form{display:grid;gap:18px;margin-top:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}.card h2{margin:0 0 8px;font-size:22px;letter-spacing:-.03em}.card p{margin:0 0 16px;color:var(--muted);line-height:1.55}
+    label{display:block;font-size:14px;font-weight:700;margin:0 0 8px} input,textarea,select{width:100%;padding:14px 15px;border:1px solid #cfd4dc;border-radius:16px;background:#fff;font:inherit;color:var(--ink)} textarea{min-height:100px;resize:vertical} input[type="color"]{padding:6px;height:52px}
+    .grid-2,.grid-3{display:grid;gap:12px}.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)} .domain{display:flex;align-items:center;gap:10px}.domain span{white-space:nowrap;color:var(--muted);font-weight:700}
+    .oauth{display:grid;grid-template-columns:1fr 1fr;gap:10px}.oauth a{padding:13px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:center;font-weight:800}.submit{border:0;border-radius:18px;padding:16px 18px;background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;font-size:16px;font-weight:800;cursor:pointer}
+    .preview-top{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow)} .preview-top h3{margin:0 0 6px;font-size:24px;letter-spacing:-.03em}.preview-top p{margin:0;color:var(--muted);line-height:1.55;max-width:620px} .preview-actions{display:flex;flex-wrap:wrap;gap:10px}.preview-actions a{padding:13px 16px;border-radius:16px;font-weight:800}.preview-actions .ghost{background:#fff;border:1px solid var(--line)}.preview-actions .dark{background:#111827;color:#fff}
+    iframe{width:100%;height:calc(100vh - 118px);border:0;border-radius:28px;background:#fff;box-shadow:var(--shadow)}.note{font-size:13px;color:var(--muted);line-height:1.55;margin-top:10px}.errors{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:18px;padding:14px 16px}
+    @media(max-width:1120px){.app{grid-template-columns:1fr}iframe{height:760px}} @media(max-width:720px){.panel,.preview{padding:16px}.grid-2,.grid-3,.oauth{grid-template-columns:1fr}.preview-top{display:block}.preview-actions{margin-top:12px}h1{font-size:32px}}
   </style>
 </head>
 <body>
   <div class="app">
     <section class="panel">
       <div class="hero">
-        <div class="eyebrow">Create Real Website</div>
+        <div class="eyebrow">Create Real Website + Owner Account</div>
         <h1>{{ template_meta.name }}</h1>
         <p>{{ template_meta.description }}</p>
         <div class="hero-meta">
           <span>Saved to Neon</span>
-          <span>Live subdomain on {{ base_domain }}</span>
-          <span>Redirects to real dashboard</span>
+          <span>Live at subdomain.{{ base_domain }}</span>
+          <span>Includes secure owner login</span>
         </div>
       </div>
+
+      {% if errors %}
+      <div class="errors">
+        {% for error in errors %}<div>{{ error }}</div>{% endfor %}
+      </div>
+      {% endif %}
 
       <form method="POST" enctype="multipart/form-data">
         <div class="card">
           <h2>Business Details</h2>
           <p>This form creates the real business profile and website. After saving, the website becomes live at <strong>https://your-subdomain.{{ base_domain }}</strong>.</p>
-
-          <label for="business_name">Business name</label>
-          <input id="business_name" name="business_name" required placeholder="Kasera Shop">
-
-          <label for="owner_name">Owner name</label>
-          <input id="owner_name" name="owner_name" placeholder="Owner full name">
-
-          <label for="description">Business description</label>
-          <textarea id="description" name="description" placeholder="Describe the products or services customers will find on this website."></textarea>
-
+          <label for="business_name">Business name</label><input id="business_name" name="business_name" required placeholder="VibeHost Business">
+          <label for="owner_name">Owner name</label><input id="owner_name" name="owner_name" placeholder="Business owner">
+          <label for="description">Business description</label><textarea id="description" name="description" placeholder="Describe the products or services customers will find on this website."></textarea>
           <div class="grid-2">
-            <div>
-              <label for="town">Town</label>
-              <input id="town" name="town" placeholder="Windhoek">
-            </div>
-            <div>
-              <label for="region">Region</label>
-              <select id="region" name="region">
-                {% for region in region_options %}
-                <option value="{{ region }}">{{ region }}</option>
-                {% endfor %}
-              </select>
-            </div>
+            <div><label for="town">Town</label><input id="town" name="town" placeholder="Windhoek"></div>
+            <div><label for="region">Region</label><select id="region" name="region">{% for region in region_options %}<option value="{{ region }}">{{ region }}</option>{% endfor %}</select></div>
           </div>
-
           <label for="subdomain">Subdomain</label>
-          <div class="domain">
-            <input id="subdomain" name="subdomain" placeholder="kaserashop">
-            <span>.{{ base_domain }}</span>
-          </div>
+          <div class="domain"><input id="subdomain" name="subdomain" placeholder="vibehostbusiness"><span>.{{ base_domain }}</span></div>
         </div>
 
         <div class="card">
-          <h2>Contact</h2>
-          <p>These details are stored with the business profile and used by the live site template.</p>
-
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="info@kaserashop.com">
-
+          <h2>Public Contact</h2>
+          <p>These details appear on the live website and customer-facing template.</p>
+          <label for="email">Business email</label><input id="email" name="email" type="email" placeholder="info@business.com">
           <div class="grid-2">
-            <div>
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" placeholder="+264 81 000 0000">
-            </div>
-            <div>
-              <label for="whatsapp">WhatsApp</label>
-              <input id="whatsapp" name="whatsapp" placeholder="264810000000">
-            </div>
+            <div><label for="phone">Phone</label><input id="phone" name="phone" placeholder="+264 81 000 0000"></div>
+            <div><label for="whatsapp">WhatsApp</label><input id="whatsapp" name="whatsapp" placeholder="264810000000"></div>
           </div>
+          <label for="logo">Logo upload</label><input id="logo" name="logo" type="file" accept="image/*">
+        </div>
 
-          <label for="logo">Logo upload</label>
-          <input id="logo" name="logo" type="file" accept="image/*">
+        <div class="card">
+          <h2>Owner Account</h2>
+          <p>Create the secure owner login now. The owner is automatically signed in after the site is created.</p>
+          <label for="owner_email">Owner email</label><input id="owner_email" name="owner_email" type="email" required placeholder="owner@business.com">
+          <div class="grid-2">
+            <div><label for="owner_password">Owner password</label><input id="owner_password" name="owner_password" type="password" required placeholder="Minimum 8 characters"></div>
+            <div><label for="confirm_password">Confirm password</label><input id="confirm_password" name="confirm_password" type="password" required placeholder="Repeat password"></div>
+          </div>
+          <div class="oauth">
+            <a href="#">Continue with Google<br><small>Coming soon with Supabase auth</small></a>
+            <a href="#">Continue with Facebook<br><small>Coming soon with Supabase auth</small></a>
+          </div>
         </div>
 
         <div class="card">
           <h2>Visual Style</h2>
           <p>These settings are saved with the business site record and applied to the selected template.</p>
-
           <div class="grid-3">
-            <div>
-              <label for="primary_color">Primary color</label>
-              <input id="primary_color" name="primary_color" type="color" value="#0f172a">
-            </div>
-            <div>
-              <label for="secondary_color">Secondary color</label>
-              <input id="secondary_color" name="secondary_color" type="color" value="#e2a93b">
-            </div>
-            <div>
-              <label for="accent_color">Accent color</label>
-              <input id="accent_color" name="accent_color" type="color" value="#f97316">
-            </div>
+            <div><label for="primary_color">Primary color</label><input id="primary_color" name="primary_color" type="color" value="#0f172a"></div>
+            <div><label for="secondary_color">Secondary color</label><input id="secondary_color" name="secondary_color" type="color" value="#e2a93b"></div>
+            <div><label for="accent_color">Accent color</label><input id="accent_color" name="accent_color" type="color" value="#f97316"></div>
           </div>
-
           <div class="grid-2" style="margin-top:12px">
-            <div>
-              <label for="font_style">Font style</label>
-              <select id="font_style" name="font_style">
-                <option value="modern">Modern clean</option>
-                <option value="luxury">Luxury serif</option>
-                <option value="friendly">Friendly rounded</option>
-              </select>
-            </div>
-            <div>
-              <label for="wallpaper_style">Wallpaper style</label>
-              <select id="wallpaper_style" name="wallpaper_style">
-                <option value="premium">Premium gradient</option>
-                <option value="editorial">Editorial neutral</option>
-                <option value="clean">Clean professional</option>
-              </select>
-            </div>
+            <div><label for="font_style">Font style</label><select id="font_style" name="font_style"><option value="modern">Modern clean</option><option value="luxury">Luxury serif</option><option value="friendly">Friendly rounded</option></select></div>
+            <div><label for="wallpaper_style">Wallpaper style</label><select id="wallpaper_style" name="wallpaper_style"><option value="premium">Premium gradient</option><option value="editorial">Editorial neutral</option><option value="clean">Clean professional</option></select></div>
           </div>
         </div>
 
         <button class="submit" type="submit">Create My Live Website</button>
-        <div class="note">After save, VibeHost redirects to the real dashboard for the created business, not a demo page. Need help? WhatsApp the developer at <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a>.</div>
+        <div class="note">After save, VibeHost redirects to the created website dashboard and the owner can also open the protected owner dashboard. Need help? WhatsApp the developer at <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a>.</div>
       </form>
     </section>
 
     <section class="preview">
       <div class="preview-top">
-        <div>
-          <h3>Right-side real template preview</h3>
-          <p>The iframe loads the actual template preview route. Demo data stays inside preview mode only; your submitted business data is saved separately for the live site.</p>
-        </div>
-        <div class="preview-actions">
-          <a class="ghost" href="/templates" target="_self">All Templates</a>
-          <a class="dark" href="{{ preview_url }}" target="_blank">Open Full Preview</a>
-        </div>
+        <div><h3>Right-side real template preview</h3><p>The iframe loads the actual template preview route. Demo data stays inside preview mode only; your submitted business data is saved separately for the live site.</p></div>
+        <div class="preview-actions"><a class="ghost" href="/templates">All Templates</a><a class="dark" href="{{ preview_url }}" target="_blank">Open Full Preview</a></div>
       </div>
       <iframe src="{{ preview_url }}" title="Template preview"></iframe>
     </section>

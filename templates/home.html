@@ -5,111 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VibeHost | Build a Live Business Website in Minutes</title>
   <style>
-    :root{
-      --bg:#f4efe6;
-      --ink:#161514;
-      --muted:#625d56;
-      --card:#fffdf8;
-      --line:#ddd2c0;
-      --deep:#17222f;
-      --forest:#253b33;
-      --gold:#c89a2b;
-      --sand:#efe2c7;
-      --shadow:0 24px 70px rgba(22,21,20,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(180deg,#f7f2ea 0%,#efe7d8 100%);color:var(--ink)}
-    a{text-decoration:none;color:inherit}
-    .shell{max-width:1240px;margin:0 auto;padding:18px}
-    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0}
-    .brand{display:flex;gap:12px;align-items:center;font-weight:700}
-    .mark{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,#17222f,#253b33 55%,#c89a2b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px}
-    .brand span{font-size:22px;letter-spacing:-.04em}
-    .navlinks{display:flex;flex-wrap:wrap;gap:10px}
-    .navlinks a{padding:11px 14px;border-radius:999px;font-size:14px;color:var(--muted)}
-    .navlinks .primary{background:#17222f;color:#fff}
-    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:stretch;margin-top:18px}
-    .hero-copy,.hero-panel{border-radius:36px;box-shadow:var(--shadow);overflow:hidden}
-    .hero-copy{position:relative;padding:34px;background:linear-gradient(135deg,#182330,#274036 56%,#8d6e20);color:#fff}
-    .hero-copy:before,.hero-copy:after{content:"";position:absolute;border-radius:999px;opacity:.18}
-    .hero-copy:before{width:340px;height:340px;background:#f3ddb0;top:-90px;right:-70px}
-    .hero-copy:after{width:260px;height:260px;background:#d8ba73;bottom:-110px;left:-60px}
-    .eyebrow{position:relative;z-index:1;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#ead9af}
-    h1{position:relative;z-index:1;margin:20px 0 16px;font-size:clamp(44px,8vw,86px);line-height:.9;letter-spacing:-.07em;max-width:760px}
-    .lead{position:relative;z-index:1;max-width:700px;color:#eef0ea;font-size:18px;line-height:1.75}
-    .hero-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 20px;border-radius:999px;font-weight:700}
-    .btn.primary{background:#f1ddb2;color:#171512}
-    .btn.secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
-    .btn.dark{background:#111827;color:#fff}
-    .hero-points{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
-    .hero-points div{padding:15px 16px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);font-size:14px;color:#f4f0e7}
-    .hero-panel{padding:24px;background:var(--card);border:1px solid var(--line)}
-    .panel-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
-    .pill{padding:10px 14px;border-radius:999px;background:#f5ecdb;color:#6a5219;font-size:13px;font-weight:700}
-    .mockup{border-radius:28px;background:linear-gradient(180deg,#182330,#243647);padding:16px;color:#fff}
-    .mock-header{display:flex;gap:8px;margin-bottom:14px}
-    .mock-header span{width:10px;height:10px;border-radius:999px;background:#fff;opacity:.65}
-    .mock-hero{display:grid;grid-template-columns:1fr .9fr;gap:12px}
-    .mock-card,.mock-side{border-radius:24px;padding:18px}
-    .mock-card{background:linear-gradient(135deg,#335447,#d0a742);min-height:210px}
-    .mock-side{background:#f8fafc;color:#17222f}
-    .mock-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
-    .mock-grid div,.mini-grid div{border-radius:18px;background:rgba(255,255,255,.16);min-height:72px}
-    .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-    .section{padding:24px 0}
-    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px}
-    .section-head h2{margin:0;font-size:36px;letter-spacing:-.05em}
-    .section-head p{margin:0;max-width:620px;color:var(--muted);line-height:1.65}
-    .flow,.benefits,.pricing{display:grid;gap:16px}
-    .flow{grid-template-columns:repeat(4,1fr)}
-    .benefits{grid-template-columns:repeat(4,1fr)}
-    .pricing{grid-template-columns:repeat(3,1fr)}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:22px;box-shadow:var(--shadow)}
-    .card b.kicker{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9b761f;margin-bottom:12px}
-    .card h3{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}
-    .card p{margin:0;color:var(--muted);line-height:1.65}
-    .price{font-size:34px;margin:12px 0 10px;color:#17222f}
-    .card ul{margin:14px 0 0;padding-left:18px;color:var(--muted);line-height:1.7}
-    .featured{background:linear-gradient(180deg,#1b2634,#314538);color:#fff;border-color:transparent}
-    .featured p,.featured ul{color:#e6ebdf}
-    .featured .price,.featured b.kicker{color:#f1ddb2}
-    .support{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .support-box{background:linear-gradient(135deg,#17222f,#253b33 56%,#7a6222);color:#fff}
-    .support-box p,.support-box ul{color:#e6ece2}
-    .support-box ul{margin:14px 0 0;padding-left:18px;line-height:1.8}
-    .cta{margin:10px 0 26px;padding:28px;border-radius:34px;background:linear-gradient(135deg,#17222f,#253b33 58%,#c89a2b);color:#fff;box-shadow:var(--shadow)}
-    .cta h2{margin:0 0 10px;font-size:40px;letter-spacing:-.05em}
-    .cta p{margin:0;color:#e8ece4;max-width:720px;line-height:1.7}
-    .cta .hero-actions{margin-top:18px}
-    footer{padding:8px 0 34px;text-align:center;color:var(--muted);line-height:1.7}
-    @media(max-width:1080px){
-      .hero,.support,.flow,.benefits,.pricing{grid-template-columns:1fr 1fr}
-      .mock-hero{grid-template-columns:1fr}
-      .hero-points{grid-template-columns:1fr}
-    }
-    @media(max-width:760px){
-      .shell{padding:14px}
-      .nav,.section-head{display:block}
-      .navlinks{margin-top:12px}
-      .hero,.support,.flow,.benefits,.pricing{grid-template-columns:1fr}
-      .hero-copy,.hero-panel,.card,.cta{border-radius:28px}
-      h1{font-size:44px}
-      .section-head p{margin-top:10px}
-    }
+    :root{--bg:#f4efe6;--ink:#161514;--muted:#625d56;--card:#fffdf8;--line:#ddd2c0;--deep:#17222f;--forest:#253b33;--gold:#c89a2b;--sand:#efe2c7;--shadow:0 24px 70px rgba(22,21,20,.10)}
+    *{box-sizing:border-box} body{margin:0;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(180deg,#f7f2ea 0%,#efe7d8 100%);color:var(--ink)} a{text-decoration:none;color:inherit}
+    .shell{max-width:1240px;margin:0 auto;padding:18px}.nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0}.brand{display:flex;gap:12px;align-items:center;font-weight:700}.mark{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,#17222f,#253b33 55%,#c89a2b);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px}.brand span{font-size:22px;letter-spacing:-.04em}.navlinks{display:flex;flex-wrap:wrap;gap:10px}.navlinks a{padding:11px 14px;border-radius:999px;font-size:14px;color:var(--muted)}.navlinks .primary{background:#17222f;color:#fff}
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:stretch;margin-top:18px}.hero-copy,.hero-panel{border-radius:36px;box-shadow:var(--shadow);overflow:hidden}.hero-copy{position:relative;padding:34px;background:linear-gradient(135deg,#182330,#274036 56%,#8d6e20);color:#fff}.hero-copy:before,.hero-copy:after{content:"";position:absolute;border-radius:999px;opacity:.18}.hero-copy:before{width:340px;height:340px;background:#f3ddb0;top:-90px;right:-70px}.hero-copy:after{width:260px;height:260px;background:#d8ba73;bottom:-110px;left:-60px}.eyebrow{position:relative;z-index:1;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#ead9af} h1{position:relative;z-index:1;margin:20px 0 16px;font-size:clamp(44px,8vw,86px);line-height:.9;letter-spacing:-.07em;max-width:760px}.lead{position:relative;z-index:1;max-width:700px;color:#eef0ea;font-size:18px;line-height:1.75}
+    .hero-actions{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:15px 20px;border-radius:999px;font-weight:700}.btn.primary{background:#f1ddb2;color:#171512}.btn.secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}.btn.dark{background:#111827;color:#fff}
+    .hero-points{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}.hero-points div{padding:15px 16px;border-radius:20px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);font-size:14px;color:#f4f0e7}
+    .hero-panel{padding:24px;background:var(--card);border:1px solid var(--line)}.panel-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.pill{padding:10px 14px;border-radius:999px;background:#f5ecdb;color:#6a5219;font-size:13px;font-weight:700}
+    .mockup{border-radius:28px;background:linear-gradient(180deg,#182330,#243647);padding:16px;color:#fff}.mock-header{display:flex;gap:8px;margin-bottom:14px}.mock-header span{width:10px;height:10px;border-radius:999px;background:#fff;opacity:.65}.mock-hero{display:grid;grid-template-columns:1fr .9fr;gap:12px}.mock-card,.mock-side{border-radius:24px;padding:18px}.mock-card{background:linear-gradient(135deg,#335447,#d0a742);min-height:210px}.mock-side{background:#f8fafc;color:#17222f}.mock-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.mock-grid div,.mini-grid div{border-radius:18px;background:rgba(255,255,255,.16);min-height:72px}.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+    .section{padding:24px 0}.section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:16px}.section-head h2{margin:0;font-size:36px;letter-spacing:-.05em}.section-head p{margin:0;max-width:620px;color:var(--muted);line-height:1.65}
+    .flow,.benefits,.pricing{display:grid;gap:16px}.flow{grid-template-columns:repeat(4,1fr)}.benefits{grid-template-columns:repeat(4,1fr)}.pricing{grid-template-columns:repeat(3,1fr)}.support{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:22px;box-shadow:var(--shadow)}.card b.kicker{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#9b761f;margin-bottom:12px}.card h3{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}.card p{margin:0;color:var(--muted);line-height:1.65}.price{font-size:34px;margin:12px 0 10px;color:#17222f}.featured{background:linear-gradient(180deg,#1b2634,#314538);color:#fff;border-color:transparent}.featured p{color:#e6ebdf}.featured .price,.featured b.kicker{color:#f1ddb2}.support-box{background:linear-gradient(135deg,#17222f,#253b33 56%,#7a6222);color:#fff}.support-box p,.support-box ul{color:#e6ece2}.support-box ul{margin:14px 0 0;padding-left:18px;line-height:1.8}
+    .cta{margin:10px 0 26px;padding:28px;border-radius:34px;background:linear-gradient(135deg,#17222f,#253b33 58%,#c89a2b);color:#fff;box-shadow:var(--shadow)}.cta h2{margin:0 0 10px;font-size:40px;letter-spacing:-.05em}.cta p{margin:0;color:#e8ece4;max-width:720px;line-height:1.7}.cta .hero-actions{margin-top:18px} footer{padding:8px 0 34px;text-align:center;color:var(--muted);line-height:1.7}
+    @media(max-width:1080px){.hero,.support,.flow,.benefits,.pricing{grid-template-columns:1fr 1fr}.mock-hero{grid-template-columns:1fr}.hero-points{grid-template-columns:1fr}}
+    @media(max-width:760px){.shell{padding:14px}.nav,.section-head{display:block}.navlinks{margin-top:12px}.hero,.support,.flow,.benefits,.pricing{grid-template-columns:1fr}.hero-copy,.hero-panel,.card,.cta{border-radius:28px}h1{font-size:44px}.section-head p{margin-top:10px}}
   </style>
 </head>
 <body>
   <div class="shell">
     <nav class="nav">
-      <a class="brand" href="/">
-        <div class="mark">VH</div>
-        <span>VibeHost</span>
-      </a>
+      <a class="brand" href="/"><div class="mark">VH</div><span>VibeHost</span></a>
       <div class="navlinks">
         <a href="/preview">Templates</a>
+        <a href="/free-tools">Free Tools</a>
         <a href="/packages">Packages</a>
-        <a href="/support">Support</a>
         <a href="{{ support_whatsapp_url }}" target="_blank">WhatsApp</a>
         <a class="primary" href="/builder/new">Start Building</a>
       </div>
@@ -117,43 +36,37 @@
 
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">Namibia-focused website builder and hosting</div>
+        <div class="eyebrow">Website builder, owner dashboard and business tools</div>
         <h1>Build a live business website in minutes.</h1>
-        <p class="lead">
-          VibeHost lets business owners preview real full website templates, choose one, save their site to Neon, and launch on a live Namvibe subdomain with dashboard-ready tools for growth.
-        </p>
+        <p class="lead">Preview real website templates, create a business site, choose a live Namvibe subdomain, get an owner dashboard, and manage products, enquiries, invoices and quotations from one place.</p>
         <div class="hero-actions">
           <a class="btn primary" href="/preview">Try Website Preview</a>
           <a class="btn secondary" href="/builder/new">Start Building</a>
           <a class="btn secondary" href="{{ support_whatsapp_url }}" target="_blank">WhatsApp Developer</a>
         </div>
         <div class="hero-points">
-          <div>Hosting, business email, custom domain support and live subdomain launch.</div>
-          <div>Products, bookings, invoices, dashboard tools and customer messaging flow.</div>
-          <div>Direct support on {{ support_phone }} with premium setup and deployment help.</div>
+          <div>Live hosting, business email path, custom domain support and subdomain launch.</div>
+          <div>Products, bookings, invoices, quotations, reports and owner dashboard tools.</div>
+          <div>Developer contact: {{ support_phone }} for launch help and support.</div>
         </div>
       </div>
-
       <div class="hero-panel">
         <div class="panel-top">
-          <div>
-            <strong style="font-size:24px;letter-spacing:-.04em">Preview. Choose. Launch.</strong><br>
-            <span style="color:#625d56;line-height:1.6">Real templates become real websites with your saved business data.</span>
-          </div>
-          <div class="pill">Live on subdomain.namvibe.com</div>
+          <div><strong style="font-size:24px;letter-spacing:-.04em">Real templates. Real dashboard.</strong><br><span style="color:#625d56;line-height:1.6">The public preview flow remains intact and the admin layer now sits behind secure owner login.</span></div>
+          <div class="pill">Live at subdomain.namvibe.com</div>
         </div>
         <div class="mockup">
           <div class="mock-header"><span></span><span></span><span></span></div>
           <div class="mock-hero">
             <div class="mock-card">
-              <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff3d4">Retail Template Preview</div>
-              <div style="font-size:34px;line-height:1;letter-spacing:-.05em;margin:14px 0 10px">Kasera Shop</div>
-              <div style="max-width:360px;line-height:1.6">Strong first impressions, branded offers, WhatsApp selling and real contact details.</div>
+              <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#fff3d4">VibeHost Demo Store</div>
+              <div style="font-size:34px;line-height:1;letter-spacing:-.05em;margin:14px 0 10px">Website preview that converts into a real live website</div>
+              <div style="max-width:360px;line-height:1.6">Choose a template, create an owner account, save to Neon, and manage the business from the protected dashboard.</div>
               <div class="mock-grid"><div></div><div></div><div></div><div></div></div>
             </div>
             <div class="mock-side">
-              <strong>Builder outcome</strong>
-              <p style="margin:8px 0 0;color:#625d56;line-height:1.6">After save, the customer lands on the real dashboard and their real website is ready for the production subdomain flow.</p>
+              <strong>Owner SaaS layer</strong>
+              <p style="margin:8px 0 0;color:#625d56;line-height:1.6">14-day trial, product limits, invoice and quotation tools, enquiry tracking, and ready upgrade paths.</p>
               <div class="mini-grid"><div style="background:#e5e7eb"></div><div style="background:#dbeafe"></div><div style="background:#fae8ff"></div></div>
             </div>
           </div>
@@ -162,120 +75,78 @@
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <div><h2>How VibeHost works</h2></div>
-        <p>The flow is built for business owners who need a premium front page, real previews, quick setup and a live deployed result instead of a fake demo experience.</p>
-      </div>
+      <div class="section-head"><div><h2>How the VibeHost flow works</h2></div><p>The public builder flow stays simple while the secure owner/admin layer handles the business operations after launch.</p></div>
       <div class="flow">
-        <article class="card"><b class="kicker">01</b><h3>Open the homepage</h3><p>Start on a premium front page with strong calls to action and direct access to website previews.</p></article>
-        <article class="card"><b class="kicker">02</b><h3>Preview templates</h3><p>See all real full website templates and open each one in a full preview route.</p></article>
-        <article class="card"><b class="kicker">03</b><h3>Create your site</h3><p>Choose a template, fill business details, pick a subdomain and save the website to Neon.</p></article>
-        <article class="card"><b class="kicker">04</b><h3>Go live</h3><p>Get redirected to the real dashboard, then open the real website using saved business data.</p></article>
+        <article class="card"><b class="kicker">01</b><h3>Open homepage</h3><p>Start from a premium front page and jump straight into the website preview gallery.</p></article>
+        <article class="card"><b class="kicker">02</b><h3>Preview templates</h3><p>Browse all real full templates and choose the one that fits the business.</p></article>
+        <article class="card"><b class="kicker">03</b><h3>Create site + owner account</h3><p>Save the business, site, subscription and secure owner login together.</p></article>
+        <article class="card"><b class="kicker">04</b><h3>Manage and grow</h3><p>Open the live website or sign into the owner dashboard for editing, products and documents.</p></article>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <div><h2>Packages</h2></div>
-        <p>VibeHost supports both do-it-yourself setup through the builder and done-for-you service tiers for businesses that want help with launch, support and growth.</p>
-      </div>
+      <div class="section-head"><div><h2>Packages</h2></div><p>VibeHost supports self-serve builder usage and done-for-you launch packages for businesses that need more help.</p></div>
       <div class="pricing">
-        <article class="card">
-          <b class="kicker">Free Trial</b>
-          <h3>Start with the builder</h3>
-          <div class="price">Free Trial</div>
-          <p>Use the VibeHost builder, preview templates and launch a first version on a Namvibe subdomain.</p>
-        </article>
-        <article class="card">
-          <b class="kicker">Preview Tier</b>
-          <h3>N$150 Preview</h3>
-          <div class="price">N$150</div>
-          <p>For businesses that want a stronger guided preview before committing to a larger build.</p>
-        </article>
-        <article class="card">
-          <b class="kicker">Domain Tier</b>
-          <h3>N$450 Business Domain</h3>
-          <div class="price">N$450</div>
-          <p>Move toward a more professional public presence with domain and email setup support.</p>
-        </article>
-        <article class="card featured">
-          <b class="kicker">Starter Build</b>
-          <h3>N$3,000+ Starter Web Build</h3>
-          <div class="price">N$3,000+</div>
-          <p>Done-for-you business website build, launch support and structured onboarding.</p>
-        </article>
-        <article class="card">
-          <b class="kicker">Monthly Care</b>
-          <h3>N$750/mo Silver Support</h3>
-          <div class="price">N$750/mo</div>
-          <p>Hosting, updates, maintenance and business website support for active owners.</p>
-        </article>
-        <article class="card">
-          <b class="kicker">Growth Tier</b>
-          <h3>N$1,500/mo Premium Business</h3>
-          <div class="price">N$1,500/mo</div>
-          <p>Advanced digital support for businesses that need dashboard help, faster updates and premium service.</p>
-        </article>
+        <article class="card"><b class="kicker">Free Trial</b><h3>Launch your first site</h3><div class="price">Free Trial</div><p>Start with live preview, real dashboard access and a 14-day owner trial.</p></article>
+        <article class="card"><b class="kicker">Preview Tier</b><h3>N$150 Preview</h3><div class="price">N$150</div><p>Perfect for guided preview setup before moving into a bigger business package.</p></article>
+        <article class="card"><b class="kicker">Domain Tier</b><h3>N$450 Business Domain</h3><div class="price">N$450</div><p>For businesses ready to move toward branded email and domain support.</p></article>
+        <article class="card featured"><b class="kicker">Starter Build</b><h3>N$3,000+ Starter Web Build</h3><div class="price">N$3,000+</div><p>Done-for-you professional build, launch support and structured onboarding.</p></article>
+        <article class="card"><b class="kicker">Monthly Care</b><h3>N$750/mo Silver Support</h3><div class="price">N$750/mo</div><p>Hosting, updates, maintenance and business website support.</p></article>
+        <article class="card"><b class="kicker">Growth Tier</b><h3>N$1,500/mo Premium Business</h3><div class="price">N$1,500/mo</div><p>Advanced digital support for businesses using dashboards, documents and growth tools.</p></article>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-head">
-        <div><h2>Why businesses choose VibeHost</h2></div>
-        <p>VibeHost is designed around the actual operational tools a business needs after launch, not just a pretty landing page.</p>
-      </div>
-      <div class="benefits">
-        <article class="card"><h3>Hosting</h3><p>Websites are prepared for live hosting and subdomain routing on Namvibe.</p></article>
-        <article class="card"><h3>Business Email</h3><p>Support for branded email setup as the business grows beyond the trial stage.</p></article>
-        <article class="card"><h3>Custom Domain</h3><p>Upgrade paths for domain connection and a more polished public presence.</p></article>
-        <article class="card"><h3>Invoices</h3><p>Business-ready dashboard direction for quotations, invoices and payment records.</p></article>
-        <article class="card"><h3>Bookings</h3><p>Templates and dashboards are designed with booking and enquiry workflows in mind.</p></article>
-        <article class="card"><h3>Products</h3><p>Retail, food and service businesses can grow into product or service management features.</p></article>
-        <article class="card"><h3>Dashboard</h3><p>The owner lands on a real dashboard backed by saved records, not demo placeholders.</p></article>
-        <article class="card"><h3>Support</h3><p>Need help with launch or deployment? Reach the developer directly on WhatsApp.</p></article>
-      </div>
-    </section>
-
-    <section class="section">
+      <div class="section-head"><div><h2>Free invoice and quotation tool</h2></div><p>Not every business is ready for a full website on day one. The free tool gives owners a lightweight entry point with upgrade paths later.</p></div>
       <div class="support">
         <article class="card">
-          <b class="kicker">Public Support</b>
-          <h3>Direct developer contact</h3>
-          <p>For setup help, preview guidance, deployment questions or package enquiries, contact the VibeHost developer directly.</p>
+          <b class="kicker">Free Tools</b>
+          <h3>Create free invoice or quotation</h3>
+          <p>Register a free-tool account, create up to two invoices and two quotations, and upgrade later if you need unlimited records.</p>
           <div class="hero-actions">
-            <a class="btn dark" href="{{ support_whatsapp_url }}" target="_blank">Open WhatsApp</a>
-            <a class="btn secondary" href="/preview">See Templates</a>
+            <a class="btn dark" href="/free-tools">Open Free Tools</a>
+            <a class="btn secondary" href="/free-tools/register" style="color:#161514;border-color:#ddd2c0;background:#fff">Register Free Tool Account</a>
           </div>
-          <p style="margin-top:14px"><strong>{{ support_phone }}</strong></p>
         </article>
         <article class="card support-box">
           <b class="kicker">Included Value</b>
           <h3>Business launch benefits</h3>
-          <p>VibeHost is positioned as both a builder and an execution platform for businesses that want more than a basic static site.</p>
           <ul>
             <li>Website hosting and live subdomain launch</li>
             <li>Business email and custom domain pathways</li>
-            <li>Products, invoices, bookings and dashboard planning</li>
-            <li>Customer messages, adverts and reporting direction</li>
-            <li>Support for production deployment on GitHub and VPS</li>
+            <li>Products, invoices, quotations, enquiries and reports</li>
+            <li>Secure owner login with trial-aware dashboard access</li>
+            <li>Developer support on WhatsApp for setup and deployment</li>
           </ul>
         </article>
       </div>
     </section>
 
-    <section class="cta">
-      <h2>Preview a real template and launch your business website.</h2>
-      <p>The builder flow now leads from premium homepage to real template preview, real saved business records, real dashboard redirect and real Namvibe subdomain routing.</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="/preview">Try Website Preview</a>
-        <a class="btn secondary" href="/builder/new">Start Building</a>
-        <a class="btn secondary" href="{{ support_whatsapp_url }}" target="_blank">WhatsApp Developer</a>
+    <section class="section">
+      <div class="section-head"><div><h2>Why businesses choose VibeHost</h2></div><p>VibeHost is built as a real operating layer for small businesses, not just a landing page generator.</p></div>
+      <div class="benefits">
+        <article class="card"><h3>Hosting</h3><p>Websites are prepared for live hosting and subdomain routing on Namvibe.</p></article>
+        <article class="card"><h3>Business Email</h3><p>Support for branded email setup as the business grows beyond trial.</p></article>
+        <article class="card"><h3>Custom Domain</h3><p>Upgrade paths for stronger public branding and domain connection.</p></article>
+        <article class="card"><h3>Invoices</h3><p>Built-in invoice and quotation tools for owner and free-tool accounts.</p></article>
+        <article class="card"><h3>Bookings</h3><p>Templates and dashboards are designed around enquiry and booking workflows.</p></article>
+        <article class="card"><h3>Products</h3><p>Retail, food and service businesses can manage products/services in one table.</p></article>
+        <article class="card"><h3>Dashboard</h3><p>The owner lands on a real dashboard backed by saved database records.</p></article>
+        <article class="card"><h3>Support</h3><p>Need help with launch or deployment? Reach the developer directly on WhatsApp.</p></article>
       </div>
     </section>
 
-    <footer>
-      VibeHost by Namvibe. Developer support: {{ support_phone }}. WhatsApp: <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_whatsapp_url }}</a>
-    </footer>
+    <section class="cta">
+      <h2>Preview a real template, launch your website, and manage the business after go-live.</h2>
+      <p>The full flow now covers public previews, real site creation, secure owner login, trial-aware admin tools, and a free invoice or quotation entry point.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/preview">Try Website Preview</a>
+        <a class="btn secondary" href="/builder/new">Start Building</a>
+        <a class="btn secondary" href="/free-tools">Create Free Invoice or Quotation</a>
+      </div>
+    </section>
+
+    <footer>VibeHost by Namvibe. Developer support: {{ support_phone }}. WhatsApp: <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_whatsapp_url }}</a></footer>
   </div>
 </body>
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ business.business_name }} Owner Dashboard</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f5f7fb;color:#101828} a{text-decoration:none;color:inherit}
+    .hero{padding:26px 18px 82px;background:linear-gradient(135deg,#0f172a,#1d4ed8 58%,#c28e1f);color:#fff}.wrap{max-width:1220px;margin:0 auto}.bar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.badge{padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:13px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.actions a{padding:14px 18px;border-radius:16px;font-weight:700}.actions .primary{background:#f4deb0;color:#111827}.actions .ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.16)} h1{margin:20px 0 10px;font-size:clamp(42px,7vw,76px);line-height:.92;letter-spacing:-.06em}.hero p{max-width:760px;color:#e5e7eb;line-height:1.7}
+    .main{max-width:1220px;margin:-54px auto 0;padding:0 18px 42px}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}.stack{display:grid;gap:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:24px;box-shadow:0 24px 70px rgba(15,23,42,.08)} .card h2{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}.card p{margin:0;color:#667085;line-height:1.6}.stats,.tools{display:grid;gap:12px;margin-top:18px}.stats{grid-template-columns:repeat(2,1fr)}.stat,.tool,.check{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dbe3ed}.stat b,.tool b{display:block;font-size:20px;margin-bottom:6px}.checks{display:grid;gap:12px;margin-top:18px}.banner{margin-top:18px;padding:16px 18px;border-radius:20px;background:#fff7ed;border:1px solid #fdba74;color:#9a3412;font-weight:700}
+    @media(max-width:980px){.grid,.stats,.tools{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="wrap">
+      <div class="bar">
+        <div class="badge">Signed in as {{ owner.email }}</div>
+        <div class="badge">Plan: {{ subscription.plan_name if subscription else "free_trial" }} · Status: {{ subscription.status if subscription else "trial" }}</div>
+      </div>
+      <h1>{{ business.business_name }}</h1>
+      <p>Manage the live site, website content, products or services, enquiries, invoices and quotations from this protected owner dashboard.</p>
+      <div class="actions">
+        <a class="primary" href="{{ site.live_url if site else '#' }}" target="_blank">Open Live Website</a>
+        <a class="ghost" href="/owner/site-editor">Website Editor</a>
+        <a class="ghost" href="/owner/logout">Logout</a>
+      </div>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="grid">
+      <div class="stack">
+        <section class="card">
+          <h2>Business Summary</h2>
+          <div class="stats">
+            <div class="stat"><b>{{ site.live_url if site else "Unavailable" }}</b><span>Live URL</span></div>
+            <div class="stat"><b>{{ trial.days_left }}</b><span>Trial days left</span></div>
+            <div class="stat"><b>{{ stats.products }}</b><span>Products/services count</span></div>
+            <div class="stat"><b>{{ stats.orders }}</b><span>Orders/enquiries count</span></div>
+            <div class="stat"><b>{{ stats.invoices }}</b><span>Invoices count</span></div>
+            <div class="stat"><b>{{ stats.quotations }}</b><span>Quotations count</span></div>
+          </div>
+          {% if trial.expired %}
+          <div class="banner">Your 14-day trial has ended. Upgrade to continue editing your website.</div>
+          {% endif %}
+        </section>
+
+        <section class="card">
+          <h2>Admin Tools</h2>
+          <div class="tools">
+            <a class="tool" href="/owner/site-editor"><b>Website editor</b><span>Edit business info, hero copy, colors, font style and logo.</span></a>
+            <a class="tool" href="/owner/products"><b>Products/services</b><span>Manage {{ business.website_type|replace('-', ' ') }} items with trial limits applied.</span></a>
+            <a class="tool" href="/owner/orders"><b>Orders/enquiries</b><span>Track new, contacted, quoted, confirmed and completed activity.</span></a>
+            <a class="tool" href="/owner/invoices"><b>Invoices</b><span>Create and download premium invoice records.</span></a>
+            <a class="tool" href="/owner/quotations"><b>Quotations</b><span>Create quotations and convert them into revenue workflows.</span></a>
+            <div class="tool"><b>Gallery</b><span>Prepared in schema and ready for media management expansion.</span></div>
+            <div class="tool"><b>Adverts</b><span>Prepared for campaign cards and homepage promotions.</span></div>
+            <div class="tool"><b>Customer accounts</b><span>Prepared for future customer-facing account layers.</span></div>
+            <div class="tool"><b>Reports</b><span>Use counts, enquiry status and documents to guide growth actions.</span></div>
+            <a class="tool" href="/dashboard/{{ business.id }}/upgrade"><b>Upgrade plan</b><span>Upgrade when the trial needs more capacity and editing access.</span></a>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <section class="card">
+          <h2>Setup Checklist</h2>
+          <div class="checks">
+            <div class="check"><strong>Review live website</strong><br>{{ site.live_url if site else "No live URL yet" }}</div>
+            <div class="check"><strong>Update website content</strong><br>Make the hero title, subtitle and business contacts production-ready.</div>
+            <div class="check"><strong>Add first {{ business.website_type|replace('-', ' ') }} items</strong><br>Use the trial to publish up to three active items.</div>
+            <div class="check"><strong>Create first invoice or quotation</strong><br>Test the document workflows before going fully live.</div>
+          </div>
+        </section>
+        <section class="card">
+          <h2>Support</h2>
+          <p>Developer contact: {{ support_phone }}</p>
+          <div class="actions"><a class="primary" href="{{ support_whatsapp_url }}" target="_blank">Open WhatsApp Support</a></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

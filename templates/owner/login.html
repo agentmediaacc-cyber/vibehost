@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Login | VibeHost</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Trebuchet MS",Verdana,sans-serif;background:linear-gradient(135deg,#f6f7fb,#edf2f7);color:#101828}
+    .card{width:min(100%,460px);background:#fff;border:1px solid #d0d5dd;border-radius:30px;padding:28px;box-shadow:0 24px 70px rgba(15,23,42,.10)} h1{margin:0 0 10px;font-size:36px;letter-spacing:-.05em} p{color:#667085;line-height:1.6} label{display:block;font-weight:700;margin:14px 0 8px} input{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px} button{width:100%;margin-top:18px;padding:15px;border:0;border-radius:16px;background:#111827;color:#fff;font-weight:800} .error{margin-top:14px;padding:12px 14px;border-radius:16px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b} .meta{margin-top:16px;font-size:14px;color:#667085}
+  </style>
+</head>
+<body>
+  <form class="card" method="POST">
+    <h1>Owner Login</h1>
+    <p>Sign in to the protected VibeHost owner dashboard for your website.</p>
+    <label>Email</label><input type="email" name="email" required placeholder="owner@business.com">
+    <label>Password</label><input type="password" name="password" required placeholder="Your password">
+    <button type="submit">Open Owner Dashboard</button>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <div class="meta">Need help? WhatsApp <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a></div>
+  </form>
+</body>
+</html>
