@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ business.business_name }} | Food & Restaurant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#fff7ed;color:#1f2937}
+    a{text-decoration:none}
+    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #fed7aa}
+    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
+    .logo{width:48px;height:48px;border-radius:18px;background:#7c2d12;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
+    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
+    .order-btn{background:#ea580c;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
+    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .hero-main{min-height:440px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#facc15,transparent 28%),linear-gradient(135deg,#7c2d12,#ea580c);color:white;display:flex;flex-direction:column;justify-content:center}
+    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
+    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
+    .hero p{font-size:18px;color:#ffedd5;line-height:1.6;max-width:660px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
+    .primary{background:#facc15;color:#431407}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
+    .side{display:grid;gap:18px}
+    .deal{border-radius:30px;padding:24px;background:white;border:1px solid #fed7aa;box-shadow:0 18px 50px rgba(124,45,18,.12)}
+    .deal.dark{background:#431407;color:white}
+    .deal h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.deal p{color:#9a3412}.deal.dark p{color:#fed7aa}
+    .wrap{max-width:1180px;margin:auto;padding:18px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
+    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#9a3412;margin:6px 0 0}
+    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .cat{background:white;border:1px solid #fed7aa;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(124,45,18,.07)}
+    .cat span{display:block;font-size:30px;margin-bottom:8px}
+    .menu{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .item{background:white;border:1px solid #fed7aa;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(124,45,18,.09)}
+    .foodpic{height:190px;background:linear-gradient(135deg,#fed7aa,#fef3c7);display:flex;align-items:center;justify-content:center;font-size:54px}
+    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#9a3412;line-height:1.45}
+    .price{font-size:23px;font-weight:1000;color:#7c2d12}.tag{display:inline-block;margin:10px 0;background:#dcfce7;color:#166534;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
+    .item button{width:100%;border:0;background:#ea580c;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
+    .locked{opacity:.58;filter:grayscale(.5)}
+    .booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel{background:#431407;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#1f2937;border:1px solid #fed7aa}
+    .panel p{color:#fed7aa}.panel.light p{color:#9a3412}
+    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#fff7ed}
+    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .tool{background:white;border:1px solid #fed7aa;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(124,45,18,.08)}
+    .tool b{font-size:18px}.tool p{color:#9a3412;line-height:1.55}
+    .cart{position:fixed;right:18px;bottom:18px;width:350px;max-width:calc(100vw - 36px);background:white;border:1px solid #fed7aa;border-radius:28px;box-shadow:0 28px 80px rgba(124,45,18,.25);padding:18px;z-index:30}
+    .cart h3{margin:0 0 10px}.cart-line{display:flex;justify-content:space-between;border-bottom:1px solid #fed7aa;padding:10px 0;color:#9a3412}
+    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#7c2d12}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
+    footer{text-align:center;padding:38px 18px;color:#9a3412}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.menu{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.booking-grid{grid-template-columns:1fr}.navlinks{display:none}}
+    @media(max-width:560px){.menu,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.cart{position:static;width:auto;margin:18px}.section-head{display:block}}
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}🍽️{% endif %}</div>
+      <div>{{ business.business_name }}</div>
+    </div>
+    <nav class="navlinks">
+      <a href="#menu">Menu</a>
+      <a href="#delivery">Delivery</a>
+      <a href="#booking">Bookings</a>
+      <a href="#catering">Catering</a>
+    </nav>
+    <a class="order-btn" href="#cart">🧾 Order · 3</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-main">
+    <div class="badge">Restaurant & Food • {{ business.town or "Windhoek" }}</div>
+    <h1>{{ business.business_name }}</h1>
+    <p>{{ business.description or "Fresh meals, takeaway orders, family combos, catering trays and table bookings — all in one premium restaurant website." }}</p>
+    <div class="btns">
+      <a class="btn primary" href="#menu">🍔 View Menu</a>
+      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 Order on WhatsApp</a>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="deal dark">
+      <h3>Today’s combo</h3>
+      <p>Show daily specials, lunch plates, family combos and weekend promotions.</p>
+      <b>N$149 meal deal</b>
+    </div>
+    <div class="deal">
+      <h3>Fast food ordering</h3>
+      <p>Customers can order pickup, town delivery, table booking or catering quotes.</p>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="section-head">
+    <div>
+      <h2>Food categories</h2>
+      <p>Organize your restaurant menu clearly.</p>
+    </div>
+  </div>
+
+  <div class="categories">
+    <div class="cat"><span>🍔</span>Burgers</div>
+    <div class="cat"><span>🍕</span>Pizza</div>
+    <div class="cat"><span>🍗</span>Chicken</div>
+    <div class="cat"><span>🥗</span>Healthy</div>
+    <div class="cat"><span>🥤</span>Drinks</div>
+    <div class="cat"><span>🎂</span>Catering</div>
+  </div>
+
+  <div class="section-head" id="menu">
+    <div>
+      <h2>Popular menu</h2>
+      <p>Free trial shows 3 food cards. Upgrade unlocks full menu, online orders and reports.</p>
+    </div>
+  </div>
+
+  <section class="menu">
+    <div class="item">
+      <div class="foodpic">🍔</div>
+      <div class="info">
+        <h3>Lunch Special</h3>
+        <p>Burger, chips and drink combo.</p>
+        <span class="price">N$89</span><br>
+        <span class="tag">Available today</span>
+        <button>Add to Order</button>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="foodpic">🍗</div>
+      <div class="info">
+        <h3>Family Combo</h3>
+        <p>Meal pack for families and groups.</p>
+        <span class="price">N$299</span><br>
+        <span class="tag">Best seller</span>
+        <button>Add to Order</button>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="foodpic">🎂</div>
+      <div class="info">
+        <h3>Catering Tray</h3>
+        <p>Perfect for events and office meals.</p>
+        <span class="price">Quote</span><br>
+        <span class="tag">Request quote</span>
+        <button>Request Catering</button>
+      </div>
+    </div>
+
+    <div class="item locked">
+      <div class="foodpic">🔒</div>
+      <div class="info">
+        <h3>More Menu Items</h3>
+        <p>Unlock full menu and unlimited items.</p>
+        <span class="price">Upgrade</span><br>
+        <span class="tag">Trial limit</span>
+        <button>Unlock Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head" id="delivery">
+    <div>
+      <h2>Orders, delivery & table bookings</h2>
+      <p>Built for restaurants, takeaways, cafes, bakeries and catering businesses.</p>
+    </div>
+  </div>
+
+  <section class="booking-grid">
+    <div class="panel">
+      <h2>Order types</h2>
+      <p>Customers choose how they want food served.</p>
+      <div class="rows">
+        <div class="row"><span>Pickup order</span><b>Ready</b></div>
+        <div class="row"><span>Town delivery</span><b>N$35</b></div>
+        <div class="row"><span>Table reservation</span><b>Enabled</b></div>
+        <div class="row"><span>Catering quote</span><b>Enabled</b></div>
+      </div>
+    </div>
+
+    <div class="panel light" id="catering">
+      <h2>Invoices & catering quotes</h2>
+      <p>Restaurant owners can generate quotes for events, catering, office meals and bulk orders.</p>
+      <div class="rows">
+        <div class="row"><span>Quotation template</span><b>Ready</b></div>
+        <div class="row"><span>Invoice template</span><b>Ready</b></div>
+        <div class="row"><span>Event catering</span><b>Ready</b></div>
+        <div class="row"><span>Kitchen reports</span><b>Paid plan</b></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head" id="booking">
+    <div>
+      <h2>Restaurant admin system preview</h2>
+      <p>These features are prepared for the business owner dashboard.</p>
+    </div>
+  </div>
+
+  <section class="tools">
+    <div class="tool"><b>🍽️ Menu manager</b><p>Add meals, prices, photos, categories, availability and daily specials.</p></div>
+    <div class="tool"><b>🛵 Delivery manager</b><p>Track pickup, town delivery, driver notes and order status.</p></div>
+    <div class="tool"><b>📅 Table bookings</b><p>Customers can request table bookings with date, time and guest count.</p></div>
+    <div class="tool"><b>🎂 Catering quotes</b><p>Create quotations for birthdays, events, companies and school orders.</p></div>
+    <div class="tool"><b>🧾 Invoices</b><p>Create receipts, invoices and customer order records.</p></div>
+    <div class="tool"><b>📊 Reports</b><p>Top meals, daily orders, unpaid invoices and monthly food sales.</p></div>
+  </section>
+</main>
+
+<div class="cart" id="cart">
+  <h3>🧾 Food order preview</h3>
+  <div class="cart-line"><span>Lunch Special</span><b>N$89</b></div>
+  <div class="cart-line"><span>Family Combo</span><b>N$299</b></div>
+  <div class="cart-line"><span>Delivery</span><b>N$35</b></div>
+  <div class="total">Total: N$423</div>
+  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Send Food Order</a>
+</div>
+
+<footer>
+  <b>{{ business.business_name }}</b><br>
+  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
+  Restaurant website powered by VibeHost
+</footer>
+
+</body>
+</html>

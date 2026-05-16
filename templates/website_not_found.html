@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Not Found | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;font-family:Georgia,"Times New Roman",serif;background:radial-gradient(circle at top left,#fff1cc,transparent 18%),linear-gradient(135deg,#f8f6f1,#ece7dc);color:#1b1a18}
+    .card{max-width:760px;width:100%;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border:1px solid rgba(27,26,24,.10);border-radius:32px;padding:34px;box-shadow:0 24px 70px rgba(27,26,24,.10)}
+    .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a6a18}
+    h1{margin:14px 0 12px;font-size:48px;line-height:.95;letter-spacing:-.05em}
+    p{margin:0;color:#5f5a52;line-height:1.7;font-size:18px}
+    .sub{margin:18px 0;padding:16px 18px;border-radius:18px;background:#f8f3e7;border:1px solid #eadab6;font-family:"Trebuchet MS",Verdana,sans-serif;font-size:15px;color:#362f1e}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .actions a{padding:14px 18px;border-radius:16px;text-decoration:none;font-weight:700}
+    .primary{background:#1b1a18;color:#fff}
+    .secondary{background:#efe6d2;color:#1b1a18}
+    @media(max-width:640px){.card{padding:24px}h1{font-size:38px}}
+  </style>
+</head>
+<body>
+  <section class="card">
+    <div class="eyebrow">Website Not Found</div>
+    <h1>This Namvibe website does not exist yet.</h1>
+    <p>The requested subdomain could not be matched to a saved business profile and website record. If the site was just created, confirm the business was saved successfully and that the subdomain is correct.</p>
+    <div class="sub">Requested subdomain: {{ subdomain or "unknown" }}</div>
+    <div class="actions">
+      <a class="primary" href="/preview">Browse Templates</a>
+      <a class="secondary" href="/">Back to VibeHost</a>
+    </div>
+  </section>
+</body>
+</html>

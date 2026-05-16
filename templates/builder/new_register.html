@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Choose Template - VibeHost</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f8fafc;color:#0f172a}
+    .hero{background:radial-gradient(circle at top left,#facc15,transparent 28%),linear-gradient(135deg,#0f172a,#312e81);color:white;padding:54px 18px}
+    .hero-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+    .brand{display:flex;gap:14px;align-items:center;margin-bottom:20px}
+    .mark{width:58px;height:58px;border-radius:20px;background:white;color:#111827;display:flex;align-items:center;justify-content:center;font-weight:1000}
+    h1{font-size:clamp(42px,7vw,76px);line-height:.9;letter-spacing:-.08em;margin:0 0 18px}
+    .hero p{font-size:19px;color:#dbeafe;line-height:1.6}
+    .hero-card{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:30px;padding:24px}
+    .hero-card b{display:block;font-size:26px;margin-bottom:8px}
+    .wrap{max-width:1180px;margin:auto;padding:26px 18px}
+    .topline{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:18px}
+    .topline h2{font-size:36px;letter-spacing:-.05em;margin:0}
+    .topline p{color:#64748b;margin:7px 0 0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:white;border:1px solid #e5e7eb;border-radius:30px;overflow:hidden;box-shadow:0 18px 50px rgba(15,23,42,.08)}
+    .thumb{height:190px;padding:18px;display:flex;align-items:end;color:white}
+    .retail{background:linear-gradient(135deg,#111827,#6366f1)}
+    .food{background:linear-gradient(135deg,#7c2d12,#ea580c)}
+    .transport{background:linear-gradient(135deg,#0f172a,#2563eb)}
+    .guest{background:linear-gradient(rgba(20,83,45,.72),rgba(15,23,42,.82)),url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80') center/cover}
+    .beauty{background:linear-gradient(135deg,#9f1239,#db2777)}
+    .school{background:linear-gradient(135deg,#075985,#1d4ed8)}
+    .health{background:linear-gradient(135deg,#0f766e,#0f172a)}
+    .build{background:linear-gradient(135deg,#78350f,#111827)}
+    .clean{background:linear-gradient(135deg,#14532d,#16a34a)}
+    .thumb span{font-size:46px;margin-right:10px}.thumb b{font-size:24px;line-height:1}
+    .body{padding:20px}
+    .body p{color:#64748b;line-height:1.55;min-height:72px}
+    .features{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+    .features small{background:#f1f5f9;border:1px solid #e2e8f0;padding:7px 9px;border-radius:999px;font-weight:800;color:#475569}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+    .actions a{text-align:center;padding:14px;border-radius:16px;font-weight:1000;text-decoration:none}
+    .preview{background:#111827;color:white}.use{background:#facc15;color:#111827}
+    .note{margin-top:26px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:18px;border-radius:22px;font-weight:800}
+    @media(max-width:960px){.hero-inner,.grid{grid-template-columns:1fr}.topline{display:block}}
+  </style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="brand">
+        <div class="mark">VH</div>
+        <div>
+          <b>VibeHost Builder</b><br>
+          <span style="color:#cbd5e1">Choose. Preview. Launch.</span>
+        </div>
+      </div>
+      <h1>Choose your real website template</h1>
+      <p>Preview a full working business website first. When you like it, click “Choose this template” and start creating your live site with your business name, colors, logo, subdomain and tools.</p>
+    </div>
+    <div class="hero-card">
+      <b>What happens next?</b>
+      <p>1. Preview template<br>2. Choose template<br>3. Add business details<br>4. Customize colors and features<br>5. Launch on your VibeHost subdomain</p>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="topline">
+    <div>
+      <h2>Business website templates</h2>
+      <p>Each template is designed for a real business system, not just a landing page.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    {% for t in templates %}
+      {% set cls = "retail" %}
+      {% set icon = "🛍️" %}
+      {% set chips = ["Products","Cart","Stock"] %}
+
+      {% if t.slug == "restaurant-food" %}
+        {% set cls = "food" %}{% set icon = "🍔" %}{% set chips = ["Menu","Orders","Catering"] %}
+      {% elif t.slug == "transport-shuttle" %}
+        {% set cls = "transport" %}{% set icon = "🚐" %}{% set chips = ["Routes","Fleet","Quotes"] %}
+      {% elif t.slug == "guesthouse-lodge" %}
+        {% set cls = "guest" %}{% set icon = "🏡" %}{% set chips = ["Rooms","Bookings","Calendar"] %}
+      {% elif t.slug == "salon-beauty" %}
+        {% set cls = "beauty" %}{% set icon = "💅" %}{% set chips = ["Services","Appointments","Gallery"] %}
+      {% elif t.slug == "school-education" %}
+        {% set cls = "school" %}{% set icon = "🎓" %}{% set chips = ["Admissions","Fees","Notices"] %}
+      {% elif t.slug == "health-wellness" %}
+        {% set cls = "health" %}{% set icon = "🏥" %}{% set chips = ["Appointments","Care","Reports"] %}
+      {% elif t.slug == "construction" %}
+        {% set cls = "build" %}{% set icon = "🏗️" %}{% set chips = ["Quotes","Projects","Invoices"] %}
+      {% elif t.slug == "cleaning-services" %}
+        {% set cls = "clean" %}{% set icon = "🧼" %}{% set chips = ["Bookings","Plans","Staff"] %}
+      {% endif %}
+
+      <div class="card">
+        <div class="thumb {{ cls }}">
+          <span>{{ icon }}</span>
+          <b>{{ t.name }}</b>
+        </div>
+        <div class="body">
+          <p>{{ t.description }}</p>
+          <div class="features">
+            {% for c in chips %}
+              <small>{{ c }}</small>
+            {% endfor %}
+          </div>
+          <div class="actions">
+            <a class="preview" href="/templates/preview/{{ t.slug }}" target="_blank">Preview</a>
+            <a class="use" href="/builder/create/{{ t.slug }}">Choose this</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="note">
+    Free trial websites launch with basic features. Products, business email, custom domain, full dashboard, invoices and advanced admin tools unlock on paid plans.
+  </div>
+</main>
+
+</body>
+</html>

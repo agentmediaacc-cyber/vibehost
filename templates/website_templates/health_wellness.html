@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ business.business_name }} | Health & Wellness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f0fdfa;color:#0f172a}
+    a{text-decoration:none}
+    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #99f6e4}
+    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
+    .logo{width:48px;height:48px;border-radius:18px;background:#0f766e;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
+    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
+    .book-btn{background:#14b8a6;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
+    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .hero-main{min-height:450px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#99f6e4,transparent 28%),linear-gradient(135deg,#0f766e,#0f172a);color:white;display:flex;flex-direction:column;justify-content:center}
+    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
+    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
+    .hero p{font-size:18px;color:#ccfbf1;line-height:1.6;max-width:660px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
+    .primary{background:#facc15;color:#0f172a}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
+    .side{display:grid;gap:18px}
+    .card{border-radius:30px;padding:24px;background:white;border:1px solid #99f6e4;box-shadow:0 18px 50px rgba(15,118,110,.12)}
+    .card.dark{background:#134e4a;color:white}.card h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.card p{color:#0f766e}.card.dark p{color:#ccfbf1}
+    .wrap{max-width:1180px;margin:auto;padding:18px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
+    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#0f766e;margin:6px 0 0}
+    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .cat{background:white;border:1px solid #99f6e4;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(15,118,110,.07)}
+    .cat span{display:block;font-size:30px;margin-bottom:8px}
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .service{background:white;border:1px solid #99f6e4;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(15,118,110,.09)}
+    .photo{height:190px;background:linear-gradient(135deg,#ccfbf1,#fef3c7);display:flex;align-items:center;justify-content:center;font-size:54px}
+    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#0f766e;line-height:1.45}
+    .price{font-size:23px;font-weight:1000;color:#0f766e}.tag{display:inline-block;margin:10px 0;background:#dcfce7;color:#166534;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
+    .service button{width:100%;border:0;background:#14b8a6;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
+    .locked{opacity:.58;filter:grayscale(.5)}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel{background:#134e4a;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#0f172a;border:1px solid #99f6e4}
+    .panel p{color:#ccfbf1}.panel.light p{color:#0f766e}
+    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#f0fdfa}
+    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .tool{background:white;border:1px solid #99f6e4;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(15,118,110,.08)}
+    .tool b{font-size:18px}.tool p{color:#0f766e;line-height:1.55}
+    .booking{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100vw - 36px);background:white;border:1px solid #99f6e4;border-radius:28px;box-shadow:0 28px 80px rgba(15,118,110,.25);padding:18px;z-index:30}
+    .booking h3{margin:0 0 10px}.booking-line{display:flex;justify-content:space-between;border-bottom:1px solid #99f6e4;padding:10px 0;color:#0f766e}
+    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#0f766e}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
+    footer{text-align:center;padding:38px 18px;color:#0f766e}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.services{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.grid2{grid-template-columns:1fr}.navlinks{display:none}}
+    @media(max-width:560px){.services,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.booking{position:static;width:auto;margin:18px}.section-head{display:block}}
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}🏥{% endif %}</div>
+      <div>{{ business.business_name }}</div>
+    </div>
+    <nav class="navlinks">
+      <a href="#services">Services</a>
+      <a href="#appointments">Appointments</a>
+      <a href="#wellness">Wellness</a>
+      <a href="#admin">Clinic Tools</a>
+    </nav>
+    <a class="book-btn" href="#bookingBox">🏥 Book Visit</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-main">
+    <div class="badge">Health & Wellness • {{ business.town or "Namibia" }}</div>
+    <h1>{{ business.business_name }}</h1>
+    <p>{{ business.description or "Appointments, wellness consultations, clinic services, patient enquiries and professional healthcare management." }}</p>
+    <div class="btns">
+      <a class="btn primary" href="#services">🩺 View Services</a>
+      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 WhatsApp Enquiry</a>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="card dark">
+      <h3>Wellness consultations</h3>
+      <p>Promote consultations, fitness, therapy, pharmacy or wellness care services.</p>
+      <b>Appointments open</b>
+    </div>
+
+    <div class="card">
+      <h3>Online appointment requests</h3>
+      <p>Patients can request dates, consultation type and support directly from the website.</p>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <div class="section-head">
+    <div>
+      <h2>Health categories</h2>
+      <p>Help visitors find the right care quickly.</p>
+    </div>
+  </div>
+
+  <div class="categories">
+    <div class="cat"><span>🩺</span>Clinic</div>
+    <div class="cat"><span>💊</span>Pharmacy</div>
+    <div class="cat"><span>🏋️</span>Fitness</div>
+    <div class="cat"><span>🧠</span>Wellness</div>
+    <div class="cat"><span>🦷</span>Dental</div>
+    <div class="cat"><span>❤️</span>Care</div>
+  </div>
+
+  <div class="section-head" id="services">
+    <div>
+      <h2>Popular services</h2>
+      <p>Free trial shows 3 services. Upgrade unlocks full scheduling, patient records and reporting.</p>
+    </div>
+  </div>
+
+  <section class="services">
+
+    <div class="service">
+      <div class="photo">🩺</div>
+      <div class="info">
+        <h3>General Consultation</h3>
+        <p>Professional consultation and patient support.</p>
+        <span class="price">From N$350</span><br>
+        <span class="tag">Available today</span>
+        <button>Book Consultation</button>
+      </div>
+    </div>
+
+    <div class="service">
+      <div class="photo">🏋️</div>
+      <div class="info">
+        <h3>Fitness Program</h3>
+        <p>Health and fitness plans with wellness support.</p>
+        <span class="price">Monthly</span><br>
+        <span class="tag">Popular</span>
+        <button>Request Program</button>
+      </div>
+    </div>
+
+    <div class="service">
+      <div class="photo">💊</div>
+      <div class="info">
+        <h3>Pharmacy Support</h3>
+        <p>Medication guidance and prescription enquiries.</p>
+        <span class="price">Available</span><br>
+        <span class="tag">Open</span>
+        <button>Request Support</button>
+      </div>
+    </div>
+
+    <div class="service locked">
+      <div class="photo">🔒</div>
+      <div class="info">
+        <h3>More Services Locked</h3>
+        <p>Unlock unlimited wellness and appointment modules.</p>
+        <span class="price">Upgrade</span><br>
+        <span class="tag">Trial limit</span>
+        <button>Unlock Services</button>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-head" id="appointments">
+    <div>
+      <h2>Appointments & wellness support</h2>
+      <p>Built for clinics, pharmacies, wellness centres, gyms and healthcare providers.</p>
+    </div>
+  </div>
+
+  <section class="grid2">
+
+    <div class="panel">
+      <h2>Appointment types</h2>
+      <p>Patients can request different kinds of support.</p>
+
+      <div class="rows">
+        <div class="row"><span>Consultation request</span><b>Ready</b></div>
+        <div class="row"><span>Follow-up booking</span><b>Ready</b></div>
+        <div class="row"><span>Wellness plan</span><b>Ready</b></div>
+        <div class="row"><span>Prescription enquiry</span><b>Ready</b></div>
+      </div>
+    </div>
+
+    <div class="panel light" id="wellness">
+      <h2>Patient & wellness tools</h2>
+      <p>Preview wellness support and client care features.</p>
+
+      <div class="rows">
+        <div class="row"><span>Appointment reminders</span><b>Ready</b></div>
+        <div class="row"><span>Wellness programs</span><b>Ready</b></div>
+        <div class="row"><span>Patient records</span><b>Paid plan</b></div>
+        <div class="row"><span>Medical statements</span><b>Paid plan</b></div>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-head" id="admin">
+    <div>
+      <h2>Health admin system preview</h2>
+      <p>These features are prepared for the healthcare dashboard.</p>
+    </div>
+  </div>
+
+  <section class="tools">
+
+    <div class="tool">
+      <b>📅 Appointment manager</b>
+      <p>Manage patient visits, wellness bookings and consultation schedules.</p>
+    </div>
+
+    <div class="tool">
+      <b>🩺 Service manager</b>
+      <p>Add clinic services, wellness programs, consultation pricing and support options.</p>
+    </div>
+
+    <div class="tool">
+      <b>💊 Pharmacy support</b>
+      <p>Track enquiries, medication requests and prescription information.</p>
+    </div>
+
+    <div class="tool">
+      <b>🧾 Invoices & receipts</b>
+      <p>Create consultation invoices, receipts and treatment quotations.</p>
+    </div>
+
+    <div class="tool">
+      <b>👥 Patient communication</b>
+      <p>Patients can send enquiries and receive appointment updates.</p>
+    </div>
+
+    <div class="tool">
+      <b>📊 Reports</b>
+      <p>Appointments, patient activity, unpaid balances and wellness performance.</p>
+    </div>
+
+  </section>
+
+</main>
+
+<div class="booking" id="bookingBox">
+  <h3>🏥 Appointment preview</h3>
+
+  <div class="booking-line">
+    <span>Consultation</span>
+    <b>N$350</b>
+  </div>
+
+  <div class="booking-line">
+    <span>Wellness support</span>
+    <b>N$120</b>
+  </div>
+
+  <div class="booking-line">
+    <span>Booking fee</span>
+    <b>N$30</b>
+  </div>
+
+  <div class="total">Estimate: N$500</div>
+
+  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">
+    Send Appointment Request
+  </a>
+</div>
+
+<footer>
+  <b>{{ business.business_name }}</b><br>
+  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
+  Health website powered by VibeHost
+</footer>
+
+</body>
+</html>

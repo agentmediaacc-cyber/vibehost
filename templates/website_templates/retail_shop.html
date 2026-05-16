@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ business.business_name }} | Online Shop</title>
+
+  <style>
+    :root{
+      --primary: {{ site.primary_color if site and site.primary_color else '#111827' }};
+      --accent: {{ site.accent_color if site and site.accent_color else '#f59e0b' }};
+      --bg: {{ site.background_color if site and site.background_color else '#f8fafc' }};
+      --text: {{ site.text_color if site and site.text_color else '#111827' }};
+      --font: {{ site.font_family if site and site.font_family else 'Inter, Arial, sans-serif' }};
+      --card: #ffffff;
+      --muted: #64748b;
+      --radius: 22px;
+      --shadow: 0 20px 50px rgba(15,23,42,.12);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .hero{
+      min-height:78vh;
+      padding:24px;
+      background:
+        linear-gradient(135deg, rgba(15,23,42,.88), rgba(15,23,42,.45)),
+        url("{{ site.background_image_url if site and site.background_image_url else 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1800&q=80' }}");
+      background-size:cover;
+      background-position:center;
+      color:white;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 18px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .brand{
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.04em;
+    }
+
+    .nav-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .pill,.cart-btn{
+      border:0;
+      cursor:pointer;
+      border-radius:999px;
+      padding:11px 16px;
+      font-weight:800;
+      background:white;
+      color:#111827;
+      text-decoration:none;
+    }
+
+    .cart-btn{
+      background:var(--accent);
+      color:#111827;
+    }
+
+    .hero-grid{
+      max-width:1180px;
+      width:100%;
+      margin:auto;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:26px;
+      align-items:center;
+      padding:70px 0 30px;
+    }
+
+    .hero h1{
+      font-size:clamp(42px,7vw,82px);
+      line-height:.92;
+      margin:0 0 18px;
+      letter-spacing:-.08em;
+    }
+
+    .hero p{
+      max-width:650px;
+      font-size:18px;
+      line-height:1.7;
+      color:#e5e7eb;
+    }
+
+    .hero-card{
+      background:rgba(255,255,255,.13);
+      border:1px solid rgba(255,255,255,.2);
+      border-radius:32px;
+      padding:24px;
+      backdrop-filter:blur(20px);
+      box-shadow:var(--shadow);
+    }
+
+    .search-box{
+      display:flex;
+      gap:10px;
+      background:white;
+      padding:10px;
+      border-radius:999px;
+      margin-top:24px;
+      max-width:620px;
+    }
+
+    .search-box input{
+      flex:1;
+      border:0;
+      outline:0;
+      padding:12px 16px;
+      font-size:15px;
+    }
+
+    .search-box button,.primary-btn{
+      border:0;
+      border-radius:999px;
+      padding:13px 20px;
+      background:var(--accent);
+      font-weight:900;
+      cursor:pointer;
+      color:#111827;
+      text-decoration:none;
+      display:inline-block;
+    }
+
+    .section{
+      max-width:1180px;
+      margin:0 auto;
+      padding:54px 18px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:end;
+      margin-bottom:22px;
+    }
+
+    .section h2{
+      font-size:34px;
+      margin:0;
+      letter-spacing:-.05em;
+    }
+
+    .categories{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom:10px;
+    }
+
+    .cat-btn{
+      border:1px solid #e5e7eb;
+      background:white;
+      border-radius:999px;
+      padding:12px 18px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    .cat-btn.active{
+      background:var(--primary);
+      color:white;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+    }
+
+    .product{
+      background:var(--card);
+      border-radius:var(--radius);
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(15,23,42,.08);
+      border:1px solid #eef2f7;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .product-img{
+      height:210px;
+      background:#e5e7eb;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .product-img img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .badge{
+      position:absolute;
+      top:12px;
+      left:12px;
+      background:var(--accent);
+      color:#111827;
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .product-body{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex:1;
+    }
+
+    .product h3{
+      margin:0;
+      font-size:17px;
+    }
+
+    .price{
+      font-size:20px;
+      font-weight:950;
+      color:var(--primary);
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .product-actions{
+      margin-top:auto;
+      display:grid;
+      grid-template-columns:1fr 44px;
+      gap:8px;
+    }
+
+    .add-btn,.report-btn{
+      border:0;
+      border-radius:14px;
+      padding:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .add-btn{
+      background:var(--primary);
+      color:white;
+    }
+
+    .report-btn{
+      background:#fee2e2;
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+    }
+
+    .feature{
+      background:white;
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 10px 30px rgba(15,23,42,.07);
+    }
+
+    .banner{
+      background:
+        linear-gradient(135deg, rgba(17,24,39,.9), rgba(17,24,39,.6)),
+        url("{{ site.banner_image_url if site and site.banner_image_url else 'https://images.unsplash.com/photo-1607082349566-187342175e2f?auto=format&fit=crop&w=1600&q=80' }}");
+      background-size:cover;
+      background-position:center;
+      border-radius:32px;
+      padding:42px;
+      color:white;
+      box-shadow:var(--shadow);
+    }
+
+    .cart-drawer{
+      position:fixed;
+      right:-430px;
+      top:0;
+      width:410px;
+      max-width:94vw;
+      height:100vh;
+      background:white;
+      z-index:50;
+      box-shadow:-20px 0 60px rgba(0,0,0,.22);
+      transition:.3s;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .cart-drawer.open{right:0}
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.45);
+      z-index:40;
+      display:none;
+    }
+
+    .overlay.show{display:block}
+
+    .cart-item{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:14px 0;
+      border-bottom:1px solid #e5e7eb;
+    }
+
+    .checkout-box{
+      margin-top:auto;
+      display:grid;
+      gap:10px;
+    }
+
+    .checkout-box input,.checkout-box select,.checkout-box textarea{
+      width:100%;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:12px;
+      font-family:inherit;
+    }
+
+    footer{
+      background:#0f172a;
+      color:white;
+      padding:36px 18px;
+      margin-top:40px;
+    }
+
+    .footer-inner{
+      max-width:1180px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr;
+      gap:24px;
+    }
+
+    @media(max-width:900px){
+      .hero-grid,.grid,.features,.footer-inner{
+        grid-template-columns:1fr;
+      }
+      .nav{
+        border-radius:22px;
+        align-items:flex-start;
+      }
+      .hero{
+        padding:14px;
+      }
+      .product-img{
+        height:240px;
+      }
+      .section-head{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="overlay" id="overlay" onclick="toggleCart(false)"></div>
+
+<div class="cart-drawer" id="cartDrawer">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Your Cart</h2>
+    <button class="pill" onclick="toggleCart(false)">Close</button>
+  </div>
+
+  <div id="cartItems"></div>
+
+  <div class="checkout-box">
+    <strong>Total: N$ <span id="cartTotal">0.00</span></strong>
+
+    <input id="customerName" placeholder="Your full name">
+    <input id="customerPhone" placeholder="Phone / WhatsApp number">
+    <select id="deliveryType">
+      <option value="Delivery">Delivery</option>
+      <option value="Pickup">Pickup from shop</option>
+      <option value="Courier">Courier / parcel delivery</option>
+    </select>
+    <textarea id="customerAddress" placeholder="Delivery address or notes"></textarea>
+
+    <button class="primary-btn" onclick="sendOrder()">Send Order on WhatsApp</button>
+    <button class="pill" onclick="clearCart()">Clear Cart</button>
+  </div>
+</div>
+
+<header class="hero">
+  <nav class="nav">
+    <div class="brand">{{ business.business_name }}</div>
+
+    <div class="nav-actions">
+      <a class="pill" href="#products">Products</a>
+      <a class="pill" href="#delivery">Delivery</a>
+      <button class="cart-btn" onclick="toggleCart(true)">🛒 Cart <span id="cartCount">0</span></button>
+    </div>
+  </nav>
+
+  <div class="hero-grid">
+    <div>
+      <h1>{{ site.hero_title if site and site.hero_title else business.business_name }}</h1>
+      <p>
+        {{ site.hero_subtitle if site and site.hero_subtitle else business.description }}
+      </p>
+
+      <div class="search-box">
+        <input id="searchInput" onkeyup="filterProducts()" placeholder="Search products, categories, brands...">
+        <button onclick="filterProducts()">Search</button>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <h2 style="margin-top:0">Premium Online Store</h2>
+      <p>Shop products, add to cart, choose delivery, and send orders directly to the owner.</p>
+      <p><strong>Open:</strong> {{ site.opening_hours if site and site.opening_hours else 'Mon - Sat, 08:00 - 18:00' }}</p>
+      <p><strong>Contact:</strong> {{ business.phone if business.phone else 'Add phone number' }}</p>
+      <a class="primary-btn" href="#products">Start Shopping</a>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <div class="features">
+    <div class="feature">🚚 <h3>Delivery</h3><p class="muted">Local delivery, pickup, and courier options.</p></div>
+    <div class="feature">🛒 <h3>Smart Cart</h3><p class="muted">Customers can add products and send full orders.</p></div>
+    <div class="feature">🎁 <h3>Promotions</h3><p class="muted">Highlight specials, discounts, and new arrivals.</p></div>
+    <div class="feature">🛡️ <h3>Report Product</h3><p class="muted">Customers can report wrong, expired, or unavailable products.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="banner">
+    <h2>{{ site.banner_title if site and site.banner_title else 'Today’s Featured Deals' }}</h2>
+    <p>{{ site.banner_text if site and site.banner_text else 'Update this banner anytime with your own promotion, wallpaper, colours and message.' }}</p>
+    <a class="primary-btn" href="#products">View Deals</a>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="section-head">
+    <div>
+      <h2>Shop Products</h2>
+      <p class="muted">Browse products by category and add items to cart.</p>
+    </div>
+  </div>
+
+  <div class="categories">
+    <button class="cat-btn active" onclick="setCategory('all', this)">All</button>
+    <button class="cat-btn" onclick="setCategory('Groceries', this)">Groceries</button>
+    <button class="cat-btn" onclick="setCategory('Fashion', this)">Fashion</button>
+    <button class="cat-btn" onclick="setCategory('Electronics', this)">Electronics</button>
+    <button class="cat-btn" onclick="setCategory('Beauty', this)">Beauty</button>
+    <button class="cat-btn" onclick="setCategory('Home', this)">Home</button>
+  </div>
+
+  <div class="grid" id="productGrid">
+
+    {% if products %}
+      {% for product in products %}
+      <div class="product"
+           data-name="{{ product.name }}"
+           data-category="{{ product.category if product.category else 'General' }}"
+           data-price="{{ product.price if product.price else 0 }}">
+        <div class="product-img">
+          <img src="{{ product.image_url if product.image_url else 'https://images.unsplash.com/photo-1607083206968-13611e3d76db?auto=format&fit=crop&w=900&q=80' }}" alt="{{ product.name }}">
+          <span class="badge">{{ product.badge if product.badge else 'Available' }}</span>
+        </div>
+        <div class="product-body">
+          <h3>{{ product.name }}</h3>
+          <p class="muted">{{ product.description if product.description else 'Quality product available from this shop.' }}</p>
+          <div class="price">N$ {{ product.price if product.price else '0.00' }}</div>
+          <div class="product-actions">
+            <button class="add-btn" onclick="addToCart('{{ product.name }}', {{ product.price if product.price else 0 }})">Add to Cart</button>
+            <button class="report-btn" onclick="reportProduct('{{ product.name }}')">⚠️</button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+
+      <div class="product" data-name="Premium Grocery Pack" data-category="Groceries" data-price="299">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80">
+          <span class="badge">Best Seller</span>
+        </div>
+        <div class="product-body">
+          <h3>Premium Grocery Pack</h3>
+          <p class="muted">Daily home essentials packed for quick delivery.</p>
+          <div class="price">N$ 299.00</div>
+          <div class="product-actions">
+            <button class="add-btn" onclick="addToCart('Premium Grocery Pack',299)">Add to Cart</button>
+            <button class="report-btn" onclick="reportProduct('Premium Grocery Pack')">⚠️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product" data-name="Fashion Outfit Set" data-category="Fashion" data-price="450">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=900&q=80">
+          <span class="badge">New</span>
+        </div>
+        <div class="product-body">
+          <h3>Fashion Outfit Set</h3>
+          <p class="muted">Stylish clothing item for everyday wear.</p>
+          <div class="price">N$ 450.00</div>
+          <div class="product-actions">
+            <button class="add-btn" onclick="addToCart('Fashion Outfit Set',450)">Add to Cart</button>
+            <button class="report-btn" onclick="reportProduct('Fashion Outfit Set')">⚠️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product" data-name="Wireless Headphones" data-category="Electronics" data-price="699">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80">
+          <span class="badge">Hot</span>
+        </div>
+        <div class="product-body">
+          <h3>Wireless Headphones</h3>
+          <p class="muted">Clear sound, modern design, and long battery life.</p>
+          <div class="price">N$ 699.00</div>
+          <div class="product-actions">
+            <button class="add-btn" onclick="addToCart('Wireless Headphones',699)">Add to Cart</button>
+            <button class="report-btn" onclick="reportProduct('Wireless Headphones')">⚠️</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="product" data-name="Beauty Care Kit" data-category="Beauty" data-price="380">
+        <div class="product-img">
+          <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80">
+          <span class="badge">Promo</span>
+        </div>
+        <div class="product-body">
+          <h3>Beauty Care Kit</h3>
+          <p class="muted">Personal care and beauty essentials.</p>
+          <div class="price">N$ 380.00</div>
+          <div class="product-actions">
+            <button class="add-btn" onclick="addToCart('Beauty Care Kit',380)">Add to Cart</button>
+            <button class="report-btn" onclick="reportProduct('Beauty Care Kit')">⚠️</button>
+          </div>
+        </div>
+      </div>
+
+    {% endif %}
+  </div>
+</section>
+
+<section class="section" id="delivery">
+  <div class="section-head">
+    <div>
+      <h2>Delivery & Customer Support</h2>
+      <p class="muted">Customers can choose pickup, local delivery, or courier delivery.</p>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feature">📍 <h3>Pickup</h3><p class="muted">Customer collects from your shop location.</p></div>
+    <div class="feature">🏍️ <h3>Local Delivery</h3><p class="muted">Deliver within town or selected areas.</p></div>
+    <div class="feature">📦 <h3>Courier</h3><p class="muted">Send products to other towns or regions.</p></div>
+    <div class="feature">💬 <h3>WhatsApp Orders</h3><p class="muted">Orders are sent directly with customer details.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <h2>{{ business.business_name }}</h2>
+      <p>{{ business.description }}</p>
+    </div>
+    <div>
+      <h3>Shop</h3>
+      <p>Products</p>
+      <p>Categories</p>
+      <p>Promotions</p>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <p>{{ business.phone if business.phone else 'Phone not added' }}</p>
+      <p>{{ business.email if business.email else 'Email not added' }}</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  let cart = [];
+  let activeCategory = "all";
+
+  function toggleCart(show){
+    document.getElementById("cartDrawer").classList.toggle("open", show);
+    document.getElementById("overlay").classList.toggle("show", show);
+  }
+
+  function addToCart(name, price){
+    const existing = cart.find(item => item.name === name);
+    if(existing){
+      existing.qty += 1;
+    }else{
+      cart.push({name, price:Number(price), qty:1});
+    }
+    renderCart();
+    toggleCart(true);
+  }
+
+  function renderCart(){
+    const box = document.getElementById("cartItems");
+    const count = document.getElementById("cartCount");
+    const total = document.getElementById("cartTotal");
+
+    box.innerHTML = "";
+    let sum = 0;
+    let qty = 0;
+
+    cart.forEach((item, index) => {
+      sum += item.price * item.qty;
+      qty += item.qty;
+      box.innerHTML += `
+        <div class="cart-item">
+          <div>
+            <strong>${item.name}</strong><br>
+            <small>N$ ${item.price.toFixed(2)} x ${item.qty}</small>
+          </div>
+          <div>
+            <button onclick="changeQty(${index},1)">+</button>
+            <button onclick="changeQty(${index},-1)">-</button>
+          </div>
+        </div>
+      `;
+    });
+
+    count.innerText = qty;
+    total.innerText = sum.toFixed(2);
+  }
+
+  function changeQty(index, amount){
+    cart[index].qty += amount;
+    if(cart[index].qty <= 0){
+      cart.splice(index,1);
+    }
+    renderCart();
+  }
+
+  function clearCart(){
+    cart = [];
+    renderCart();
+  }
+
+  function setCategory(category, btn){
+    activeCategory = category;
+    document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filterProducts();
+  }
+
+  function filterProducts(){
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll(".product").forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      const category = card.dataset.category;
+      const matchSearch = name.includes(search) || category.toLowerCase().includes(search);
+      const matchCategory = activeCategory === "all" || category === activeCategory;
+      card.style.display = matchSearch && matchCategory ? "flex" : "none";
+    });
+  }
+
+  function sendOrder(){
+    if(cart.length === 0){
+      alert("Cart is empty.");
+      return;
+    }
+
+    const name = document.getElementById("customerName").value || "Customer";
+    const phone = document.getElementById("customerPhone").value || "Not provided";
+    const delivery = document.getElementById("deliveryType").value;
+    const address = document.getElementById("customerAddress").value || "Not provided";
+
+    let message = `New order from {{ business.business_name }}%0A%0A`;
+    message += `Customer: ${name}%0APhone: ${phone}%0ADelivery: ${delivery}%0AAddress/Notes: ${address}%0A%0AItems:%0A`;
+
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.qty;
+      message += `- ${item.name} x ${item.qty} = N$ ${(item.price * item.qty).toFixed(2)}%0A`;
+    });
+
+    message += `%0ATotal: N$ ${total.toFixed(2)}`;
+
+    const ownerPhone = "{{ business.phone if business.phone else '' }}".replace(/\D/g,'');
+    if(ownerPhone){
+      window.open(`https://wa.me/${ownerPhone}?text=${message}`, "_blank");
+    }else{
+      alert("Shop owner WhatsApp number is not added yet.");
+    }
+  }
+
+  function reportProduct(productName){
+    const reason = prompt("Why are you reporting this product? Example: wrong price, unavailable, expired, wrong image.");
+    if(!reason) return;
+
+    const ownerPhone = "{{ business.phone if business.phone else '' }}".replace(/\D/g,'');
+    const message = `Product report for {{ business.business_name }}%0AProduct: ${productName}%0AReason: ${reason}`;
+
+    if(ownerPhone){
+      window.open(`https://wa.me/${ownerPhone}?text=${message}`, "_blank");
+    }else{
+      alert("Report saved locally. Add owner phone to send reports by WhatsApp.");
+    }
+  }
+</script>
+
+</body>
+</html>

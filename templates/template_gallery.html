@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Templates | VibeHost</title>
+  <style>
+    :root{
+      --bg:#f4efe7;
+      --ink:#1d1c1a;
+      --muted:#6b665f;
+      --card:#fffdf8;
+      --line:#ddd4c6;
+      --gold:#b8860b;
+      --olive:#31473a;
+      --sand:#efe5d3;
+      --shadow:0 20px 60px rgba(29,28,26,.10);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(180deg,#f7f1e8 0%,#efe6d6 100%);color:var(--ink)}
+    a{text-decoration:none;color:inherit}
+    .shell{max-width:1260px;margin:0 auto;padding:24px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#1f2c24,#31473a 55%,#6f5a2a);color:#f8f4ec;border-radius:36px;padding:32px;box-shadow:var(--shadow)}
+    .hero:before,.hero:after{content:"";position:absolute;border-radius:999px;opacity:.18;pointer-events:none}
+    .hero:before{width:320px;height:320px;background:#f8e6b5;top:-80px;right:-40px}
+    .hero:after{width:240px;height:240px;background:#d9c08a;bottom:-90px;left:-40px}
+    .topline{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;position:relative;z-index:1}
+    .brand{font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:#e8d8b0}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);font-size:13px}
+    h1{font-size:clamp(42px,7vw,86px);line-height:.92;letter-spacing:-.06em;margin:28px 0 18px;max-width:760px;position:relative;z-index:1}
+    .hero-copy{max-width:680px;font-size:18px;line-height:1.7;color:#eee6d6;position:relative;z-index:1}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;position:relative;z-index:1}
+    .hero-actions a{padding:15px 20px;border-radius:999px;font-weight:700}
+    .hero-actions .primary{background:#f4ddb0;color:#1d1c1a}
+    .hero-actions .secondary{background:transparent;color:#f8f4ec;border:1px solid rgba(255,255,255,.22)}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 28px}
+    .summary-card{background:rgba(255,255,255,.78);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.7);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+    .summary-card b{display:block;font-size:28px;margin-bottom:8px}
+    .summary-card span{color:var(--muted);line-height:1.5}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin:18px 0}
+    .section-head h2{margin:0;font-size:34px;letter-spacing:-.04em}
+    .section-head p{margin:0;color:var(--muted);max-width:560px;line-height:1.6}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:30px;padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:100%}
+    .art{height:180px;border-radius:22px;margin-bottom:18px;padding:18px;display:flex;align-items:flex-end;font-size:14px;font-weight:700;color:#fff;overflow:hidden;position:relative}
+    .art:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.34))}
+    .art span{position:relative;z-index:1}
+    .art.retail{background:linear-gradient(135deg,#14213d,#fca311)}
+    .art.restaurant{background:linear-gradient(135deg,#7c2d12,#fb923c)}
+    .art.transport{background:linear-gradient(135deg,#0f172a,#0ea5e9)}
+    .art.guesthouse{background:linear-gradient(135deg,#1f2937,#84cc16)}
+    .art.salon{background:linear-gradient(135deg,#581c87,#ec4899)}
+    .art.school{background:linear-gradient(135deg,#1d4ed8,#facc15)}
+    .art.health{background:linear-gradient(135deg,#14532d,#22c55e)}
+    .art.construction{background:linear-gradient(135deg,#292524,#f59e0b)}
+    .art.cleaning{background:linear-gradient(135deg,#0f766e,#2dd4bf)}
+    .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+    .card h3{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}
+    .card p{margin:0;color:var(--muted);line-height:1.65;flex:1}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+    .actions a{display:flex;align-items:center;justify-content:center;padding:14px 16px;border-radius:16px;font-weight:700}
+    .actions .preview{background:#1d1c1a;color:#fff}
+    .actions .choose{background:var(--sand);color:#1d1c1a;border:1px solid #dbc9a8}
+    .footnote{margin:28px auto 0;max-width:780px;text-align:center;color:var(--muted);line-height:1.7}
+    @media(max-width:1080px){.grid,.summary{grid-template-columns:1fr 1fr}}
+    @media(max-width:760px){
+      .shell{padding:16px}
+      .hero{padding:22px;border-radius:28px}
+      .topline,.section-head{display:block}
+      .summary,.grid,.actions{grid-template-columns:1fr}
+      h1{font-size:44px}
+      .section-head p{margin-top:10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="topline">
+        <div class="brand">VibeHost Website Builder</div>
+        <div class="pill">Real full templates. Real subdomains. Real saved businesses.</div>
+      </div>
+      <h1>Preview the full website before you create it.</h1>
+      <p class="hero-copy">
+        Browse the actual business templates stored in VibeHost, open each one in full preview mode, then choose the design you want to turn into a live Namvibe subdomain for your business.
+      </p>
+      <div class="hero-actions">
+        <a class="primary" href="#templates">Browse Templates</a>
+        <a class="secondary" href="/">Back Home</a>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="summary-card">
+        <b>1</b>
+        <span>Open a real full-screen preview for any template.</span>
+      </div>
+      <div class="summary-card">
+        <b>2</b>
+        <span>Choose the design that matches the business category.</span>
+      </div>
+      <div class="summary-card">
+        <b>3</b>
+        <span>Create a saved live website and dashboard backed by Neon.</span>
+      </div>
+    </section>
+
+    <div class="section-head" id="templates">
+      <div>
+        <h2>Premium Template Gallery</h2>
+      </div>
+      <p>Each card links to the full preview route and directly into the real create flow. No demo dashboard redirect after save.</p>
+    </div>
+
+    <section class="grid">
+      {% for t in templates %}
+      <article class="card">
+        <div class="art {% if t.slug == 'retail-shop' %}retail{% elif t.slug == 'restaurant-food' %}restaurant{% elif t.slug == 'transport-shuttle' %}transport{% elif t.slug == 'guesthouse-lodge' %}guesthouse{% elif t.slug == 'salon-beauty' %}salon{% elif t.slug == 'school-education' %}school{% elif t.slug == 'health-wellness' %}health{% elif t.slug == 'construction' %}construction{% elif t.slug == 'cleaning-services' %}cleaning{% else %}retail{% endif %}">
+          <span>{{ t.category|default("business")|replace("-", " ")|title }}</span>
+        </div>
+        <div class="eyebrow">Template</div>
+        <h3>{{ t.name }}</h3>
+        <p>{{ t.description }}</p>
+        <div class="actions">
+          <a class="preview" href="/templates/preview/{{ t.slug }}" target="_blank">Preview</a>
+          <a class="choose" href="/builder/create/{{ t.slug }}">Choose This</a>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <p class="footnote">
+      Template previews use demo content only on the preview route. The create flow saves a real business profile, site record and subscription, then sends the owner to the created dashboard for that exact business.
+    </p>
+  </div>
+</body>
+</html>

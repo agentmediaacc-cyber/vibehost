@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ business.business_name }} | Transport & Shuttle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#eff6ff;color:#0f172a}
+    a{text-decoration:none}
+    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #bfdbfe}
+    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
+    .logo{width:48px;height:48px;border-radius:18px;background:#0f172a;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
+    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
+    .book-btn{background:#2563eb;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
+    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .hero-main{min-height:440px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#38bdf8,transparent 28%),linear-gradient(135deg,#0f172a,#1d4ed8);color:white;display:flex;flex-direction:column;justify-content:center}
+    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
+    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
+    .hero p{font-size:18px;color:#dbeafe;line-height:1.6;max-width:660px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
+    .primary{background:#facc15;color:#111827}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
+    .side{display:grid;gap:18px}
+    .card{border-radius:30px;padding:24px;background:white;border:1px solid #bfdbfe;box-shadow:0 18px 50px rgba(30,64,175,.12)}
+    .card.dark{background:#0f172a;color:white}
+    .card h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.card p{color:#475569}.card.dark p{color:#cbd5e1}
+    .wrap{max-width:1180px;margin:auto;padding:18px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
+    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#475569;margin:6px 0 0}
+    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .cat{background:white;border:1px solid #bfdbfe;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(30,64,175,.07)}
+    .cat span{display:block;font-size:30px;margin-bottom:8px}
+    .routes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .route{background:white;border:1px solid #bfdbfe;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(30,64,175,.09)}
+    .map{height:190px;background:linear-gradient(135deg,#dbeafe,#e0f2fe);display:flex;align-items:center;justify-content:center;font-size:54px}
+    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#475569;line-height:1.45}
+    .price{font-size:23px;font-weight:1000;color:#1d4ed8}.tag{display:inline-block;margin:10px 0;background:#dcfce7;color:#166534;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
+    .route button{width:100%;border:0;background:#2563eb;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
+    .locked{opacity:.58;filter:grayscale(.5)}
+    .booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel{background:#0f172a;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#0f172a;border:1px solid #bfdbfe}
+    .panel p{color:#cbd5e1}.panel.light p{color:#475569}
+    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#eff6ff}
+    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .tool{background:white;border:1px solid #bfdbfe;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(30,64,175,.08)}
+    .tool b{font-size:18px}.tool p{color:#475569;line-height:1.55}
+    .quote{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100vw - 36px);background:white;border:1px solid #bfdbfe;border-radius:28px;box-shadow:0 28px 80px rgba(30,64,175,.25);padding:18px;z-index:30}
+    .quote h3{margin:0 0 10px}.quote-line{display:flex;justify-content:space-between;border-bottom:1px solid #bfdbfe;padding:10px 0;color:#475569}
+    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#1d4ed8}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
+    footer{text-align:center;padding:38px 18px;color:#475569}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.routes{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.booking-grid{grid-template-columns:1fr}.navlinks{display:none}}
+    @media(max-width:560px){.routes,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.quote{position:static;width:auto;margin:18px}.section-head{display:block}}
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <div class="nav">
+    <div class="brand">
+      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}🚐{% endif %}</div>
+      <div>{{ business.business_name }}</div>
+    </div>
+    <nav class="navlinks">
+      <a href="#routes">Routes</a>
+      <a href="#fleet">Fleet</a>
+      <a href="#booking">Booking</a>
+      <a href="#admin">Admin Tools</a>
+    </nav>
+    <a class="book-btn" href="#quote">🚐 Book Ride</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-main">
+    <div class="badge">Transport & Shuttle • {{ business.town or "Windhoek" }}</div>
+    <h1>{{ business.business_name }}</h1>
+    <p>{{ business.description or "Reliable shuttle bookings, airport transfers, school transport, tour trips, parcel delivery and real-time quote requests." }}</p>
+    <div class="btns">
+      <a class="btn primary" href="#routes">🛣️ View Routes</a>
+      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 WhatsApp Booking</a>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="card dark">
+      <h3>Airport transfer</h3>
+      <p>Show popular pickup/drop-off routes, driver contact and booking status.</p>
+      <b>From N$250</b>
+    </div>
+    <div class="card">
+      <h3>Smart quote request</h3>
+      <p>Customers can request once-off rides, return trips, school transport or monthly shuttle plans.</p>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="section-head">
+    <div>
+      <h2>Transport categories</h2>
+      <p>Make it easy for customers to choose the right trip type.</p>
+    </div>
+  </div>
+
+  <div class="categories">
+    <div class="cat"><span>✈️</span>Airport</div>
+    <div class="cat"><span>🚐</span>Shuttle</div>
+    <div class="cat"><span>🎒</span>School</div>
+    <div class="cat"><span>🏜️</span>Tours</div>
+    <div class="cat"><span>📦</span>Parcel</div>
+    <div class="cat"><span>👔</span>Corporate</div>
+  </div>
+
+  <div class="section-head" id="routes">
+    <div>
+      <h2>Popular routes</h2>
+      <p>Free trial shows 3 route cards. Upgrade unlocks route pricing, live maps and driver dashboard.</p>
+    </div>
+  </div>
+
+  <section class="routes">
+    <div class="route">
+      <div class="map">✈️</div>
+      <div class="info">
+        <h3>Airport Transfer</h3>
+        <p>Town to airport pickup and drop-off.</p>
+        <span class="price">From N$250</span><br>
+        <span class="tag">Available today</span>
+        <button>Book Transfer</button>
+      </div>
+    </div>
+
+    <div class="route">
+      <div class="map">🚐</div>
+      <div class="info">
+        <h3>Town Shuttle</h3>
+        <p>Local rides and scheduled shuttle routes.</p>
+        <span class="price">From N$80</span><br>
+        <span class="tag">Popular</span>
+        <button>Request Ride</button>
+      </div>
+    </div>
+
+    <div class="route">
+      <div class="map">🎒</div>
+      <div class="info">
+        <h3>School Transport</h3>
+        <p>Monthly student pickup plans.</p>
+        <span class="price">Monthly</span><br>
+        <span class="tag">Plan available</span>
+        <button>Request Plan</button>
+      </div>
+    </div>
+
+    <div class="route locked">
+      <div class="map">🔒</div>
+      <div class="info">
+        <h3>More Routes Locked</h3>
+        <p>Unlock unlimited routes and live pricing.</p>
+        <span class="price">Upgrade</span><br>
+        <span class="tag">Trial limit</span>
+        <button>Unlock Routes</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head" id="booking">
+    <div>
+      <h2>Booking, quote & trip flow</h2>
+      <p>Built for shuttle companies, taxis, airport transfers, delivery and tour transport.</p>
+    </div>
+  </div>
+
+  <section class="booking-grid">
+    <div class="panel">
+      <h2>Trip types</h2>
+      <p>Customers choose the type of transport they need.</p>
+      <div class="rows">
+        <div class="row"><span>Once-off ride</span><b>Ready</b></div>
+        <div class="row"><span>Return trip</span><b>Ready</b></div>
+        <div class="row"><span>Monthly school plan</span><b>Ready</b></div>
+        <div class="row"><span>Tour transfer quote</span><b>Ready</b></div>
+      </div>
+    </div>
+
+    <div class="panel light" id="fleet">
+      <h2>Fleet & driver preview</h2>
+      <p>Business owners can show available vehicles, driver status and trip availability.</p>
+      <div class="rows">
+        <div class="row"><span>Sedan</span><b>1–3 pax</b></div>
+        <div class="row"><span>Minibus</span><b>4–14 pax</b></div>
+        <div class="row"><span>Tour van</span><b>Group trips</b></div>
+        <div class="row"><span>Parcel vehicle</span><b>Delivery</b></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-head" id="admin">
+    <div>
+      <h2>Transport admin system preview</h2>
+      <p>These features are prepared for the business owner dashboard.</p>
+    </div>
+  </div>
+
+  <section class="tools">
+    <div class="tool"><b>🗺️ Route pricing</b><p>Add pickup/drop-off routes, fixed prices, per-km rules and custom quotes.</p></div>
+    <div class="tool"><b>🚐 Fleet manager</b><p>Add vehicles, seats, plate numbers, availability and service status.</p></div>
+    <div class="tool"><b>👨‍✈️ Driver dashboard</b><p>Assign drivers, update trip status and track completed rides.</p></div>
+    <div class="tool"><b>🧾 Invoices & quotes</b><p>Create transport quotations, booking invoices and monthly plan invoices.</p></div>
+    <div class="tool"><b>📦 Parcel delivery</b><p>Track sender, receiver, delivery notes and proof of delivery.</p></div>
+    <div class="tool"><b>📊 Reports</b><p>Trip totals, driver payouts, revenue, pending payments and route performance.</p></div>
+  </section>
+</main>
+
+<div class="quote" id="quote">
+  <h3>🚐 Trip quote preview</h3>
+  <div class="quote-line"><span>Airport Transfer</span><b>N$250</b></div>
+  <div class="quote-line"><span>Return option</span><b>N$200</b></div>
+  <div class="quote-line"><span>Booking fee</span><b>N$20</b></div>
+  <div class="total">Estimate: N$470</div>
+  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Send Booking Request</a>
+</div>
+
+<footer>
+  <b>{{ business.business_name }}</b><br>
+  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
+  Transport website powered by VibeHost
+</footer>
+
+</body>
+</html>

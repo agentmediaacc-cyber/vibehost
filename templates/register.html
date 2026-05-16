@@ -1,101 +1,204 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Register - VibeHost</title>
+  <title>VibeHost Website Builder</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/css/register.css">
+  <link rel="stylesheet" href="/static/css/live_builder.css">
 </head>
 <body>
-<div class="page">
-  <div class="card">
-    <div class="brand">VH</div>
-    <h1>Start your VibeHost trial</h1>
-    <p>Create your business website profile. Domain, email and full dashboard unlock after subscription.</p>
 
-    <div class="socials">
-      <a href="#" class="google">Continue with Google</a>
-      <a href="#" class="facebook">Continue with Facebook</a>
+<div class="builder-shell">
+
+  <aside class="builder-panel">
+    <div class="brand-row">
+      <div class="logo">VH</div>
+      <div>
+        <h1>Create your website</h1>
+        <p>Build a live business website in minutes.</p>
+      </div>
     </div>
 
-    <div class="divider">or register with email</div>
+    <div class="progress">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
 
     <form method="POST" enctype="multipart/form-data">
-      <label>Business name</label>
-      <input name="business_name" required placeholder="Example: Kasera Beauty Salon">
 
-      <label>Owner full name</label>
-      <input name="owner_name" required placeholder="Your full name">
+      <section class="step-card">
+        <span>Step 1</span>
+        <h2>Choose your website type</h2>
 
-      <label>Business category</label>
-      <select name="category" required>
-        <option value="">Choose category</option>
-        <option>Salon & Beauty</option>
-        <option>Restaurant & Food</option>
-        <option>Transport & Shuttle</option>
-        <option>Guesthouse & Accommodation</option>
-        <option>Construction</option>
-        <option>Cleaning Services</option>
-        <option>Retail Shop</option>
-        <option>Health & Wellness</option>
-        <option>Other Business</option>
-      </select>
-
-      <div class="grid">
-        <div>
-          <label>Region</label>
-          <select name="region" required>
-            <option value="">Choose region</option>
-            <option>Khomas</option>
-            <option>Erongo</option>
-            <option>Oshana</option>
-            <option>Ohangwena</option>
-            <option>Omusati</option>
-            <option>Oshikoto</option>
-            <option>Otjozondjupa</option>
-            <option>Kunene</option>
-            <option>Hardap</option>
-            <option>Karas</option>
-            <option>Kavango East</option>
-            <option>Kavango West</option>
-            <option>Zambezi</option>
-            <option>Omaheke</option>
-          </select>
+        <div class="template-grid">
+          {% for t in templates %}
+          <label class="template-option">
+            <input type="radio" name="template_slug" value="{{ t.slug }}" data-name="{{ t.name }}" {% if loop.first %}checked{% endif %}>
+            <b>{{ t.name }}</b>
+            <small>{{ t.description }}</small>
+          </label>
+          {% endfor %}
         </div>
-        <div>
-          <label>Town</label>
-          <input name="town" required placeholder="Windhoek">
+      </section>
+
+      <section class="step-card">
+        <span>Step 2</span>
+        <h2>Business details</h2>
+
+        <label>Business name</label>
+        <input name="business_name" id="businessName" required placeholder="Kasera Beauty Salon">
+
+        <label>Short description</label>
+        <textarea name="description" id="description" placeholder="Tell customers what your business does"></textarea>
+
+        <label>Category</label>
+        <select name="category" id="category">
+          <option>Retail Shop</option>
+          <option>Salon & Beauty</option>
+          <option>Restaurant & Food</option>
+          <option>Transport & Shuttle</option>
+          <option>Guesthouse & Accommodation</option>
+          <option>Construction</option>
+          <option>Cleaning Services</option>
+          <option>Health & Wellness</option>
+        </select>
+
+        <div class="two">
+          <div>
+            <label>Town</label>
+            <input name="town" id="town" placeholder="Windhoek">
+          </div>
+          <div>
+            <label>Region</label>
+            <select name="region" id="region">
+              <option>Khomas</option>
+              <option>Erongo</option>
+              <option>Oshana</option>
+              <option>Omaheke</option>
+              <option>Hardap</option>
+              <option>Karas</option>
+              <option>Zambezi</option>
+            </select>
+          </div>
         </div>
+
+        <label>Wanted subdomain</label>
+        <div class="domain-row">
+          <input name="subdomain" id="subdomain" placeholder="kaserashop">
+          <strong>.namvibe.com</strong>
+        </div>
+
+        <label>Email</label>
+        <input type="email" name="email" id="email" placeholder="info@business.com">
+
+        <label>Phone</label>
+        <input name="phone" id="phone" placeholder="+264">
+
+        <label>WhatsApp</label>
+        <input name="whatsapp" id="whatsapp" placeholder="0812613261">
+
+        <label>Business logo</label>
+        <input type="file" name="logo" id="logoInput" accept="image/*">
+      </section>
+
+      <section class="step-card">
+        <span>Step 3</span>
+        <h2>Design style</h2>
+
+        <div class="three">
+          <div>
+            <label>Main</label>
+            <input type="color" name="primary_color" id="primaryColor" value="#111827">
+          </div>
+          <div>
+            <label>Gold</label>
+            <input type="color" name="secondary_color" id="secondaryColor" value="#d4af37">
+          </div>
+          <div>
+            <label>Accent</label>
+            <input type="color" name="accent_color" id="accentColor" value="#ff6b6b">
+          </div>
+        </div>
+
+        <label>Font style</label>
+        <select name="font_style" id="fontStyle">
+          <option value="modern">Modern</option>
+          <option value="luxury">Luxury</option>
+          <option value="friendly">Friendly</option>
+        </select>
+
+        <label>Wallpaper style</label>
+        <select name="wallpaper_style" id="wallpaperStyle">
+          <option value="clean">Clean professional</option>
+          <option value="gradient">Gradient premium</option>
+          <option value="dark">Dark luxury</option>
+          <option value="soft">Soft light</option>
+        </select>
+      </section>
+
+      <section class="step-card">
+        <span>Step 4</span>
+        <h2>Website features</h2>
+
+        <div class="feature-list">
+          <label><input type="checkbox" name="show_services" id="showServices" checked> Services section</label>
+          <label><input type="checkbox" name="show_gallery" id="showGallery" checked> Gallery section <em>Free trial: 3 images</em></label>
+          <label><input type="checkbox" name="show_booking" id="showBooking" checked> Booking/contact form <em>Free trial: basic enquiry</em></label>
+          <label><input type="checkbox" name="show_whatsapp" id="showWhatsapp" checked> WhatsApp button</label>
+          <label class="locked"><input type="checkbox" disabled> Products / adverts <em>Upgrade to unlock more than 3 cards</em></label>
+          <label class="locked"><input type="checkbox" disabled> Custom domain <em>Paid plan only</em></label>
+          <label class="locked"><input type="checkbox" disabled> Business email <em>Paid plan only</em></label>
+        </div>
+
+        <button type="submit">Create My Live Website</button>
+      </section>
+
+    </form>
+  </aside>
+
+  <main class="preview-area">
+    <div class="preview-phone">
+      <div class="browser-bar">
+        <span></span><span></span><span></span>
+        <b id="liveDomain">yourbusiness.namvibe.com</b>
       </div>
 
-      <label>Email address</label>
-      <input type="email" name="email" required placeholder="info@business.com">
+      <section class="site-hero" id="siteHero">
+        <img id="previewLogo" class="preview-logo" style="display:none;">
+        <div class="badge" id="previewCategory">Retail Shop • Windhoek</div>
+        <h2 id="previewName">Your Business Name</h2>
+        <p id="previewDescription">Your business description will appear here while you type.</p>
+        <div class="hero-actions">
+          <a>WhatsApp</a>
+          <a>Email</a>
+        </div>
+      </section>
 
-      <label>Phone number</label>
-      <input name="phone" required placeholder="+264">
+      <section class="preview-content">
+        <div class="mini-card" id="servicesCard">
+          <h3>Services</h3>
+          <p>Show your main services and prices.</p>
+        </div>
 
-      <label>WhatsApp number</label>
-      <input name="whatsapp" placeholder="+264">
+        <div class="product-grid" id="productGrid">
+          <div class="product-card">Advert / Product 1</div>
+          <div class="product-card">Advert / Product 2</div>
+          <div class="product-card locked-card">More cards locked</div>
+        </div>
 
-      <label>Choose template</label>
-      <select name="template_name">
-        <option value="modern">Modern Professional</option>
-        <option value="luxury">Luxury Premium</option>
-        <option value="simple">Simple Clean</option>
-        <option value="restaurant">Restaurant/Food</option>
-        <option value="booking">Booking Business</option>
-      </select>
+        <div class="mini-card" id="bookingCard">
+          <h3>Booking / Contact</h3>
+          <p>Customers can send enquiries.</p>
+        </div>
 
-      <label>Brand color</label>
-      <input type="color" name="primary_color" value="#111827">
+        <div class="mini-card" id="galleryCard">
+          <h3>Gallery</h3>
+          <p>Free trial includes 3 gallery photos.</p>
+        </div>
+      </section>
+    </div>
+  </main>
 
-      <label>Upload business logo</label>
-      <input type="file" name="logo" accept="image/*">
-
-      <button type="submit">Create Free Trial Website</button>
-    </form>
-
-    <p class="note">Free trial includes preview website, basic profile, WhatsApp button and enquiry form.</p>
-  </div>
 </div>
+
+<script src="/static/js/live_builder.js"></script>
 </body>
 </html>
