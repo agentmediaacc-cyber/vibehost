@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ document_type|title }} Templates | VibeHost</title>
+  <style>
+    :root{--bg:#f7f2ea;--card:#fffdf8;--line:#ddd3c5;--ink:#171717;--muted:#625d56;--deep:#17222f;--forest:#243f37;--gold:#c19028;--shadow:0 24px 70px rgba(23,23,23,.10)}
+    *{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:linear-gradient(180deg,#f8f2ea,#efe4d4);color:var(--ink)}a{text-decoration:none;color:inherit}
+    .wrap{max-width:1240px;margin:0 auto;padding:18px}.hero{padding:30px;border-radius:34px;background:linear-gradient(135deg,var(--deep),var(--forest) 58%,var(--gold));color:#fff;box-shadow:var(--shadow)}
+    h1{margin:0 0 12px;font-size:clamp(42px,7vw,78px);line-height:.92;letter-spacing:-.06em}.hero p{max-width:760px;color:#ece9e2;line-height:1.7;font-size:18px}
+    .tabs{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.tab{padding:13px 18px;border-radius:999px;font-weight:700;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);color:#fff}.tab.active{background:#f1ddb2;color:#171512;border-color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:20px;box-shadow:var(--shadow)}.thumb{height:210px;border-radius:22px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18);padding:16px}
+    .thumb .surface{position:relative;height:100%;border-radius:18px;background:rgba(255,255,255,.92);box-shadow:0 18px 40px rgba(15,23,42,.12);overflow:hidden}
+    .thumb .tag,.thumb .mini,.thumb .bar,.thumb .box,.thumb .dotline{position:absolute;z-index:2}
+    .thumb .tag{left:14px;top:12px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .thumb .mini{height:8px;border-radius:999px;background:rgba(17,24,39,.14)}
+    .thumb .box{border-radius:12px;background:rgba(17,24,39,.08)}
+    .thumb .dotline{border-top:2px dashed rgba(17,24,39,.24)}
+    .thumb.modern_clean{background:linear-gradient(135deg,#f8fafc,#e2e8f0)}
+    .thumb.luxury_gold{background:linear-gradient(135deg,#111827,#7c5b14)}
+    .thumb.corporate_blue{background:linear-gradient(135deg,#1d4ed8,#dbeafe)}
+    .thumb.retail_receipt,.thumb.retail_quote{background:linear-gradient(135deg,#f8fafc,#e5e7eb)}
+    .thumb.restaurant_order,.thumb.restaurant_catering{background:linear-gradient(135deg,#7c2d12,#fdba74)}
+    .thumb.transport_trip{background:linear-gradient(135deg,#0f172a,#38bdf8)}
+    .thumb.construction_progress,.thumb.construction_estimate{background:linear-gradient(135deg,#292524,#f59e0b)}
+    .thumb.medical_statement,.thumb.medical_plan{background:linear-gradient(135deg,#14532d,#bbf7d0)}
+    .thumb.school_fees{background:linear-gradient(135deg,#1d4ed8,#fde68a)}
+    .thumb.minimal_black{background:linear-gradient(135deg,#000000,#525252)}
+    .thumb.modern_clean .surface:before{content:"";position:absolute;left:0;right:0;top:0;height:48px;background:#f8fbff;border-bottom:1px solid #dbe4f0}
+    .thumb.modern_clean .box.totals{right:14px;bottom:14px;width:84px;height:54px}
+    .thumb.luxury_gold .surface{background:#fffaf0}
+    .thumb.luxury_gold .surface:before{content:"";position:absolute;left:0;right:0;top:0;height:46px;background:linear-gradient(180deg,#101010,#2b2111)}
+    .thumb.luxury_gold .surface:after{content:"";position:absolute;left:0;right:0;top:46px;height:4px;background:linear-gradient(90deg,#6d5315,#edcc74,#6d5315)}
+    .thumb.corporate_blue .surface:before{content:"";position:absolute;left:0;top:0;bottom:0;width:54px;background:linear-gradient(180deg,#0f4db8,#17306b)}
+    .thumb.corporate_blue .box.meta{right:14px;top:14px;width:98px;height:40px;background:#e8f1ff}
+    .thumb.retail_receipt .surface{width:90px;margin:0 auto;background:#fff}
+    .thumb.retail_receipt .surface:before,.thumb.retail_quote .surface:before{content:"";position:absolute;left:10px;right:10px;top:58px;border-top:2px dashed #bbb}
+    .thumb.retail_receipt .surface:after,.thumb.retail_quote .surface:after{content:"";position:absolute;left:10px;right:10px;bottom:38px;border-top:2px dashed #bbb}
+    .thumb.restaurant_order .surface:before,.thumb.restaurant_catering .surface:before{content:"";position:absolute;left:0;right:0;top:0;height:62px;background:linear-gradient(135deg,#6f260d,#dd7a22)}
+    .thumb.transport_trip .surface:before{content:"";position:absolute;left:0;right:0;top:0;height:56px;background:linear-gradient(135deg,#0f172a,#1c84c6)}
+    .thumb.transport_trip .box.route{left:14px;right:14px;top:68px;height:42px;border:2px solid #b8d7f2;background:#fff}
+    .thumb.construction_progress .surface:before,.thumb.construction_estimate .surface:before{content:"";position:absolute;left:14px;right:14px;top:14px;height:56px;border:2px solid #d6a33a;border-radius:16px;background:#fff6dc}
+    .thumb.construction_progress .box.stage,.thumb.construction_estimate .box.stage{right:14px;top:82px;width:90px;height:38px;background:#2c2418}
+    .thumb.medical_statement .surface{background:#f7fff9}
+    .thumb.medical_statement .box.patient,.thumb.medical_plan .box.patient{left:14px;top:52px;width:86px;height:48px;background:#fff;border:1px solid #b7e5c8}
+    .thumb.school_fees .surface:before{content:"";position:absolute;left:0;right:0;top:0;height:58px;background:linear-gradient(135deg,#2045aa,#f0be2c)}
+    .thumb.school_fees .box.student{left:14px;top:70px;width:90px;height:44px;background:#fff;border:1px solid #e8d37d}
+    .thumb.minimal_black .surface{background:#fff}
+    .thumb.minimal_black .tag{font-size:22px;letter-spacing:-.06em;top:14px;left:14px}
+    .thumb.minimal_black .box.panel{right:0;bottom:0;width:88px;height:74px;background:#0b0b0b;border-radius:0}
+    h2{margin:18px 0 8px;font-size:28px;letter-spacing:-.04em}.card p{margin:0;color:var(--muted);line-height:1.6}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.actions a{padding:13px 14px;border-radius:16px;text-align:center;font-weight:700}.preview{background:#111827;color:#fff}.use{background:#efe3cf;color:#171717;border:1px solid #ddc9a8}.foot{margin-top:18px;padding:18px;border-radius:24px;background:#fff;border:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    @media(max-width:980px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.wrap{padding:14px}.grid{grid-template-columns:1fr}.hero,.card,.foot{border-radius:26px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>{{ "Invoice" if document_type == "invoice" else "Quotation" }} Templates</h1>
+      <p>Preview full A4 document designs before you register. Every preview is available instantly, and your chosen template can carry into your free account or paid branded workflow later.</p>
+      <div class="tabs">
+        <a class="tab {{ 'active' if document_type == 'invoice' else '' }}" href="/free-tools/templates/invoices">Invoice Templates</a>
+        <a class="tab {{ 'active' if document_type == 'quotation' else '' }}" href="/free-tools/templates/quotations">Quotation Templates</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      {% for t in templates %}
+      {% set layout = t.slug.split('_', 1)[1] %}
+      <article class="card">
+        <div class="thumb {{ layout }}">
+          <div class="surface">
+            <div class="tag">{{ "QUOTATION" if document_type == "quotation" else "INVOICE" }}</div>
+            {% if layout == "modern_clean" %}
+            <div class="mini" style="left:14px;top:58px;width:94px;"></div>
+            <div class="box" style="right:14px;top:56px;width:72px;height:44px;"></div>
+            <div class="mini" style="left:14px;top:112px;width:150px;"></div>
+            <div class="mini" style="left:14px;top:128px;width:132px;"></div>
+            <div class="box totals"></div>
+            {% elif layout == "luxury_gold" %}
+            <div class="mini" style="left:18px;top:72px;width:132px;background:rgba(125,95,24,.28)"></div>
+            <div class="mini" style="left:18px;top:90px;width:110px;background:rgba(125,95,24,.18)"></div>
+            <div class="box" style="left:18px;right:18px;top:118px;height:46px;background:rgba(125,95,24,.10)"></div>
+            <div class="box" style="right:18px;bottom:16px;width:92px;height:46px;background:rgba(125,95,24,.14)"></div>
+            {% elif layout == "corporate_blue" %}
+            <div class="mini" style="left:68px;top:64px;width:110px;"></div>
+            <div class="box meta"></div>
+            <div class="box" style="left:68px;right:14px;top:112px;height:54px;"></div>
+            <div class="box" style="right:14px;bottom:14px;width:86px;height:44px;background:#eef5ff"></div>
+            {% elif layout == "retail_receipt" or layout == "retail_quote" %}
+            <div class="mini" style="left:50%;transform:translateX(-50%);top:24px;width:42px;"></div>
+            <div class="mini" style="left:50%;transform:translateX(-50%);top:42px;width:56px;"></div>
+            <div class="dotline" style="left:10px;right:10px;top:108px;"></div>
+            <div class="dotline" style="left:10px;right:10px;top:136px;"></div>
+            <div class="mini" style="left:18px;bottom:18px;width:54px;"></div>
+            {% elif layout == "restaurant_order" or layout == "restaurant_catering" %}
+            <div class="mini" style="left:16px;top:76px;width:94px;background:rgba(255,255,255,.55)"></div>
+            <div class="box" style="left:14px;top:108px;width:86px;height:48px;background:#fff3e1"></div>
+            <div class="box" style="right:14px;top:108px;width:86px;height:48px;background:#fff3e1"></div>
+            <div class="box" style="right:14px;bottom:14px;width:92px;height:44px;background:#fff0dd"></div>
+            {% elif layout == "transport_trip" %}
+            <div class="box route"></div>
+            <div class="mini" style="left:24px;top:82px;width:56px;"></div>
+            <div class="mini" style="right:24px;top:82px;width:56px;"></div>
+            <div class="box" style="left:14px;right:14px;top:122px;height:40px;background:#eef8ff"></div>
+            <div class="box" style="right:14px;bottom:14px;width:92px;height:44px;"></div>
+            {% elif layout == "construction_progress" or layout == "construction_estimate" %}
+            <div class="box stage"></div>
+            <div class="box" style="left:14px;top:82px;width:88px;height:38px;background:#fff7e2"></div>
+            <div class="box" style="left:14px;bottom:14px;width:84px;height:58px;background:#fff7e2"></div>
+            <div class="box" style="right:14px;bottom:14px;width:84px;height:58px;background:#fff7e2"></div>
+            {% elif layout == "medical_statement" or layout == "medical_plan" %}
+            <div class="box patient"></div>
+            <div class="box" style="right:14px;top:52px;width:86px;height:48px;background:#fff;border:1px solid #b7e5c8"></div>
+            <div class="box" style="left:14px;right:14px;top:112px;height:52px;background:#fff"></div>
+            <div class="mini" style="right:14px;bottom:18px;width:84px;background:#8bcfa7"></div>
+            {% elif layout == "school_fees" %}
+            <div class="box student"></div>
+            <div class="box" style="right:14px;top:70px;width:90px;height:44px;background:#fff;border:1px solid #e8d37d"></div>
+            <div class="box" style="left:14px;right:14px;top:122px;height:42px;background:#eef4ff"></div>
+            <div class="mini" style="right:14px;bottom:18px;width:78px;background:#d5b13a"></div>
+            {% else %}
+            <div class="box" style="right:14px;top:14px;width:80px;height:42px;background:#fff;border:2px solid #111;"></div>
+            <div class="mini" style="left:14px;top:68px;width:132px;background:#111"></div>
+            <div class="mini" style="left:14px;top:86px;width:112px;"></div>
+            <div class="box" style="left:14px;right:14px;top:116px;height:40px;"></div>
+            <div class="box panel"></div>
+            {% endif %}
+          </div>
+        </div>
+        <h2>{{ t.name }}</h2>
+        <p><strong>Best for:</strong> {{ t.best_for }}</p>
+        <div class="actions">
+          <a class="preview" href="/free-tools/templates/{{ document_type }}/{{ t.slug }}">Preview</a>
+          <a class="use" href="{% if user_logged_in %}/free-tools/create/{{ document_type }}?template={{ t.slug }}{% else %}/free-tools/register?template={{ t.slug }}{% endif %}">Use this template</a>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section class="foot">
+      <div>
+        <strong>Need help choosing?</strong><br>
+        WhatsApp support is available on {{ support_phone }}.
+      </div>
+      <a class="use" href="{{ support_whatsapp_url }}" target="_blank">Open WhatsApp</a>
+    </section>
+  </div>
+</body>
+</html>

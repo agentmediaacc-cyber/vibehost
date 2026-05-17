@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Login | {{ business.business_name }}</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#0f172a}.wrap{max-width:820px;margin:0 auto;padding:22px}.hero,.card{background:#fff;border:1px solid #d9e2ee;border-radius:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.hero{padding:26px;background:linear-gradient(135deg,#111827,#0f766e);color:#fff}.card{padding:24px;margin-top:18px}form{display:grid;gap:14px}input{width:100%;padding:14px;border-radius:14px;border:1px solid #cbd5e1}.btn{padding:14px 16px;border:0;border-radius:14px;background:#111827;color:#fff;font-weight:800}.error{margin-top:14px;padding:14px;border-radius:14px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 style="margin:0 0 8px;">Customer Login</h1>
+      <p style="margin:0;color:#d1fae5;">Sign in to view your orders, enquiries and business documents under {{ business.business_name }}.</p>
+    </section>
+    <section class="card">
+      {% if error %}<div class="error">{{ error }}</div>{% endif %}
+      <form method="POST">
+        <input name="email" type="email" placeholder="Email" required>
+        <input name="password" type="password" placeholder="Password" required>
+        <button class="btn" type="submit">Sign In</button>
+      </form>
+      <p style="margin-top:16px;">New customer? <a href="/customer/register">Create Account</a></p>
+    </section>
+  </div>
+</body>
+</html>

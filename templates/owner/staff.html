@@ -1,0 +1,44 @@
+{% extends "owner/base.html" %}
+{% block title %}Employees{% endblock %}
+{% block page_heading %}Employees and Staff{% endblock %}
+{% block page_intro %}Keep a simple business team list for managers, support staff, drivers, receptionists and service roles.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="form-card">
+    <h2>Add Staff Member</h2>
+    {% if error %}<div class="banner danger">{{ error }}</div>{% endif %}
+    {% if success %}<div class="banner">{{ success }}</div>{% endif %}
+    <form class="grid" method="POST">
+      <div><label>Full Name</label><input name="full_name" required></div>
+      <div><label>Email</label><input name="email" type="email"></div>
+      <div><label>Phone</label><input name="phone"></div>
+      <div><label>Role</label><select name="role">{% for role in ['manager','cashier','support','driver','cleaner','stylist','receptionist'] %}<option value="{{ role }}">{{ role }}</option>{% endfor %}</select></div>
+      <div><label>Status</label><select name="status"><option value="active">active</option><option value="inactive">inactive</option></select></div>
+      <div class="full"><button class="button" type="submit">Save Staff Member</button></div>
+    </form>
+  </section>
+  <section class="table-card">
+    <h2>Current Team</h2>
+    {% if staff_rows %}
+    <div class="cards">
+      {% for staff in staff_rows %}
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ staff.full_name }}</h3>
+            <div class="meta">{{ staff.role or "support" }} · {{ staff.email or "No email" }} · {{ staff.phone or "No phone" }}</div>
+          </div>
+          <span class="chip {% if staff.status == 'active' %}good{% else %}warn{% endif %}">{{ staff.status or "active" }}</span>
+        </div>
+        <form method="POST" action="/owner/staff/{{ staff.id }}/delete" style="margin-top:12px;">
+          <button class="button alt" type="submit">Remove</button>
+        </form>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No staff members added yet.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

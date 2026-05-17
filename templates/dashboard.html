@@ -40,7 +40,7 @@
       <div class="stack">
         <section class="card">
           <h2>Live Website</h2>
-          <p>Your live public website uses the saved business data, not demo placeholders.</p>
+          <p>Your live public website uses the saved business data from your account and website records.</p>
           <div class="url-box"><code>{{ site.live_url if site and site.live_url else "Live URL missing" }}</code><a href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">Open Live Website</a></div>
           <div class="stats">
             <div class="stat"><b>{{ site.template_name if site and site.template_name else business.website_type }}</b><span>Template type</span></div>
@@ -84,7 +84,7 @@
             <div class="tool"><b>Customer accounts</b><span>Future-ready owner/customer account workflows.</span></div>
             <div class="tool"><b>Reports and upgrade</b><span>See trial status and upgrade when ready.</span></div>
           </div>
-          <div class="support-line">Developer support: {{ support_phone }} · <a href="{{ support_whatsapp_url }}" target="_blank">WhatsApp</a></div>
+          <div class="support-line">Support: {{ support_phone }} · <a href="{{ support_whatsapp_url }}" target="_blank">WhatsApp</a></div>
         </section>
       </div>
     </div>

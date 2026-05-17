@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Owner Dashboard{% endblock %}</title>
+  <style>
+    :root{--ink:#0f172a;--muted:#64748b;--line:#d8e1ee;--paper:#eef2f8;--card:#ffffff;--brand:#1d4ed8;--brand-2:#f59e0b;--good:#15803d;--warn:#b45309;--danger:#b91c1c}
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#dbe7fb 0,#eef2f8 240px,#f6f8fc 100%);color:var(--ink)}a{text-decoration:none;color:inherit}
+    .adminbar{position:sticky;top:0;z-index:50;display:flex;justify-content:center;gap:16px;align-items:center;padding:10px 14px;background:#0f172a;color:#fff}
+    .adminbar button{border:0;border-radius:999px;background:#ef4444;color:#fff;padding:8px 14px;font-weight:800;cursor:pointer}
+    .shell{max-width:1380px;margin:0 auto;padding:18px}
+    .hero{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:stretch}
+    .hero-card,.panel,.table-card,.form-card,.metric{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:30px;box-shadow:0 24px 70px rgba(15,23,42,.08)}
+    .hero-card{padding:28px;background:linear-gradient(135deg,#0f172a,#1d4ed8 62%,#f59e0b);color:#fff}
+    .hero-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:700}
+    .hero h1{margin:18px 0 10px;font-size:clamp(40px,6vw,70px);line-height:.92;letter-spacing:-.06em}
+    .hero p{margin:0;max-width:760px;color:#dbeafe;line-height:1.7}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+    .hero-actions a{padding:14px 18px;border-radius:16px;font-weight:800}
+    .hero-actions .primary{background:#fff;color:#111827}.hero-actions .ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .panel{padding:22px}
+    .panel h2,.section-head h2,.table-card h2,.form-card h2{margin:0 0 8px;font-size:28px;letter-spacing:-.04em}
+    .panel p,.section-head p,.table-card p,.form-card p,.meta{margin:0;color:var(--muted);line-height:1.6}
+    .summary-grid,.metrics,.module-grid{display:grid;gap:14px}
+    .summary-grid{grid-template-columns:repeat(3,1fr);margin-top:16px}
+    .metric{padding:18px}.metric strong{display:block;font-size:30px;letter-spacing:-.04em}.metric span{display:block;color:var(--muted);margin-top:6px}
+    .module-grid{grid-template-columns:repeat(2,1fr);margin-top:16px}
+    .module-link{display:block;padding:18px;border-radius:22px;background:#f8fbff;border:1px solid var(--line)}
+    .module-link b{display:block;font-size:18px;margin-bottom:6px}
+    .banner{margin:18px 0;padding:16px 18px;border-radius:18px;border:1px solid #fdba74;background:#fff7ed;color:#9a3412;font-weight:700}
+    .banner.danger{border-color:#fca5a5;background:#fef2f2;color:#991b1b}
+    .main-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:18px}
+    .stack{display:grid;gap:18px}
+    .section-head{display:flex;justify-content:space-between;gap:14px;align-items:end;margin-bottom:14px}
+    .table-card,.form-card{padding:22px}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap}
+    .toolbar a,.toolbar button,.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 15px;border-radius:14px;background:#111827;color:#fff;font-weight:800;border:0;cursor:pointer}
+    .button.alt,.toolbar .alt{background:#e2e8f0;color:#0f172a}
+    form.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    form.grid .full{grid-column:1 / -1}
+    label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:6px}
+    input,textarea,select{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;font:inherit;color:inherit}
+    textarea{min-height:120px;resize:vertical}
+    .cards{display:grid;gap:12px}
+    .item{padding:16px;border-radius:20px;background:#f8fbff;border:1px solid var(--line)}
+    .item-top{display:flex;justify-content:space-between;gap:12px;align-items:start;flex-wrap:wrap}
+    .item h3{margin:0 0 6px;font-size:20px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .chip{padding:8px 11px;border-radius:999px;background:#e8f0ff;color:#1d4ed8;font-size:12px;font-weight:800}
+    .chip.warn{background:#fff1d6;color:#b45309}.chip.good{background:#dcfce7;color:#166534}.chip.dark{background:#e2e8f0;color:#0f172a}
+    .split{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+    .table{width:100%;border-collapse:collapse}.table th,.table td{padding:14px 12px;border-bottom:1px solid #e6ecf5;text-align:left;vertical-align:top}.table th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#64748b}
+    .mini-form{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .mini-form input,.mini-form select{width:auto;min-width:120px;padding:10px 12px;border-radius:12px}
+    .empty{padding:18px;border-radius:18px;background:#f8fafc;border:1px dashed #cbd5e1;color:#64748b}
+    .footer-note{margin-top:18px;color:#64748b;font-size:13px}
+    @media(max-width:1080px){.hero,.main-grid,.summary-grid,.module-grid,form.grid{grid-template-columns:1fr}}
+    @media(max-width:720px){.shell{padding:12px}.hero-card,.panel,.table-card,.form-card,.metric{border-radius:24px;padding:18px}.hero h1{font-size:40px}.table{display:block;overflow:auto;white-space:nowrap}}
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {% if session.get('original_master_id') %}
+  <div class="adminbar">
+    <span><strong>Admin session:</strong> you are impersonating this owner.</span>
+    <form action="{{ url_for('master_stop_impersonation') }}" method="POST" style="margin:0;">
+      <button type="submit">Stop Impersonation</button>
+    </form>
+  </div>
+  {% endif %}
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="pill">{{ owner.email }}</div>
+          <div class="pill">{{ business.business_name }}{% if business.subdomain %} · {{ business.subdomain }}{% endif %}</div>
+        </div>
+        <h1>{% block page_heading %}Owner Dashboard{% endblock %}</h1>
+        <p>{% block page_intro %}Manage your public website, sales flow and operations from one owner-scoped control dashboard.{% endblock %}</p>
+        <div class="hero-actions">
+          <a class="primary" href="/owner/dashboard">Dashboard</a>
+          <a class="ghost" href="/owner/site-editor">Website Editor</a>
+          <a class="ghost" href="/owner/products">Products</a>
+          <a class="ghost" href="/owner/orders">Orders</a>
+          <a class="ghost" href="/owner/logout">Logout</a>
+        </div>
+        {% if trial and trial.expired %}
+        <div class="banner danger">Your trial expired. You can still view this dashboard, but editing and creation actions are locked until you upgrade.</div>
+        {% elif trial %}
+        <div class="banner">Trial access remains active for {{ trial.days_left }} day{% if trial.days_left != 1 %}s{% endif %}. Owner edits, products, documents and adverts will lock after expiry until payment is active.</div>
+        {% endif %}
+        {% if business.verification_status != 'approved' %}
+        <div class="banner danger">Business verification is required before selling or receiving customer orders. Upload your business registration, owner ID and proof of address to unlock products, orders, documents and activation. <a href="/owner/verification" style="text-decoration:underline;color:inherit;">Upload documents</a></div>
+        {% endif %}
+      </div>
+      <aside class="panel">
+        <h2>Control Center</h2>
+        <p>Every card below is owner-scoped to this business only.</p>
+        <div class="module-grid">
+          <a class="module-link" href="/owner/site-editor"><b>Website Editor</b><span>Branding, contact details, homepage text.</span></a>
+          <a class="module-link" href="/owner/verification"><b>Verification</b><span>Upload ownership and address documents for approval.</span></a>
+          <a class="module-link" href="/owner/products"><b>Products / Services</b><span>Catalog, stock and live cards.</span></a>
+          <a class="module-link" href="/owner/orders"><b>Orders / Enquiries</b><span>Track public requests and status.</span></a>
+          <a class="module-link" href="/owner/invoices"><b>Invoices</b><span>Create and download PDFs.</span></a>
+          <a class="module-link" href="/owner/quotations"><b>Quotations</b><span>Quote workflow and approvals.</span></a>
+          <a class="module-link" href="/owner/stock"><b>Stock Control</b><span>Adjust levels and view movement history.</span></a>
+          <a class="module-link" href="/owner/delivery"><b>Delivery / Bookings</b><span>Dispatch and assigned staff.</span></a>
+          <a class="module-link" href="/owner/staff"><b>Employees</b><span>Roles, status and contact list.</span></a>
+          <a class="module-link" href="/owner/marketing"><b>Marketing</b><span>Homepage specials and campaign cards.</span></a>
+          <a class="module-link" href="/owner/reports"><b>Reports</b><span>Real totals and recent activity.</span></a>
+          <a class="module-link" href="/dashboard/{{ business.id }}/upgrade"><b>Subscription</b><span>Upgrade trial and remove restrictions.</span></a>
+        </div>
+      </aside>
+    </section>
+    {% block content %}{% endblock %}
+    <div class="footer-note">VibeHost owner dashboard. Public website visitors only see the customer-facing site, while this dashboard stays private to the business owner and master admin.</div>
+  </div>
+</body>
+</html>

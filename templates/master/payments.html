@@ -1,0 +1,40 @@
+{% extends "master/base.html" %}
+{% block title %}Payments{% endblock %}
+{% block header_title %}Payments & Revenue{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="margin: 0; font-size: 1.25rem;">Recent Payments</h2>
+        <button class="btn btn-primary" onclick="alert('Manual payment recording coming soon')">Record Manual Payment</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Reference</th>
+                <th>Entity</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments %}
+            <tr>
+                <td style="font-weight: 600;">{{ payment.reference }}</td>
+                <td>{{ payment.business_name or payment.user_name or 'Unknown' }}</td>
+                <td style="font-weight: 600;">{{ payment.currency }} {{ "{:,.2f}".format(payment.amount) }}</td>
+                <td>{{ payment.payment_type }}</td>
+                <td><span class="badge badge-success">{{ payment.status|title }}</span></td>
+                <td>{{ payment.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+            {% if not payments %}
+            <tr>
+                <td colspan="6" style="text-align: center; color: #64748b; padding: 40px;">No payments recorded yet.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

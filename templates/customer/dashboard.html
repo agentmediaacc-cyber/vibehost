@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard | {{ business.business_name }}</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f8fc;color:#0f172a}.wrap{max-width:1180px;margin:0 auto;padding:20px}.hero,.card{background:#fff;border:1px solid #d9e2ee;border-radius:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.hero{padding:26px;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}.card{padding:22px}.item{padding:14px;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0;margin-top:12px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.toolbar a{display:inline-flex;padding:12px 14px;border-radius:999px;text-decoration:none;font-weight:800}.toolbar .primary{background:#111827;color:#fff}.toolbar .ghost{background:#e2e8f0;color:#111827}@media(max-width:860px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 style="margin:0 0 8px;">{{ customer.full_name or customer.email }}</h1>
+      <p style="margin:0;color:#dbeafe;">Customer account for {{ business.business_name }}. Review your activity, documents and contact options.</p>
+      <div class="toolbar"><a class="primary" href="/customer/orders">My Orders</a><a class="ghost" href="https://wa.me/{{ (business.whatsapp or '')|replace('+','') }}">WhatsApp Business</a><a class="ghost" href="/customer/logout">Logout</a></div>
+    </section>
+    <section class="grid">
+      <div class="card">
+        <h2 style="margin-top:0;">Recent Orders / Enquiries</h2>
+        {% for order in orders %}
+        <div class="item"><strong>{{ order.order_type or 'enquiry' }}</strong><br>Status: {{ order.status or 'new' }}<br>{{ order.message or 'No message' }}</div>
+        {% else %}
+        <div class="item">No orders yet.</div>
+        {% endfor %}
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0;">Documents</h2>
+        {% for document in documents %}
+        <div class="item"><strong>{{ document.document_number }}</strong><br>{{ document.document_type|title }} · N$ {{ '%.2f'|format((document.total or 0)|float) }}</div>
+        {% else %}
+        <div class="item">No invoices or quotations matched to this account yet.</div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</body>
+</html>

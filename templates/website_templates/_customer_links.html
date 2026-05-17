@@ -1,0 +1,20 @@
+<style>
+  .vh-account-links{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0;padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.92);border:1px solid rgba(148,163,184,.24);box-shadow:0 18px 48px rgba(15,23,42,.08)}
+  .vh-account-links strong{display:block;font-size:18px}
+  .vh-account-links span{display:block;color:#64748b;font-size:14px;line-height:1.5}
+  .vh-account-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .vh-account-actions a{display:inline-flex;align-items:center;justify-content:center;padding:12px 15px;border-radius:999px;text-decoration:none;font-weight:800}
+  .vh-account-actions .primary{background:{{ site.primary_color if site and site.primary_color else '#111827' }};color:#fff}
+  .vh-account-actions .ghost{background:#eef2f7;color:#0f172a}
+</style>
+<section class="vh-account-links">
+  <div>
+    <strong>Customer account access</strong>
+    <span>Create an account, sign in or review your orders directly under {{ business.business_name }}.</span>
+  </div>
+  <div class="vh-account-actions">
+    <a class="ghost" href="/customer/register?subdomain={{ business.subdomain or '' }}">Create Account</a>
+    <a class="ghost" href="/customer/login?subdomain={{ business.subdomain or '' }}">Customer Login</a>
+    <a class="primary" href="/customer/orders?subdomain={{ business.subdomain or '' }}">My Orders</a>
+  </div>
+</section>

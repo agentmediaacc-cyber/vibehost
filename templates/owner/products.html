@@ -1,3 +1,65 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Products | VibeHost</title><style>*{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.wrap{max-width:1100px;margin:0 auto;padding:18px}.grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:24px;box-shadow:0 20px 60px rgba(15,23,42,.08)}label{display:block;margin:14px 0 8px;font-weight:700}input,textarea{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}textarea{min-height:100px}.msg{margin-bottom:14px;padding:14px 16px;border-radius:18px}.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}.success{background:#ecfdf3;border:1px solid #bbf7d0;color:#166534}button{padding:14px 16px;border:0;border-radius:16px;background:#111827;color:#fff;font-weight:800}.list{display:grid;gap:12px}.item{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dbe3ed}.item form{margin-top:10px} @media(max-width:900px){.grid{grid-template-columns:1fr}}</style></head>
-<body><div class="wrap"><div class="grid"><section class="card"><h1>Manage {{ item_label }}</h1><p>Trial websites can keep up to 3 active {{ item_label }}.</p>{% if error %}<div class="msg error">{{ error }}</div>{% endif %}{% if success %}<div class="msg success">{{ success }}</div>{% endif %}<form method="POST" enctype="multipart/form-data"><label>Name</label><input name="name" required><label>Description</label><textarea name="description"></textarea><label>Category</label><input name="category"><label>Price</label><input name="price" placeholder="0"><label>Stock quantity</label><input name="stock_quantity" type="number" value="0"><label>Image</label><input name="image" type="file" accept="image/*"><button type="submit">Create Item</button></form></section><section class="card"><h2>Current Items</h2><div class="list">{% for product in products %}<div class="item"><strong>{{ product.name }}</strong><br>{{ product.description or "No description" }}<br>Category: {{ product.category or "General" }} · Price: N$ {{ product.price or 0 }} · Status: {{ product.status }}<form method="POST" action="/owner/products/{{ product.id }}/delete"><button type="submit">Archive</button></form></div>{% else %}<div class="item">No items yet.</div>{% endfor %}</div></section></div></div></body></html>
+{% extends "owner/base.html" %}
+{% block title %}Products and Services{% endblock %}
+{% block page_heading %}{{ item_label|title }} Manager{% endblock %}
+{% block page_intro %}Publish live {{ item_label }} for the public website and keep stock, status and pricing tied to this business only.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="form-card">
+    <h2>Add {{ item_label|title }}</h2>
+    <p>Retail sites use product wording, while service businesses see category-appropriate labels. Trial businesses can view everything but cannot edit after expiry.</p>
+    {% if error %}<div class="banner danger">{{ error }}</div>{% endif %}
+    {% if success %}<div class="banner">{{ success }}</div>{% endif %}
+    <form class="grid" method="POST" enctype="multipart/form-data">
+      <div><label>Name</label><input name="name" required></div>
+      <div><label>Category</label><input name="category"></div>
+      <div class="full"><label>Description</label><textarea name="description"></textarea></div>
+      <div><label>Price</label><input name="price" placeholder="0.00"></div>
+      <div><label>Stock Quantity</label><input name="stock_quantity" type="number" value="0"></div>
+      <div><label>Status</label><select name="status"><option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option></select></div>
+      <div><label>Image</label><input type="file" name="image" accept="image/*"></div>
+      <div class="full"><button class="button" type="submit">Save {{ item_label|title }}</button></div>
+    </form>
+  </section>
+  <section class="table-card">
+    <h2>Current {{ item_label|title }}</h2>
+    {% if products %}
+    <div class="cards">
+      {% for product in products %}
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ product.name }}</h3>
+            <div class="meta">{{ product.category or "General" }} · N$ {{ '%.2f'|format((product.price or 0)|float) }}</div>
+          </div>
+          <div class="chips">
+            <span class="chip {% if (product.stock_quantity or 0) <= 3 %}warn{% else %}good{% endif %}">Stock {{ product.stock_quantity or 0 }}</span>
+            <span class="chip dark">{{ product.status or "active" }}</span>
+          </div>
+        </div>
+        <p class="meta" style="margin-top:10px;">{{ product.description or "No description supplied." }}</p>
+        <div class="toolbar" style="margin-top:12px;">
+          <form class="mini-form" method="POST" action="/owner/products/{{ product.id }}/stock">
+            <select name="movement_type">
+              <option value="stock_in">Stock In</option>
+              <option value="stock_out">Stock Out</option>
+              <option value="sale">Sale</option>
+              <option value="return">Return</option>
+              <option value="adjustment">Adjustment</option>
+            </select>
+            <input type="number" name="quantity" value="1" min="1">
+            <input type="text" name="note" placeholder="Note">
+            <button type="submit">Update Stock</button>
+          </form>
+          <form method="POST" action="/owner/products/{{ product.id }}/delete">
+            <button class="button alt" type="submit">Archive</button>
+          </form>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No {{ item_label }} added yet.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

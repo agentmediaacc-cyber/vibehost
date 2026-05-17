@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create {{ document_type|title }} | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.app{display:grid;grid-template-columns:minmax(340px,600px) 1fr;min-height:100vh}.panel{padding:22px;background:#fff;border-right:1px solid #d0d5dd;overflow-y:auto}.side{padding:22px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:22px;box-shadow:0 20px 60px rgba(15,23,42,.08)}
+    h1{margin:0 0 10px;font-size:34px;letter-spacing:-.04em}.lead{margin:0;color:#667085;line-height:1.65}label{display:block;font-weight:700;margin:14px 0 8px}input,textarea,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}textarea{min-height:90px}.grid2,.grid3{display:grid;gap:12px}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}
+    .msg{margin-bottom:14px;padding:14px 16px;border-radius:18px}.error{background:#fff7ed;border:1px solid #fdba74;color:#9a3412}.success{background:#ecfdf3;border:1px solid #bbf7d0;color:#166534}
+    button{margin-top:18px;padding:15px 18px;border:0;border-radius:16px;background:#111827;color:#fff;font-weight:800}.list{display:grid;gap:12px;margin-top:16px}.item{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dbe3ed}.item a{text-decoration:none;color:inherit}
+    .pill{display:inline-flex;padding:8px 12px;border-radius:999px;background:#eef2f7;color:#344054;font-size:13px;font-weight:700}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.cta a{padding:13px 14px;border-radius:14px;text-decoration:none;font-weight:700}.ghost{background:#efe3cf;color:#171717}
+    @media(max-width:1080px){.app{grid-template-columns:1fr}}@media(max-width:720px){.panel,.side{padding:16px}.grid2,.grid3{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel">
+      <div class="card">
+        <div class="pill">{{ document_type|title }}</div>
+        <h1>Create {{ document_type|title }}</h1>
+        <p class="lead">Free accounts can save up to {{ limit }} invoices and {{ limit }} quotations. Your selected template and business profile are applied automatically.</p>
+        {% if error %}<div class="msg error">{{ error }}</div>{% endif %}
+        {% if success %}<div class="msg success">{{ success }}</div>{% endif %}
+        <form method="POST">
+          <input type="hidden" name="template_slug" value="{{ template_slug }}">
+          <input type="hidden" name="document_type" value="{{ document_type }}">
+
+          <label>Template</label>
+          <select name="template_slug_display" onchange="location.href='/free-tools/create/{{ document_type }}?template='+this.value">
+            {% for t in templates %}<option value="{{ t.slug }}" {% if t.slug == template_slug %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+          </select>
+
+          <div class="grid2">
+            <div><label>Customer name</label><input name="customer_name" required></div>
+            <div><label>Customer email</label><input name="customer_email"></div>
+          </div>
+          <div class="grid2">
+            <div><label>Customer phone</label><input name="customer_phone"></div>
+            <div><label>Customer address</label><input name="customer_address"></div>
+          </div>
+
+          {% for row in range(1, 4) %}
+          <div class="grid3">
+            <div><label>Item {{ row }}</label><input name="item_name" {% if row == 1 %}required{% endif %}></div>
+            <div><label>Quantity {{ row }}</label><input name="quantity" value="1"></div>
+            <div><label>Unit price {{ row }}</label><input name="unit_price" value="0"></div>
+          </div>
+          {% endfor %}
+
+          <div class="grid2">
+            <div><label>{% if document_type == 'quotation' %}Valid until{% else %}Due date{% endif %}</label><input type="date" name="{{ 'valid_until' if document_type == 'quotation' else 'due_date' }}"></div>
+            <div><label>Tax percentage</label><input name="tax_percentage" value="0"></div>
+          </div>
+
+          <label>Discount</label>
+          <input name="discount" value="0">
+          <label>Notes</label>
+          <textarea name="notes"></textarea>
+          <label>Terms</label>
+          <textarea name="terms">{% if document_type == 'quotation' %}Approval and acceptance terms appear here.{% else %}Payment terms and reference details appear here.{% endif %}</textarea>
+
+          <button type="submit">Save {{ document_type|title }}</button>
+        </form>
+      </div>
+    </section>
+    <section class="side">
+      <div class="card">
+        <h2>{{ template_meta.name }}</h2>
+        <p>{{ template_meta.best_for }}</p>
+        <div class="list">
+          <div class="item"><strong>Watermark</strong>{{ "VibeHost watermark is included on the free plan." if user.plan_name == 'free' else "Your current plan removes the watermark." }}</div>
+          <div class="item"><strong>Business profile</strong>{{ user.business_name or "Add your business profile and logo" }}</div>
+          <div class="item"><strong>Saved {{ document_type }}s</strong>{{ documents|length }} visible in this category</div>
+        </div>
+        <div class="cta">
+          <a class="ghost" href="/free-tools/profile">Update business profile</a>
+          <a class="ghost" href="/free-tools/dashboard">Back to dashboard</a>
+        </div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <h2>Recent {{ document_type }}s</h2>
+        <div class="list">
+          {% for document in documents[:6] %}
+          <div class="item">
+            <a href="/free-tools/documents/{{ document.id }}">
+              <strong>{{ document.document_number }}</strong>
+              {{ document.customer_name or "No customer" }} · N$ {{ document.total or 0 }}
+            </a>
+          </div>
+          {% else %}
+          <div class="item"><strong>No {{ document_type }}s yet</strong>Your next saved document will appear here.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends "owner/base.html" %}
+{% block title %}Reports{% endblock %}
+{% block page_heading %}Business Reports{% endblock %}
+{% block page_intro %}Review real invoice, quotation, order, stock and activity totals from this business only. No placeholder metrics are shown here.{% endblock %}
+{% block content %}
+<section class="summary-grid" style="margin-top:18px;">
+  <div class="metric"><strong>N$ {{ '%.2f'|format(reports.weekly_total|float) }}</strong><span>Weekly sales total</span></div>
+  <div class="metric"><strong>N$ {{ '%.2f'|format(reports.monthly_total|float) }}</strong><span>Monthly sales total</span></div>
+  <div class="metric"><strong>{{ reports.stats.invoices }}</strong><span>Invoice count</span></div>
+  <div class="metric"><strong>{{ reports.stats.quotations }}</strong><span>Quotation count</span></div>
+  <div class="metric"><strong>{{ reports.stats.orders }}</strong><span>Orders count</span></div>
+  <div class="metric"><strong>{{ reports.stats.products }}</strong><span>Products count</span></div>
+</section>
+<section class="main-grid">
+  <section class="table-card">
+    <h2>Low Stock</h2>
+    {% if reports.low_stock_items %}
+    <div class="cards">
+      {% for item in reports.low_stock_items %}
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ item.name }}</h3>
+            <div class="meta">{{ item.category or "General" }}</div>
+          </div>
+          <span class="chip warn">{{ item.stock_quantity or 0 }} left</span>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No low-stock items right now.</div>
+    {% endif %}
+  </section>
+  <section class="table-card">
+    <h2>Recent Activity</h2>
+    {% if reports.recent_activity %}
+    <div class="cards">
+      {% for activity in reports.recent_activity %}
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ activity.title }}</h3>
+            <div class="meta">{{ activity.kind|title }} · {{ activity.detail or "Activity logged" }}</div>
+          </div>
+          <span class="chip dark">{{ activity.created_at }}</span>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No activity recorded yet.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

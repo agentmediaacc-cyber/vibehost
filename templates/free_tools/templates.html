@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Templates | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f7f3eb;color:#171717}.wrap{max-width:1220px;margin:0 auto;padding:18px}.hero{background:linear-gradient(135deg,#17222f,#243e36 58%,#c19028);color:#fff;border-radius:34px;padding:30px;box-shadow:0 24px 70px rgba(23,23,23,.10)}h1{margin:0 0 10px;font-size:clamp(40px,7vw,72px);line-height:.92;letter-spacing:-.06em}.hero p{max-width:720px;line-height:1.7;color:#ece9e2}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.card{background:#fffdf8;border:1px solid #ddd3c5;border-radius:28px;padding:20px;box-shadow:0 20px 60px rgba(23,23,23,.08)}.art{height:170px;border-radius:22px;margin-bottom:16px;position:relative;overflow:hidden}.art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.22))}.modern-clean{background:linear-gradient(135deg,#f8fafc,#e2e8f0)}.luxury-gold{background:linear-gradient(135deg,#111827,#6b4f0c)}.corporate-blue{background:linear-gradient(135deg,#1d4ed8,#dbeafe)}.retail-receipt{background:linear-gradient(135deg,#f8fafc,#e5e7eb)}.restaurant-catering{background:linear-gradient(135deg,#7c2d12,#fdba74)}.transport-quote{background:linear-gradient(135deg,#0f172a,#38bdf8)}.construction-estimate{background:linear-gradient(135deg,#292524,#f59e0b)}.medical-wellness{background:linear-gradient(135deg,#14532d,#bbf7d0)}.school-fees{background:linear-gradient(135deg,#1d4ed8,#fef08a)}.minimalist-black{background:linear-gradient(135deg,#000,#525252)}
+    h2{margin:0 0 8px;font-size:28px;letter-spacing:-.04em}.card p{margin:0;color:#625d56;line-height:1.6}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.actions a{text-align:center;padding:13px 14px;border-radius:16px;font-weight:700;text-decoration:none}.preview{background:#111827;color:#fff}.use{background:#efe3cf;color:#171717;border:1px solid #ddc9a8}
+    @media(max-width:980px){.grid{grid-template-columns:1fr 1fr}}@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:14px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Choose a premium document template</h1>
+      <p>Preview full invoice and quotation layouts, open a sample builder, or use a selected template directly inside your free account.</p>
+    </section>
+    <section class="grid">
+      {% for t in templates %}
+      <article class="card">
+        <div class="art {{ t.slug }}"></div>
+        <h2>{{ t.name }}</h2>
+        <p><strong>Best for:</strong> {{ t.best_for }}</p>
+        <div class="actions">
+          <a class="preview" href="/free-tools/templates/{{ t.slug }}">Preview</a>
+          <a class="use" href="{% if user_logged_in %}/free-tools/create?template={{ t.slug }}&type=invoice{% else %}/free-tools/register?template={{ t.slug }}{% endif %}">Use this template</a>
+        </div>
+      </article>
+      {% endfor %}
+    </section>
+  </div>
+</body>
+</html>

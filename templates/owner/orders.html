@@ -1,3 +1,40 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Orders and Enquiries | VibeHost</title><style>*{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.wrap{max-width:1080px;margin:0 auto;padding:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:24px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.list{display:grid;gap:12px}.item{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dbe3ed}.row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}select,button{padding:12px;border-radius:14px;border:1px solid #d0d5dd}button{background:#111827;color:#fff;border:0;font-weight:800}</style></head>
-<body><div class="wrap"><div class="card"><h1>Orders and Enquiries</h1><p>View incoming website activity and update status.</p><div class="list">{% for order in orders %}<div class="item"><div class="row"><div><strong>{{ order.customer_name or "Anonymous customer" }}</strong><br>{{ order.order_type or "enquiry" }} · {{ order.customer_email or "No email" }} · {{ order.customer_phone or "No phone" }}<br>{{ order.message or "No message" }}</div><form method="POST" action="/owner/orders/{{ order.id }}/status"><select name="status">{% for status in ['new','contacted','quoted','confirmed','completed','cancelled'] %}<option value="{{ status }}" {% if order.status==status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select><button type="submit">Update</button></form></div></div>{% else %}<div class="item">No orders or enquiries yet.</div>{% endfor %}</div></div></div></body></html>
+{% extends "owner/base.html" %}
+{% block title %}Orders and Enquiries{% endblock %}
+{% block page_heading %}Orders and Enquiries{% endblock %}
+{% block page_intro %}Public website forms and contact requests land here with the correct business ID, so only this owner can manage them.{% endblock %}
+{% block content %}
+<section class="table-card" style="margin-top:18px;">
+  <h2>Inbound Activity</h2>
+  {% if orders %}
+  <div class="cards">
+    {% for order in orders %}
+    <article class="item">
+      <div class="item-top">
+        <div>
+          <h3>{{ order.customer_name or "Website enquiry" }}</h3>
+          <div class="meta">{{ order.order_type or "enquiry" }} · {{ order.customer_email or "No email" }} · {{ order.customer_phone or "No phone" }}</div>
+        </div>
+        <span class="chip">{{ order.status or "new" }}</span>
+      </div>
+      <p class="meta" style="margin-top:10px;">{{ order.message or "No message provided." }}</p>
+      <div class="chips">
+        {% if order.delivery_method %}<span class="chip dark">{{ order.delivery_method }}</span>{% endif %}
+        {% if order.delivery_status %}<span class="chip {% if order.delivery_status == 'delivered' %}good{% elif order.delivery_status in ['failed'] %}warn{% endif %}">{{ order.delivery_status }}</span>{% endif %}
+        {% if order.total_amount %}<span class="chip">N$ {{ '%.2f'|format((order.total_amount or 0)|float) }}</span>{% endif %}
+      </div>
+      <form class="mini-form" method="POST" action="/owner/orders/{{ order.id }}/status" style="margin-top:12px;">
+        <select name="status">
+          {% for status in ['new','contacted','quoted','confirmed','paid','delivered','completed','cancelled'] %}
+          <option value="{{ status }}" {% if order.status == status %}selected{% endif %}>{{ status }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit">Update Status</button>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">No orders or enquiries yet.</div>
+  {% endif %}
+</section>
+{% endblock %}

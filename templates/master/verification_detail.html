@@ -1,0 +1,48 @@
+{% extends "master/base.html" %}
+{% block title %}Verification Detail{% endblock %}
+{% block header_title %}Verification Detail{% endblock %}
+{% block content %}
+<div class="card">
+  <div style="display:flex; justify-content:space-between; gap:20px; align-items:start; flex-wrap:wrap;">
+    <div>
+      <h2 style="margin:0 0 8px;">{{ verification.business_name }}</h2>
+      <div style="color:#64748b;">{{ verification.subdomain }} · {{ verification.town }}, {{ verification.region }}</div>
+      <div style="margin-top:10px;"><span class="badge {% if verification.status == 'approved' %}badge-success{% elif verification.status == 'rejected' %}badge-danger{% else %}badge-warning{% endif %}">{{ verification.status|title }}</span></div>
+    </div>
+    <div>
+      <div><strong>Owner:</strong> {{ verification.owner_name or 'Unknown' }}</div>
+      <div><strong>Email:</strong> {{ verification.owner_email or 'No email' }}</div>
+      <div><strong>Phone:</strong> {{ verification.owner_phone or 'No phone' }}</div>
+      <div><strong>Customers:</strong> {{ customer_count }}</div>
+    </div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+  <div class="card">
+    <h2 style="margin-top:0;">Uploaded Documents</h2>
+    <ul style="padding-left:18px; line-height:1.9;">
+      <li><a href="{{ url_for('master_verification_file', verification_id=verification.id, doc_type='business_registration') }}" target="_blank">Business registration / ownership</a></li>
+      <li><a href="{{ url_for('master_verification_file', verification_id=verification.id, doc_type='owner_id') }}" target="_blank">Owner ID document</a></li>
+      <li><a href="{{ url_for('master_verification_file', verification_id=verification.id, doc_type='proof_of_address') }}" target="_blank">Proof of address</a></li>
+    </ul>
+    {% if verification.admin_notes %}
+    <div style="margin-top:16px; padding:14px; border-radius:10px; background:#f8fafc;"><strong>Admin notes:</strong><br>{{ verification.admin_notes }}</div>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0;">Approval Workflow</h2>
+    <form method="POST" action="{{ url_for('master_verification_approve', verification_id=verification.id) }}" style="display:grid; gap:12px; margin-bottom:18px;">
+      <label>Approval Notes</label>
+      <textarea name="admin_notes" style="min-height:100px; width:100%;"></textarea>
+      <button class="btn btn-primary" type="submit">Approve Verification</button>
+    </form>
+    <form method="POST" action="{{ url_for('master_verification_reject', verification_id=verification.id) }}" style="display:grid; gap:12px;">
+      <label>Rejection Notes</label>
+      <textarea name="admin_notes" style="min-height:100px; width:100%;" required></textarea>
+      <button class="btn" type="submit" style="background:#ef4444; color:#fff;">Reject Verification</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,231 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ business.business_name }} | School & Education</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root{
+      --primary: {{ site.primary_color if site and site.primary_color else '#123c76' }};
+      --secondary: {{ site.secondary_color if site and site.secondary_color else '#f1c84f' }};
+      --accent: {{ site.accent_color if site and site.accent_color else '#2563eb' }};
+      --bg:#f4f8fd;
+      --ink:#10243e;
+      --muted:#5a708c;
+      --card:#ffffff;
+      --line:#d8e3f2;
+      --font:{{ site.font_family if site and site.font_family else "'Trebuchet MS', Verdana, sans-serif" }};
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f0f9ff;color:#0f172a}
-    a{text-decoration:none}
-    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #bae6fd}
-    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
-    .logo{width:48px;height:48px;border-radius:18px;background:#075985;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
-    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
-    .apply-btn{background:#0284c7;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
-    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .hero-main{min-height:450px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#facc15,transparent 28%),linear-gradient(135deg,#075985,#1d4ed8);color:white;display:flex;flex-direction:column;justify-content:center}
-    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
-    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
-    .hero p{font-size:18px;color:#dbeafe;line-height:1.6;max-width:660px}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
-    .primary{background:#facc15;color:#0f172a}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
-    .side{display:grid;gap:18px}
-    .card{border-radius:30px;padding:24px;background:white;border:1px solid #bae6fd;box-shadow:0 18px 50px rgba(7,89,133,.12)}
-    .card.dark{background:#0c4a6e;color:white}.card h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.card p{color:#075985}.card.dark p{color:#bae6fd}
-    .wrap{max-width:1180px;margin:auto;padding:18px}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
-    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#075985;margin:6px 0 0}
-    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-    .cat{background:white;border:1px solid #bae6fd;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(7,89,133,.07)}
-    .cat span{display:block;font-size:30px;margin-bottom:8px}
-    .programs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .program{background:white;border:1px solid #bae6fd;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(7,89,133,.09)}
-    .photo{height:190px;background:linear-gradient(135deg,#bae6fd,#fef3c7);display:flex;align-items:center;justify-content:center;font-size:54px}
-    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#075985;line-height:1.45}
-    .price{font-size:23px;font-weight:1000;color:#0369a1}.tag{display:inline-block;margin:10px 0;background:#dcfce7;color:#166534;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
-    .program button{width:100%;border:0;background:#0284c7;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
-    .locked{opacity:.58;filter:grayscale(.5)}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .panel{background:#0c4a6e;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#0f172a;border:1px solid #bae6fd}
-    .panel p{color:#bae6fd}.panel.light p{color:#075985}
-    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#f0f9ff}
-    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .tool{background:white;border:1px solid #bae6fd;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(7,89,133,.08)}
-    .tool b{font-size:18px}.tool p{color:#075985;line-height:1.55}
-    .notice{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100vw - 36px);background:white;border:1px solid #bae6fd;border-radius:28px;box-shadow:0 28px 80px rgba(7,89,133,.25);padding:18px;z-index:30}
-    .notice h3{margin:0 0 10px}.notice-line{display:flex;justify-content:space-between;border-bottom:1px solid #bae6fd;padding:10px 0;color:#075985}
-    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#0369a1}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
-    footer{text-align:center;padding:38px 18px;color:#075985}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.programs{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.grid2{grid-template-columns:1fr}.navlinks{display:none}}
-    @media(max-width:560px){.programs,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.notice{position:static;width:auto;margin:18px}.section-head{display:block}}
+    body{margin:0;background:linear-gradient(180deg,#eff5fb,#f9fbff);color:var(--ink);font-family:var(--font)}
+    a{text-decoration:none;color:inherit}
+    .banner{background:linear-gradient(135deg,var(--primary),#1b56a8);color:#fff;padding:16px 18px}
+    .banner-inner{max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .hero{max-width:1280px;margin:0 auto;padding:18px;display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+    .intro{background:#fff;border:1px solid var(--line);border-radius:36px;padding:28px;box-shadow:0 24px 70px rgba(18,60,118,.08)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:60px;height:60px;border-radius:22px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .nav a,.apply{padding:12px 15px;border-radius:999px;background:#eef4ff;color:var(--primary);font-size:13px;font-weight:900}
+    .apply{background:var(--secondary);color:#1f2937}
+    .eyebrow{display:inline-flex;margin-top:26px;padding:8px 12px;border-radius:999px;background:#f0f5ff;color:var(--primary);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:900}
+    .intro h1{font-size:clamp(46px,8vw,90px);line-height:.9;letter-spacing:-.08em;margin:18px 0 16px}
+    .intro p{max-width:620px;color:var(--muted);font-size:18px;line-height:1.7}
+    .campus{border-radius:36px;overflow:hidden;position:relative;min-height:600px;background:
+      linear-gradient(180deg, rgba(18,60,118,.18), rgba(18,60,118,.32)),
+      url('{{ site.background_image_url if site and site.background_image_url else "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80" }}') center/cover}
+    .campus-card{position:absolute;left:18px;right:18px;bottom:18px;padding:22px;border-radius:28px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px)}
+    .wrap{max-width:1280px;margin:0 auto;padding:0 18px 28px}
+    .section{padding:26px 0}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px}
+    .section-head h3{margin:0;font-size:34px;letter-spacing:-.05em}
+    .section-head p{margin:6px 0 0;color:var(--muted);max-width:700px;line-height:1.6}
+    .triple{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:#fff;border:1px solid var(--line);border-radius:30px;padding:22px;box-shadow:0 18px 50px rgba(18,60,118,.07)}
+    .card h4{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}
+    .card p{margin:0;color:var(--muted);line-height:1.6}
+    .notice-board{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px}
+    .fees table{width:100%;border-collapse:collapse;margin-top:12px}
+    .fees td{padding:14px 0;border-bottom:1px solid #e3ebf7}
+    .fees td:last-child{text-align:right;font-weight:900;color:var(--primary)}
+    .notices{display:grid;gap:10px;margin-top:14px}
+    .notices article{padding:16px;border-radius:20px;background:#f5f8fd;border:1px solid #e3ebf7}
+    .portal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .portal article{padding:16px;border-radius:22px;background:#eef4ff;border:1px solid #d7e4f6}
+    .footer{margin-top:18px;padding:24px;border-radius:28px;background:#10243e;color:#dce6f4;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+    .footer strong{display:block;font-size:22px}
+    .footer a{padding:14px 18px;border-radius:16px;background:#16a34a;color:#fff;font-weight:900}
+    @media(max-width:1020px){
+      .hero,.triple,.notice-board,.portal{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .campus{min-height:360px}
+      .footer{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="nav">
-    <div class="brand">
-      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}🎓{% endif %}</div>
-      <div>{{ business.business_name }}</div>
-    </div>
-    <nav class="navlinks">
-      <a href="#programs">Programs</a>
-      <a href="#admissions">Admissions</a>
-      <a href="#fees">Fees</a>
-      <a href="#admin">School Tools</a>
-    </nav>
-    <a class="apply-btn" href="#noticeBox">🎓 Apply</a>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-main">
-    <div class="badge">School & Education • {{ business.town or "Namibia" }}</div>
-    <h1>{{ business.business_name }}</h1>
-    <p>{{ business.description or "Admissions, school notices, programs, fees, parent communication and student support — all in one professional education website." }}</p>
-    <div class="btns">
-      <a class="btn primary" href="#programs">📚 View Programs</a>
-      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 Contact School</a>
+  <div class="banner">
+    <div class="banner-inner">
+      <div>Admissions and parent communication website</div>
+      <a class="apply" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Admissions enquiry</a>
     </div>
   </div>
 
-  <div class="side">
-    <div class="card dark">
-      <h3>Admissions open</h3>
-      <p>Show application deadlines, required documents and school intake information.</p>
-      <b>2026 enrolment</b>
-    </div>
-    <div class="card">
-      <h3>Parent updates</h3>
-      <p>Publish notices, events, fee reminders, timetables and school announcements.</p>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-  <div class="section-head">
-    <div>
-      <h2>Education sections</h2>
-      <p>Organize school information clearly for parents and learners.</p>
-    </div>
-  </div>
-
-  <div class="categories">
-    <div class="cat"><span>📝</span>Admissions</div>
-    <div class="cat"><span>📚</span>Programs</div>
-    <div class="cat"><span>💳</span>Fees</div>
-    <div class="cat"><span>📢</span>Notices</div>
-    <div class="cat"><span>🗓️</span>Timetable</div>
-    <div class="cat"><span>👨‍👩‍👧</span>Parents</div>
-  </div>
-
-  <div class="section-head" id="programs">
-    <div>
-      <h2>Programs & classes</h2>
-      <p>Free trial shows 3 program cards. Upgrade unlocks full pages, parent portal and student resources.</p>
-    </div>
-  </div>
-
-  <section class="programs">
-    <div class="program">
-      <div class="photo">🧒</div>
-      <div class="info">
-        <h3>Primary Program</h3>
-        <p>Core subjects, learner support and class information.</p>
-        <span class="price">Apply now</span><br>
-        <span class="tag">Open</span>
-        <button>Start Application</button>
+  <section class="hero">
+    <article class="intro">
+      <div class="brand">
+        <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" alt="{{ business.business_name }} logo">{% else %}🎓{% endif %}</div>
+        <div>
+          <strong>{{ business.business_name }}</strong>
+          <div>{{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</div>
+        </div>
       </div>
-    </div>
-
-    <div class="program">
-      <div class="photo">📘</div>
-      <div class="info">
-        <h3>High School</h3>
-        <p>Academic programs, activities and exam preparation.</p>
-        <span class="price">Enrolment</span><br>
-        <span class="tag">Available</span>
-        <button>View Requirements</button>
+      <nav class="nav">
+        <a href="#programs">Programs</a>
+        <a href="#admissions">Admissions</a>
+        <a href="#fees">Fees</a>
+        <a href="#portal">Parent portal</a>
+      </nav>
+      <div class="eyebrow">Institutional style{% if request and request.path.startswith('/templates/preview/') %} · Sample preview{% endif %}</div>
+      <h1>{{ site.hero_title if site and site.hero_title else business.business_name }}</h1>
+      <p>{{ business.description or 'A clean education website with admissions callout, program cards, notice board, fees area and parent portal preview.' }}</p>
+    </article>
+    <article class="campus">
+      <div class="campus-card">
+        <strong>Admissions are clear from the first view.</strong>
+        <p>Use an institutional layout instead of a shop-style homepage so parents understand trust, structure and process immediately.</p>
       </div>
-    </div>
-
-    <div class="program">
-      <div class="photo">💻</div>
-      <div class="info">
-        <h3>Training Course</h3>
-        <p>Short courses, tutoring and skills development.</p>
-        <span class="price">Request info</span><br>
-        <span class="tag">Popular</span>
-        <button>Request Details</button>
-      </div>
-    </div>
-
-    <div class="program locked">
-      <div class="photo">🔒</div>
-      <div class="info">
-        <h3>More Programs Locked</h3>
-        <p>Unlock unlimited program pages and resources.</p>
-        <span class="price">Upgrade</span><br>
-        <span class="tag">Trial limit</span>
-        <button>Unlock Programs</button>
-      </div>
-    </div>
+    </article>
   </section>
 
-  <div class="section-head" id="admissions">
-    <div>
-      <h2>Admissions, fees & notices</h2>
-      <p>Built for schools, tutors, colleges and training centres.</p>
-    </div>
-  </div>
-
-  <section class="grid2">
-    <div class="panel">
-      <h2>Admissions checklist</h2>
-      <p>Help parents know exactly what is needed.</p>
-      <div class="rows">
-        <div class="row"><span>Application form</span><b>Ready</b></div>
-        <div class="row"><span>Birth certificate / ID</span><b>Required</b></div>
-        <div class="row"><span>Previous report</span><b>Required</b></div>
-        <div class="row"><span>Parent contact</span><b>Required</b></div>
+  <main class="wrap">
+    <section class="section" id="programs">
+      <div class="section-head">
+        <div>
+          <h3>Programs & classes</h3>
+          <p>Lead with academic pathways before notices and fee information.</p>
+        </div>
       </div>
-    </div>
-
-    <div class="panel light" id="fees">
-      <h2>Fees & statements</h2>
-      <p>Preview fee structure, invoices, receipts and parent payment records.</p>
-      <div class="rows">
-        <div class="row"><span>Registration fee</span><b>N$500</b></div>
-        <div class="row"><span>Monthly fees</span><b>Custom</b></div>
-        <div class="row"><span>Fee invoice</span><b>Ready</b></div>
-        <div class="row"><span>Parent statement</span><b>Paid plan</b></div>
+      <div class="triple">
+        <article class="card"><h4>Primary school</h4><p>Core curriculum, learner support and foundational development.</p></article>
+        <article class="card"><h4>Secondary stream</h4><p>Exam preparation, subject focus and senior learner pathways.</p></article>
+        <article class="card"><h4>Skills & tutoring</h4><p>Short courses, tutoring programs and enrichment options.</p></article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="section-head" id="admin">
-    <div>
-      <h2>School admin system preview</h2>
-      <p>These tools are prepared for the school dashboard.</p>
-    </div>
-  </div>
+    <section class="section">
+      <div class="notice-board">
+        <article class="card" id="admissions">
+          <h4>Admissions callout</h4>
+          <p>Application forms, documents, parent contact flow and intake dates belong in one guided section.</p>
+          <div class="notices">
+            <article>Application form and learner details</article>
+            <article>Birth certificate or ID records</article>
+            <article>Previous report and parent contact</article>
+          </div>
+        </article>
 
-  <section class="tools">
-    <div class="tool"><b>📝 Admissions manager</b><p>Receive applications, required documents and parent contact details.</p></div>
-    <div class="tool"><b>📢 Notices</b><p>Publish school announcements, events, holidays and urgent messages.</p></div>
-    <div class="tool"><b>💳 Fee invoices</b><p>Create fee invoices, receipts and parent account statements.</p></div>
-    <div class="tool"><b>🗓️ Timetable</b><p>Show class schedules, exams, activities and school calendar.</p></div>
-    <div class="tool"><b>👨‍👩‍👧 Parent portal</b><p>Parents can request info, view notices and contact the school.</p></div>
-    <div class="tool"><b>📊 Reports</b><p>Applications, fee balances, enquiries, notices and admission statistics.</p></div>
-  </section>
-</main>
+        <article class="card fees" id="fees">
+          <h4>Fees & enrolment</h4>
+          <table>
+            <tr><td>Registration fee</td><td>N$ 500</td></tr>
+            <tr><td>Tuition plan</td><td>Custom by grade</td></tr>
+            <tr><td>Term statement</td><td>Available</td></tr>
+            <tr><td>Parent receipts</td><td>Included</td></tr>
+          </table>
+        </article>
+      </div>
+    </section>
 
-<div class="notice" id="noticeBox">
-  <h3>🎓 Application preview</h3>
-  <div class="notice-line"><span>Admission enquiry</span><b>Open</b></div>
-  <div class="notice-line"><span>Registration fee</span><b>N$500</b></div>
-  <div class="notice-line"><span>Documents</span><b>Pending</b></div>
-  <div class="total">Status: Ready</div>
-  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Send Admission Enquiry</a>
-</div>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h3>Notice board & parent portal preview</h3>
+          <p>Use a dedicated notice board and parent portal strip instead of generic admin cards.</p>
+        </div>
+      </div>
+      <div class="triple">
+        <article class="card"><h4>School notices</h4><p>Announcements, term dates, exam reminders and event updates.</p></article>
+        <article class="card"><h4>Parent communication</h4><p>Fee reminders, schedule changes and admissions follow-up.</p></article>
+        <article class="card"><h4>Student updates</h4><p>Programs, competitions, academic support and extra activities.</p></article>
+      </div>
+      <div class="portal" id="portal">
+        <article>View notices</article>
+        <article>Check fee status</article>
+        <article>Send enquiry by WhatsApp</article>
+      </div>
+    </section>
 
-<footer>
-  <b>{{ business.business_name }}</b><br>
-  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
-  Education website powered by VibeHost
-</footer>
-
+    {% include "website_templates/_dynamic_business_section.html" %}
+    {% include "website_templates/_customer_links.html" %}
+    <footer class="footer">
+      <div>
+        <strong>{{ business.business_name }}</strong>
+        <span>{{ business.email }} · {{ business.phone }} · {{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</span>
+      </div>
+      <a href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Contact admissions</a>
+    </footer>
+  </main>
 </body>
 </html>

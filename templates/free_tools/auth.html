@@ -1,3 +1,123 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{{ mode.title() }} Free Tool Account | VibeHost</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.card{width:min(100%,460px);background:#fff;border:1px solid #d0d5dd;border-radius:30px;padding:28px;box-shadow:0 24px 70px rgba(15,23,42,.10)}label{display:block;font-weight:700;margin:14px 0 8px}input{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}button{width:100%;margin-top:18px;padding:15px;border:0;border-radius:16px;background:#111827;color:#fff;font-weight:800}.oauth{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}.oauth div{padding:12px;border:1px solid #d0d5dd;border-radius:16px;text-align:center}.error{margin-top:14px;padding:12px 14px;border-radius:16px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b}@media(max-width:640px){.oauth{grid-template-columns:1fr}}</style></head>
-<body><form class="card" method="POST"><h1>{{ "Register" if mode=="register" else "Login" }} Free Tool Account</h1><p>{{ "Create a free invoice and quotation account." if mode=="register" else "Sign in to your free tool dashboard." }}</p>{% if mode=="register" %}<label>Full name</label><input name="full_name">{% endif %}<label>Email</label><input type="email" name="email" required>{% if mode=="register" %}<label>Password</label><input type="password" name="password" required><label>Confirm password</label><input type="password" name="confirm_password" required>{% else %}<label>Password</label><input type="password" name="password" required>{% endif %}<div class="oauth"><div>Google<br><small>Coming soon with Supabase auth</small></div><div>Facebook<br><small>Coming soon with Supabase auth</small></div></div><button type="submit">{{ "Create Account" if mode=="register" else "Login" }}</button>{% if error %}<div class="error">{{ error }}</div>{% endif %}</form></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ "Create Free Account" if mode == "register" else "Login" }} | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.app{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}.panel,.side{padding:24px}.panel{display:flex;align-items:center;justify-content:center}.card{width:min(100%,540px);background:#fff;border:1px solid #d0d5dd;border-radius:30px;padding:28px;box-shadow:0 24px 70px rgba(15,23,42,.10)}
+    h1{margin:0 0 10px;font-size:36px;letter-spacing:-.04em}.lead{margin:0;color:#667085;line-height:1.65}.steps{display:flex;gap:10px;margin:16px 0 20px}.step{flex:1;height:8px;border-radius:999px;background:#e5e7eb}.step.active{background:#111827}.page{display:none}.page.active{display:block}
+    label{display:block;font-weight:700;margin:14px 0 8px}input,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}.grid2,.oauth,.actions{display:grid;gap:12px}.grid2,.oauth{grid-template-columns:1fr 1fr}.oauth a,.oauth span{display:block;padding:13px;border:1px solid #d0d5dd;border-radius:16px;text-align:center;font-weight:700;text-decoration:none;color:#111827;background:#fff}.oauth span{opacity:.58}
+    .actions{grid-template-columns:1fr 1fr;margin-top:20px}.actions button,.actions a{padding:15px;border-radius:16px;border:0;text-align:center;font-weight:800;text-decoration:none}.primary{background:#111827;color:#fff}.ghost{background:#eef2f7;color:#111827}.error{margin-top:14px;padding:12px 14px;border-radius:16px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b}.small{font-size:13px;color:#667085;line-height:1.55}.toggle{margin-top:8px;font-size:13px;color:#667085;cursor:pointer}
+    .side{background:linear-gradient(135deg,#17222f,#243f37 58%,#c19028);color:#fff}.side h2{font-size:clamp(38px,6vw,70px);line-height:.92;letter-spacing:-.06em;margin:0 0 14px}.side p,.side li{color:#e5e7eb;line-height:1.75}.side ul{margin:18px 0 0;padding-left:18px}
+    @media(max-width:980px){.app{grid-template-columns:1fr}.side{order:-1}}@media(max-width:720px){.panel,.side{padding:16px}.grid2,.oauth,.actions{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel">
+      <form class="card" method="POST" id="auth-form">
+        <h1>{{ "Create free account" if mode == "register" else "Login" }}</h1>
+        <p class="lead">{{ "Save invoices and quotations in premium templates with your own profile and logo." if mode == "register" else "Open your account to manage saved records, templates and downloads." }}</p>
+
+        {% if mode == "register" %}
+        <div class="steps"><div class="step active" data-step="1"></div><div class="step" data-step="2"></div><div class="step" data-step="3"></div></div>
+        <div class="page active" data-page="1">
+          <label>Full name</label>
+          <input name="full_name" required>
+          <label>Phone</label>
+          <input name="phone" required>
+          <label>Email</label>
+          <input type="email" name="email" required>
+        </div>
+        <div class="page" data-page="2">
+          <label>Password</label>
+          <input id="password" type="password" name="password" required>
+          <label>Confirm password</label>
+          <input id="confirm_password" type="password" name="confirm_password" required>
+          <div class="toggle" onclick="togglePasswords()">Show or hide password</div>
+        </div>
+        <div class="page" data-page="3">
+          <label>Selected starting template</label>
+          <select name="selected_template">
+            {% for t in templates %}<option value="{{ t.slug }}" {% if t.slug == template_slug %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+          </select>
+          <p class="small">Free plan limits: save 2 invoices and 2 quotations. Upgrade later to remove the VibeHost watermark, unlock more records and keep stronger business branding.</p>
+        </div>
+        {% else %}
+        <label>Email</label>
+        <input type="email" name="email" required>
+        <label>Password</label>
+        <input id="login_password" type="password" name="password" required>
+        <div class="toggle" onclick="toggleLoginPassword()">Show or hide password</div>
+        {% endif %}
+
+        <div class="oauth" style="margin-top:16px">
+          {% if google_available %}<a href="/auth/supabase/google?context=free_tools">Continue with Google</a>{% else %}<span>Continue with Google<br><small>Coming soon</small></span>{% endif %}
+          {% if facebook_available %}<a href="/auth/supabase/facebook?context=free_tools">Continue with Facebook</a>{% else %}<span>Continue with Facebook<br><small>Coming soon</small></span>{% endif %}
+        </div>
+
+        {% if mode == "register" %}
+        <div class="actions">
+          <a href="#" class="ghost" id="prev-btn" onclick="changeStep(-1);return false;">Back</a>
+          <button class="primary" type="button" id="next-btn" onclick="changeStep(1)">Next</button>
+          <button class="primary" type="submit" id="submit-btn" style="display:none">Create account</button>
+        </div>
+        {% else %}
+        <div class="actions" style="grid-template-columns:1fr">
+          <button class="primary" type="submit">Login</button>
+        </div>
+        {% endif %}
+
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+      </form>
+    </section>
+
+    <section class="side">
+      {% if mode == "register" %}
+      <h2>Start free with a premium document system.</h2>
+      <p>Create an account once, choose your invoice and quotation look, and keep your records in one clean dashboard.</p>
+      {% else %}
+      <h2>Keep documents, branding and downloads together.</h2>
+      <p>Your login keeps recent invoices, quotations, selected templates and future upgrade options in one place.</p>
+      {% endif %}
+      <ul>
+        <li>Save invoices</li>
+        <li>Save quotations</li>
+        <li>Download watermarked PDFs on the free plan</li>
+        <li>Upload your logo and business profile details</li>
+        <li>Remove the watermark after upgrade</li>
+        <li>Keep client-ready branding across templates</li>
+      </ul>
+    </section>
+  </div>
+  <script>
+    let currentStep = 1;
+    function updateStep() {
+      document.querySelectorAll('.page').forEach((page) => page.classList.toggle('active', Number(page.dataset.page) === currentStep));
+      document.querySelectorAll('.step').forEach((step) => step.classList.toggle('active', Number(step.dataset.step) <= currentStep));
+      const prev = document.getElementById('prev-btn');
+      const next = document.getElementById('next-btn');
+      const submit = document.getElementById('submit-btn');
+      if (prev) prev.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+      if (next) next.style.display = currentStep === 3 ? 'none' : 'block';
+      if (submit) submit.style.display = currentStep === 3 ? 'block' : 'none';
+    }
+    function changeStep(direction) {
+      currentStep = Math.min(3, Math.max(1, currentStep + direction));
+      updateStep();
+    }
+    function togglePasswords() {
+      ['password', 'confirm_password'].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.type = input.type === 'password' ? 'text' : 'password';
+      });
+    }
+    function toggleLoginPassword() {
+      const input = document.getElementById('login_password');
+      if (input) input.type = input.type === 'password' ? 'text' : 'password';
+    }
+    updateStep();
+  </script>
+</body>
+</html>

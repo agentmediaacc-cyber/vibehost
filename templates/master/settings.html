@@ -1,0 +1,48 @@
+{% extends "master/base.html" %}
+{% block title %}System Settings{% endblock %}
+{% block header_title %}Configuration{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 800px;">
+    <form method="POST">
+        <div style="display: grid; gap: 24px;">
+            <div>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Support WhatsApp Number</label>
+                <input type="text" name="whatsapp_number" value="{{ settings.get('whatsapp_number', '') }}" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px;">
+                <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">Used for support links throughout the site.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Default Trial Days</label>
+                    <input type="number" name="trial_days_default" value="{{ settings.get('trial_days_default', '14') }}" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Support Email</label>
+                    <input type="email" name="support_email" value="{{ settings.get('support_email', '') }}" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px;">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Free Invoice Limit</label>
+                    <input type="number" name="invoice_free_limit" value="{{ settings.get('invoice_free_limit', '2') }}" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px;">Free Quotation Limit</label>
+                    <input type="number" name="quotation_free_limit" value="{{ settings.get('quotation_free_limit', '2') }}" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px;">
+                </div>
+            </div>
+
+            <div>
+                <label style="display: block; font-weight: 600; margin-bottom: 8px;">Maintenance Message</label>
+                <textarea name="maintenance_message" rows="3" class="btn btn-outline" style="width: 100%; text-align: left; padding: 12px; resize: vertical;">{{ settings.get('maintenance_message', '') }}</textarea>
+                <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">If set, will display a banner to all users.</p>
+            </div>
+
+            <div style="padding-top: 12px; border-top: 1px solid #f1f5f9; display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn btn-primary" style="padding: 12px 32px;">Save All Settings</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,3 +1,78 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Free Tool Dashboard | VibeHost</title><style>*{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f5f7fb;color:#101828}.wrap{max-width:980px;margin:0 auto;padding:18px}.hero{background:linear-gradient(135deg,#17222f,#253b33 58%,#c89a2b);color:#fff;border-radius:30px;padding:28px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}.stat,.card{background:#fff;border:1px solid #d0d5dd;border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}@media(max-width:760px){.stats,.grid{grid-template-columns:1fr}}</style></head>
-<body><div class="wrap"><section class="hero"><h1>{{ user.full_name or user.email }}</h1><p>Free tool account. Limit: 2 invoices and 2 quotations before upgrade.</p></section><div class="stats"><div class="stat"><strong>{{ invoices }}</strong><br>Invoices</div><div class="stat"><strong>{{ quotations }}</strong><br>Quotations</div></div><div class="grid"><a class="card" href="/free-tools/invoices"><strong>Manage invoices</strong><br>Create and review invoice records.</a><a class="card" href="/free-tools/quotations"><strong>Manage quotations</strong><br>Create and review quotation records.</a></div></div></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Tools Dashboard | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f5f7fb;color:#101828}.wrap{max-width:1180px;margin:0 auto;padding:18px}
+    .hero{background:linear-gradient(135deg,#17222f,#243f37 58%,#c19028);color:#fff;border-radius:30px;padding:28px}.hero h1{margin:0 0 10px;font-size:clamp(38px,7vw,68px);line-height:.92;letter-spacing:-.05em}.hero p{max-width:720px;color:#e5e7eb;line-height:1.7}.badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);font-size:13px;font-weight:700}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.actions a{padding:13px 16px;border-radius:999px;font-weight:700;text-decoration:none}.primary{background:#f1ddb2;color:#171512}.ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;margin-top:18px}.stack{display:grid;gap:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:22px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.card h2{margin:0 0 10px;font-size:28px;letter-spacing:-.04em}.card p{margin:0;color:#667085;line-height:1.6}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.stat,.item{padding:16px;border-radius:18px;background:#f8fafc;border:1px solid #dbe3ed}.stat strong,.item strong{display:block;font-size:22px;margin-bottom:6px}.list{display:grid;gap:12px;margin-top:16px}.upgrade{margin-top:18px;padding:16px 18px;border-radius:20px;background:#111827;color:#fff}.upgrade a{display:inline-flex;margin-top:12px;padding:12px 14px;border-radius:14px;background:#f1ddb2;color:#171512;font-weight:700;text-decoration:none}
+    @media(max-width:900px){.grid,.stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="badge">{{ user.plan_name|title }} plan</div>
+      <h1>{{ user.business_name or user.full_name or user.email }}</h1>
+      <p>Manage branded invoices and quotations, keep separate default templates for each document type, and download real PDFs with the VibeHost watermark while you are on the free plan.</p>
+      <div class="actions">
+        <a class="primary" href="/free-tools/create/invoice?template={{ invoice_template_meta.slug if invoice_template_meta else 'invoice_modern_clean' }}">Create invoice</a>
+        <a class="primary" href="/free-tools/create/quotation?template={{ quotation_template_meta.slug if quotation_template_meta else 'quotation_modern_clean' }}">Create quotation</a>
+        <a class="ghost" href="/free-tools/profile">Business profile</a>
+        <a class="ghost" href="/free-tools/templates">Preview templates</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="stack">
+        <article class="card">
+          <h2>Usage and template status</h2>
+          <div class="stats">
+            <div class="stat"><strong>{{ invoices }} / {{ limit }}</strong><span>Saved invoices</span></div>
+            <div class="stat"><strong>{{ quotations }} / {{ limit }}</strong><span>Saved quotations</span></div>
+            <div class="stat"><strong>{{ invoice_template_meta.name if invoice_template_meta else 'Modern Clean' }}</strong><span>Invoice template</span></div>
+            <div class="stat"><strong>{{ quotation_template_meta.name if quotation_template_meta else 'Modern Clean' }}</strong><span>Quotation template</span></div>
+            <div class="stat"><strong>{{ "VibeHost watermark" if watermark_on else "No watermark" }}</strong><span>Watermark status</span></div>
+            <div class="stat"><strong>{{ user.business_name or 'Business profile pending' }}</strong><span>Branding profile</span></div>
+          </div>
+          <div class="upgrade">
+            Upgrade to remove the watermark, keep more records, store client history and strengthen your business branding.
+            <a href="/packages">See upgrade options</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Recent documents</h2>
+          <div class="list">
+            {% for document in recent_documents %}
+            <a class="item" href="/free-tools/documents/{{ document.id }}">
+              <strong>{{ document.document_number }}</strong>
+              {{ document.document_type|title }} · {{ document.customer_name or "Customer not added yet" }}<br>
+              N$ {{ document.total or 0 }}
+            </a>
+            {% else %}
+            <div class="item"><strong>No saved records yet</strong>Create your first invoice or quotation to start your dashboard history.</div>
+            {% endfor %}
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <article class="card">
+          <h2>Quick actions</h2>
+          <div class="list">
+            <a class="item" href="/free-tools/create/invoice?template={{ invoice_template_meta.slug if invoice_template_meta else 'invoice_modern_clean' }}"><strong>Create invoice</strong>Use your invoice template and generate a new PDF-ready record.</a>
+            <a class="item" href="/free-tools/create/quotation?template={{ quotation_template_meta.slug if quotation_template_meta else 'quotation_modern_clean' }}"><strong>Create quotation</strong>Keep quotation wording, validity dates and approval-ready totals separate.</a>
+            <a class="item" href="/free-tools/profile"><strong>Update profile and logo</strong>Control the business details shown on your documents.</a>
+            <a class="item" href="/free-tools/logout"><strong>Logout</strong>Close your current free-tools session.</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

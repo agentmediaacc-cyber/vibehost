@@ -1,0 +1,120 @@
+{% extends "master/base.html" %}
+{% block title %}{{ business.business_name }}{% endblock %}
+{% block header_title %}Website Details{% endblock %}
+{% block content %}
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <div>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 24px;">
+                <div>
+                    <h2 style="margin: 0;">{{ business.business_name }}</h2>
+                    <p style="color: #64748b; margin: 4px 0;">{{ business.description }}</p>
+                </div>
+                <span class="badge {% if business.sub_status == 'active' %}badge-success{% else %}badge-warning{% endif %}" style="padding: 8px 16px; font-size: 1rem;">
+                    {{ business.sub_status|title }}
+                </span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+                <div>
+                    <h3 style="font-size: 0.875rem; text-transform: uppercase; color: #64748b; margin-bottom: 8px;">Business Info</h3>
+                    <p><strong>Subdomain:</strong> {{ business.subdomain }}</p>
+                    <p><strong>Category:</strong> {{ business.category }}</p>
+                    <p><strong>Town/Region:</strong> {{ business.town }}, {{ business.region }}</p>
+                    <p><strong>Contact:</strong> {{ business.phone }} / {{ business.email }}</p>
+                    <p><strong>Verification:</strong> {{ business.verification_status or 'pending' }}</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 0.875rem; text-transform: uppercase; color: #64748b; margin-bottom: 8px;">Subscription</h3>
+                    <p><strong>Plan:</strong> {{ business.plan_name }}</p>
+                    <p><strong>Trial Started:</strong> {{ business.trial_started_at.strftime('%Y-%m-%d') if business.trial_started_at else 'N/A' }}</p>
+                    <p><strong>Trial Expires:</strong> {{ business.trial_expires_at.strftime('%Y-%m-%d') if business.trial_expires_at else 'N/A' }}</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px;">
+                <a href="https://{{ business.subdomain }}.namvibe.com" target="_blank" class="btn btn-outline">
+                    <i class="fas fa-external-link-alt"></i> View Live Site
+                </a>
+                {% if owner %}
+                <form action="{{ url_for('master_impersonate_owner', owner_id=owner.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-secret"></i> Impersonate Owner
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info"><h3>Products</h3><p>{{ products_count }}</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h3>Orders</h3><p>{{ orders_count }}</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h3>Invoices</h3><p>{{ invoices_count }}</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h3>Quotations</h3><p>{{ quotations_count }}</p></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info"><h3>Customers</h3><p>{{ customers_count }}</p></div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="card">
+            <h3 style="margin-top: 0;">Verification Review</h3>
+            {% if verification %}
+            <p style="color:#64748b;">Current review status: <strong>{{ verification.status }}</strong></p>
+            <a href="{{ url_for('master_verification_detail', verification_id=verification.id) }}" class="btn btn-outline" style="width:100%; justify-content:center;">Open Verification</a>
+            {% else %}
+            <p style="color:#64748b;">No verification submission uploaded yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top: 0;">Manage Status</h3>
+            <form action="{{ url_for('master_website_status', business_id=business.id) }}" method="POST">
+                <select name="status" class="btn btn-outline" style="width: 100%; margin-bottom: 12px; padding: 10px;">
+                    <option value="trial" {% if business.sub_status == 'trial' %}selected{% endif %}>Trial</option>
+                    <option value="active" {% if business.sub_status == 'active' %}selected{% endif %}>Active</option>
+                    <option value="suspended" {% if business.sub_status == 'suspended' %}selected{% endif %}>Suspended</option>
+                    <option value="expired" {% if business.sub_status == 'expired' %}selected{% endif %}>Expired</option>
+                    <option value="cancelled" {% if business.sub_status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Update Status</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top: 0;">Change Plan</h3>
+            <form action="{{ url_for('master_website_plan', business_id=business.id) }}" method="POST">
+                <select name="plan" class="btn btn-outline" style="width: 100%; margin-bottom: 12px; padding: 10px;">
+                    <option value="free_trial" {% if business.plan_name == 'free_trial' %}selected{% endif %}>Free Trial</option>
+                    <option value="preview_150" {% if business.plan_name == 'preview_150' %}selected{% endif %}>Preview (150)</option>
+                    <option value="domain_450" {% if business.plan_name == 'domain_450' %}selected{% endif %}>Domain (450)</option>
+                    <option value="starter_3000" {% if business.plan_name == 'starter_3000' %}selected{% endif %}>Starter (3000)</option>
+                    <option value="silver_750" {% if business.plan_name == 'silver_750' %}selected{% endif %}>Silver (750)</option>
+                    <option value="premium_1500" {% if business.plan_name == 'premium_1500' %}selected{% endif %}>Premium (1500)</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Update Plan</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top: 0;">Extend Trial</h3>
+            <form action="{{ url_for('master_website_trial_extend', business_id=business.id) }}" method="POST">
+                <div style="display: flex; gap: 8px;">
+                    <button type="submit" name="days" value="7" class="btn btn-outline" style="flex: 1;">+7 Days</button>
+                    <button type="submit" name="days" value="14" class="btn btn-outline" style="flex: 1;">+14 Days</button>
+                    <button type="submit" name="days" value="30" class="btn btn-outline" style="flex: 1;">+30 Days</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

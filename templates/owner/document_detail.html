@@ -1,3 +1,78 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{{ document.document_number }} | VibeHost</title><style>*{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f4f6fb;color:#101828}.wrap{max-width:960px;margin:0 auto;padding:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb}.totals{margin-top:18px;display:grid;gap:8px;justify-content:end}</style></head>
-<body><div class="wrap"><div class="card"><h1>{{ document.document_type.title() }} {{ document.document_number }}</h1><p>{{ business.business_name }} · Status: {{ document.status }}</p><p>Customer: {{ document.customer_name or "Not provided" }} · {{ document.customer_email or "" }} · {{ document.customer_phone or "" }}</p><table><thead><tr><th>Item</th><th>Quantity</th><th>Unit price</th><th>Total</th></tr></thead><tbody>{% for item in items %}<tr><td>{{ item.item_name }}</td><td>{{ item.quantity }}</td><td>N$ {{ item.unit_price }}</td><td>N$ {{ item.total }}</td></tr>{% endfor %}</tbody></table><div class="totals"><div>Subtotal: N$ {{ document.subtotal }}</div><div>Tax: N$ {{ document.tax }}</div><div><strong>Total: N$ {{ document.total }}</strong></div></div><p style="margin-top:18px"><a href="/owner/documents/{{ document.id }}/download" target="_blank">Download / Print</a></p></div></div></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ document.document_number }} | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Georgia,"Times New Roman",serif;background:#f4f6fb;color:#101828}.wrap{max-width:1080px;margin:0 auto;padding:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}
+    h1{margin:0 0 10px;font-size:38px;letter-spacing:-.05em}.meta{color:#667085;line-height:1.7}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.actions a{padding:12px 14px;border-radius:14px;background:#111827;color:#fff;text-decoration:none;font-weight:700}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.block{padding:18px;border-radius:22px;background:#f8fafc;border:1px solid #dbe3ed}.block h2{margin:0 0 10px;font-size:22px}.table{width:100%;border-collapse:collapse;margin-top:18px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e5e7eb}th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#667085}.totals{margin-top:18px;display:grid;gap:8px;justify-content:end}.totals div{display:flex;justify-content:space-between;gap:28px;min-width:260px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>{{ document.document_type|upper }} {{ document.document_number }}</h1>
+      <div class="meta">{{ business.business_name }} · Status: {{ document.status }}{% if document.watermark %} · VibeHost trial mark included{% endif %}</div>
+      <div class="actions">
+        <a href="/owner/documents/{{ document.id }}/download" target="_blank">Download PDF</a>
+        <a href="/owner/{{ 'invoices' if document.document_type == 'invoice' else 'quotations' }}">Back to {{ document.document_type|title }}s</a>
+      </div>
+
+      <div class="grid">
+        <div class="block">
+          <h2>Customer</h2>
+          <div>{{ document.customer_name or "Not provided" }}</div>
+          <div>{{ document.customer_email or "" }}</div>
+          <div>{{ document.customer_phone or "" }}</div>
+          <div>{{ document.customer_address or "" }}</div>
+        </div>
+        <div class="block">
+          <h2>{% if document.document_type == 'quotation' %}Quotation details{% else %}Invoice details{% endif %}</h2>
+          <div>Issue date: {{ document.created_at.strftime('%d %b %Y') if document.created_at else '' }}</div>
+          <div>{% if document.document_type == 'quotation' %}Valid until: {{ document.valid_until.strftime('%d %b %Y') if document.valid_until else '' }}{% else %}Due date: {{ document.due_date.strftime('%d %b %Y') if document.due_date else '' }}{% endif %}</div>
+          <div>Template: {{ document.template_slug or "Default" }}</div>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr><th>Item</th><th>Quantity</th><th>Unit price</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.item_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>N$ {{ item.unit_price }}</td>
+            <td>N$ {{ item.total }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div><span>Subtotal</span><span>N$ {{ document.subtotal }}</span></div>
+        <div><span>Tax</span><span>N$ {{ document.tax }}</span></div>
+        <div><span>Discount</span><span>N$ {{ document.discount or 0 }}</span></div>
+        <div><strong>Total</strong><strong>N$ {{ document.total }}</strong></div>
+      </div>
+
+      {% if document.notes %}
+      <div class="block" style="margin-top:18px">
+        <h2>Notes</h2>
+        <div>{{ document.notes }}</div>
+      </div>
+      {% endif %}
+      {% if document.terms %}
+      <div class="block" style="margin-top:18px">
+        <h2>Terms</h2>
+        <div>{{ document.terms }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

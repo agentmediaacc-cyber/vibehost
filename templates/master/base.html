@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Master Admin{% endblock %} - VibeHost</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vibehost.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --master-sidebar-width: 260px;
+            --master-primary: #1e293b;
+            --master-secondary: #334155;
+            --master-accent: #3b82f6;
+            --master-bg: #f8fafc;
+        }
+        body {
+            background-color: var(--master-bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: var(--master-sidebar-width);
+            background: var(--master-primary);
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .sidebar-header {
+            padding: 24px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border-bottom: 1px solid var(--master-secondary);
+        }
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: var(--master-secondary);
+            color: #fff;
+        }
+        .nav-item i {
+            width: 20px;
+        }
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid var(--master-secondary);
+        }
+        .main-content {
+            margin-left: var(--master-sidebar-width);
+            flex: 1;
+            padding: 32px;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--master-primary);
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stat-info h3 {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        .stat-info p {
+            margin: 4px 0 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--master-primary);
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn-primary { background: var(--master-accent); color: #fff; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-outline { background: transparent; border: 1px solid #cbd5e1; color: #475569; }
+        .btn-outline:hover { background: #f1f5f9; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #f1f5f9;
+            color: #64748b;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #e0f2fe; color: #075985; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            VibeHost Admin
+        </div>
+        <div class="sidebar-nav">
+            <a href="{{ url_for('master_dashboard') }}" class="nav-item {% if request.path == url_for('master_dashboard') %}active{% endif %}">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+            <a href="{{ url_for('master_websites') }}" class="nav-item {% if '/master/websites' in request.path %}active{% endif %}">
+                <i class="fas fa-globe"></i> Websites
+            </a>
+            <a href="{{ url_for('master_owners') }}" class="nav-item {% if request.path == url_for('master_owners') %}active{% endif %}">
+                <i class="fas fa-users"></i> Business Owners
+            </a>
+            <a href="{{ url_for('master_verifications') }}" class="nav-item {% if '/master/verifications' in request.path %}active{% endif %}">
+                <i class="fas fa-shield-check"></i> Verifications
+            </a>
+            <a href="{{ url_for('master_free_tool_users') }}" class="nav-item {% if request.path == url_for('master_free_tool_users') %}active{% endif %}">
+                <i class="fas fa-user-tag"></i> Free Users
+            </a>
+            <a href="{{ url_for('master_documents') }}" class="nav-item {% if request.path == url_for('master_documents') %}active{% endif %}">
+                <i class="fas fa-file-invoice"></i> Documents
+            </a>
+            <a href="{{ url_for('master_payments') }}" class="nav-item {% if request.path == url_for('master_payments') %}active{% endif %}">
+                <i class="fas fa-credit-card"></i> Payments
+            </a>
+            <a href="{{ url_for('master_templates_list') }}" class="nav-item {% if request.path == url_for('master_templates_list') %}active{% endif %}">
+                <i class="fas fa-layer-group"></i> Templates
+            </a>
+            <a href="{{ url_for('master_settings') }}" class="nav-item {% if request.path == url_for('master_settings') %}active{% endif %}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="{{ url_for('master_system_health') }}" class="nav-item {% if request.path == url_for('master_system_health') %}active{% endif %}">
+                <i class="fas fa-heartbeat"></i> System Health
+            </a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('owner_logout') }}" class="nav-item" style="color: #f87171;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="header">
+            <div>
+                <h1>{% block header_title %}Dashboard{% endblock %}</h1>
+            </div>
+            <div class="user-info">
+                <span>Welcome, <strong>{{ session.get('master_name', 'Admin') }}</strong></span>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="card badge-{{ category }}" style="margin-bottom: 20px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends "master/base.html" %}
+{% block title %}Websites{% endblock %}
+{% block header_title %}Website Management{% endblock %}
+{% block content %}
+<div class="card">
+    <form method="GET" style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <input type="text" name="q" value="{{ search }}" placeholder="Search business, email or subdomain..." style="flex: 1; padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 8px;">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Business</th>
+                <th>Owner</th>
+                <th>Subdomain</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for site in websites %}
+            <tr>
+                <td>
+                    <div style="font-weight: 600;">{{ site.business_name }}</div>
+                    <div style="font-size: 0.75rem; color: #64748b;">{{ site.website_type }}</div>
+                </td>
+                <td>{{ site.owner_email }}</td>
+                <td>
+                    <a href="https://{{ site.subdomain }}.namvibe.com" target="_blank" style="color: var(--master-accent); text-decoration: none;">
+                        {{ site.subdomain }} <i class="fas fa-external-link-alt" style="font-size: 0.75rem;"></i>
+                    </a>
+                </td>
+                <td><span class="badge badge-info">{{ site.plan_name }}</span></td>
+                <td>
+                    <span class="badge {% if site.sub_status == 'active' %}badge-success{% elif site.sub_status == 'trial' %}badge-warning{% else %}badge-danger{% endif %}">
+                        {{ site.sub_status|title }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('master_website_detail', business_id=site.id) }}" class="btn btn-outline" style="padding: 6px 12px;">Manage</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

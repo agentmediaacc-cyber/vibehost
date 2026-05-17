@@ -11,11 +11,11 @@
 </head>
 <body>
   <form class="card" method="POST">
-    <h1>Owner Login</h1>
-    <p>Sign in to the protected VibeHost owner dashboard for your website.</p>
-    <label>Email</label><input type="email" name="email" required placeholder="owner@business.com">
-    <label>Password</label><input type="password" name="password" required placeholder="Your password">
-    <button type="submit">Open Owner Dashboard</button>
+    <h1>Login</h1>
+    <p>Sign in to your protected VibeHost dashboard.</p>
+    <label>Email</label><input type="email" name="email" required>
+    <label>Password</label><input type="password" name="password" required>
+    <button type="submit">Continue to Dashboard</button>
     {% if error %}<div class="error">{{ error }}</div>{% endif %}
     <div class="meta">Need help? WhatsApp <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a></div>
   </form>

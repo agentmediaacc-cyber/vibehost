@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Orders | {{ business.business_name }}</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f6f8fc;color:#0f172a}.wrap{max-width:980px;margin:0 auto;padding:20px}.hero,.card{background:#fff;border:1px solid #d9e2ee;border-radius:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.hero{padding:26px;background:linear-gradient(135deg,#111827,#7c3aed);color:#fff}.card{padding:22px;margin-top:18px}.item{padding:14px;border-radius:18px;background:#f8fafc;border:1px solid #e2e8f0;margin-top:12px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.toolbar a{display:inline-flex;padding:12px 14px;border-radius:999px;text-decoration:none;font-weight:800}.toolbar .primary{background:#111827;color:#fff}.toolbar .ghost{background:#e2e8f0;color:#111827}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 style="margin:0 0 8px;">My Orders</h1>
+      <p style="margin:0;color:#ede9fe;">Track every enquiry and order saved under your {{ business.business_name }} customer account.</p>
+      <div class="toolbar"><a class="primary" href="/customer/dashboard">Dashboard</a><a class="ghost" href="https://wa.me/{{ (business.whatsapp or '')|replace('+','') }}">Contact Business</a></div>
+    </section>
+    <section class="card">
+      {% for order in orders %}
+      <div class="item"><strong>{{ order.order_type or 'enquiry' }}</strong><br>Status: {{ order.status or 'new' }}{% if order.delivery_status %} · Delivery: {{ order.delivery_status }}{% endif %}<br>{{ order.message or 'No message' }}</div>
+      {% else %}
+      <div class="item">No orders or enquiries linked to this account yet.</div>
+      {% endfor %}
+    </section>
+  </div>
+</body>
+</html>

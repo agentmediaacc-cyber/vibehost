@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ document_type|title }} {{ document_number }}</title>
+  <style>
+    @page{size:A4;margin:14mm}
+    :root{
+      --bg: {{ theme.bg }};
+      --card: {{ theme.card }};
+      --ink: {{ theme.ink }};
+      --muted: {{ theme.muted }};
+      --line: {{ theme.line }};
+      --accent: {{ theme.accent }};
+      --accent-soft: {{ theme.accent_soft }};
+    }
+    *{box-sizing:border-box}body{margin:0;font-family:{{ theme.font }};background:var(--bg);color:var(--ink);padding:30px}
+    .page{max-width:{% if theme.layout == 'receipt' %}560px{% else %}980px{% endif %};margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:32px;overflow:hidden;box-shadow:0 24px 70px rgba(15,23,42,.10);position:relative}
+    .watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:{% if theme.layout == 'receipt' %}48px{% else %}78px{% endif %};color:rgba(17,24,39,.08);transform:rotate(-24deg);pointer-events:none;font-weight:700;letter-spacing:.06em}
+    .hero{padding:28px;background:{{ theme.hero }};color:{{ theme.hero_ink }}}
+    .hero-grid{display:grid;grid-template-columns:{% if theme.layout == 'receipt' %}1fr{% else %}1.1fr .9fr{% endif %};gap:18px}
+    h1{margin:0 0 10px;font-size:clamp(28px,5vw,52px);line-height:.92;letter-spacing:-.05em}.eyebrow{display:inline-flex;padding:8px 12px;border-radius:999px;background:{{ theme.badge_bg }};color:{{ theme.badge_ink }};font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+    .hero p{margin:0;color:{{ theme.hero_muted }};line-height:1.65}.meta{background:{{ theme.meta_bg }};padding:18px;border-radius:24px;border:1px solid {{ theme.meta_line }}}
+    .body{padding:26px}.section{display:grid;grid-template-columns:{% if theme.layout == 'statement' %}.95fr 1.05fr{% elif theme.layout == 'receipt' %}1fr{% else %}1fr 1fr{% endif %};gap:18px;margin-bottom:22px}
+    .block{padding:18px;border-radius:22px;background:{{ theme.block_bg }};border:1px solid {{ theme.block_line }}}
+    .label{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    table{width:100%;border-collapse:collapse;margin-top:8px}th,td{text-align:left;padding:14px 10px;border-bottom:1px solid var(--line)}th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .totals{display:grid;gap:10px;justify-content:end;margin-top:22px}.totals div{display:flex;justify-content:space-between;gap:24px;min-width:240px}.totals strong{font-size:20px}
+    .footer{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-top:26px;flex-wrap:wrap}.note{max-width:560px;color:var(--muted);line-height:1.7}.stamp{padding:12px 14px;border-radius:16px;background:var(--accent-soft);color:var(--accent);font-weight:700}
+    .logo{max-width:90px;max-height:90px;display:block;margin-bottom:12px;border-radius:16px}
+    .print-meta{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+    @media print{body{padding:0;background:#fff}.page{box-shadow:none;border-radius:0;border:0;max-width:100%}.watermark{font-size:72px}}
+    @media(max-width:760px){body{padding:12px}.page{border-radius:24px}.hero-grid,.section{grid-template-columns:1fr}.body{padding:18px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">{{ document_type|title }}</div>
+          {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo">{% endif %}
+          <h1>{{ business_name }}</h1>
+          <p>{{ business_email }}{% if business_phone %} · {{ business_phone }}{% endif %}</p>
+          <p>{{ business_address }}{% if business_tax_number %} · Tax/VAT: {{ business_tax_number }}{% endif %}</p>
+        </div>
+        <div class="meta">
+          <div class="label">Document</div>
+          <div><strong>{{ document_number }}</strong></div>
+          <div style="margin-top:10px">{{ document_type|title }}</div>
+          <div style="margin-top:10px">Issue Date: {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div style="margin-top:10px">{% if document_type == 'quotation' %}Valid Until{% else %}Due Date{% endif %}: {{ (valid_until if document_type == 'quotation' else due_date).strftime('%d %b %Y') if (valid_until if document_type == 'quotation' else due_date) else '' }}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="body">
+      <div class="section">
+        <div class="block">
+          <div class="label">Bill to</div>
+          <strong>{{ customer_name }}</strong><br>
+          {{ customer_email }}<br>
+          {{ customer_phone }}<br>
+          {{ customer_address }}
+        </div>
+        <div class="block">
+          <div class="label">Summary</div>
+          <strong>{% if document_type == 'quotation' %}Quotation prepared{% else %}Invoice prepared{% endif %}</strong><br>
+          {% if document_type == 'quotation' %}This quotation is valid until the date shown above and can be used for review or approval.{% else %}This invoice includes payment details, due date and item totals in one printable view.{% endif %}
+        </div>
+      </div>
+
+      <table>
+        <thead><tr><th>Item</th><th>Quantity</th><th>Unit price</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.item_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>N$ {{ "%.2f"|format(item.unit_price) }}</td>
+            <td>N$ {{ "%.2f"|format(item.total) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div><span>Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+        <div><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+        <div><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+        <div><strong>Total</strong><strong>N$ {{ "%.2f"|format(total) }}</strong></div>
+      </div>
+
+      <div class="footer">
+        <div class="note">
+          <div class="label">Notes</div>
+          {{ notes }}
+          <div class="label" style="margin-top:16px">Terms</div>
+          {{ terms }}
+          {% if payment_details %}
+          <div class="label" style="margin-top:16px">{% if document_type == 'quotation' %}Payment Details{% else %}Payment Details{% endif %}</div>
+          {{ payment_details }}
+          {% endif %}
+        </div>
+        <div class="stamp">{% if watermark %}Includes VibeHost watermark{% else %}Watermark removed{% endif %}</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

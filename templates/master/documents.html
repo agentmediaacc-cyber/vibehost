@@ -1,0 +1,58 @@
+{% extends "master/base.html" %}
+{% block title %}Documents{% endblock %}
+{% block header_title %}All Documents{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 20px;">Business Websites Documents</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Type</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in business_docs %}
+            <tr>
+                <td style="font-weight: 600;">{{ doc.document_number }}</td>
+                <td>{{ doc.document_type|title }}</td>
+                <td>{{ doc.customer_name }}</td>
+                <td style="font-weight: 600;">NAD {{ "{:,.2f}".format(doc.total) }}</td>
+                <td><span class="badge badge-info">{{ doc.status|title }}</span></td>
+                <td>{{ doc.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 20px;">Free Tool Documents</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Type</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in free_docs %}
+            <tr>
+                <td style="font-weight: 600;">{{ doc.document_number }}</td>
+                <td>{{ doc.document_type|title }}</td>
+                <td>{{ doc.customer_name }}</td>
+                <td style="font-weight: 600;">NAD {{ "{:,.2f}".format(doc.total) }}</td>
+                <td>{{ doc.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -14,6 +14,7 @@
     .grid-2,.grid-3{display:grid;gap:12px}.grid-2{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:repeat(3,1fr)} .domain{display:flex;align-items:center;gap:10px}.domain span{white-space:nowrap;color:var(--muted);font-weight:700}
     .oauth{display:grid;grid-template-columns:1fr 1fr;gap:10px}.oauth a{padding:13px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;text-align:center;font-weight:800}.submit{border:0;border-radius:18px;padding:16px 18px;background:linear-gradient(135deg,#111827,#1d4ed8);color:#fff;font-size:16px;font-weight:800;cursor:pointer}
     .preview-top{display:flex;justify-content:space-between;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px 20px;box-shadow:var(--shadow)} .preview-top h3{margin:0 0 6px;font-size:24px;letter-spacing:-.03em}.preview-top p{margin:0;color:var(--muted);line-height:1.55;max-width:620px} .preview-actions{display:flex;flex-wrap:wrap;gap:10px}.preview-actions a{padding:13px 16px;border-radius:16px;font-weight:800}.preview-actions .ghost{background:#fff;border:1px solid var(--line)}.preview-actions .dark{background:#111827;color:#fff}
+    .chosen-style{background:linear-gradient(135deg,#111827,#1d4ed8 62%,#d4a72c);color:#fff;border-radius:24px;padding:18px 20px;box-shadow:var(--shadow)} .chosen-style .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#dbeafe}.chosen-style h4{margin:8px 0 8px;font-size:28px;letter-spacing:-.04em}.chosen-style p{margin:0;color:#dbeafe;line-height:1.6}
     iframe{width:100%;height:calc(100vh - 118px);border:0;border-radius:28px;background:#fff;box-shadow:var(--shadow)}.note{font-size:13px;color:var(--muted);line-height:1.55;margin-top:10px}.errors{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;border-radius:18px;padding:14px 16px}
     @media(max-width:1120px){.app{grid-template-columns:1fr}iframe{height:760px}} @media(max-width:720px){.panel,.preview{padding:16px}.grid-2,.grid-3,.oauth{grid-template-columns:1fr}.preview-top{display:block}.preview-actions{margin-top:12px}h1{font-size:32px}}
   </style>
@@ -93,14 +94,19 @@
         </div>
 
         <button class="submit" type="submit">Create My Live Website</button>
-        <div class="note">After save, VibeHost redirects to the created website dashboard and the owner can also open the protected owner dashboard. Need help? WhatsApp the developer at <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a>.</div>
+        <div class="note">After save, VibeHost signs the owner in automatically and redirects to business verification onboarding before the full dashboard unlocks. Need help? WhatsApp support at <a href="{{ support_whatsapp_url }}" target="_blank">{{ support_phone }}</a>.</div>
       </form>
     </section>
 
     <section class="preview">
       <div class="preview-top">
-        <div><h3>Right-side real template preview</h3><p>The iframe loads the actual template preview route. Demo data stays inside preview mode only; your submitted business data is saved separately for the live site.</p></div>
+        <div><h3>Right-side real template preview</h3><p>The iframe loads the actual template preview route. Sample preview content stays inside preview mode only; your submitted business data is saved separately for the live site.</p></div>
         <div class="preview-actions"><a class="ghost" href="/templates">All Templates</a><a class="dark" href="{{ preview_url }}" target="_blank">Open Full Preview</a></div>
+      </div>
+      <div class="chosen-style">
+        <div class="eyebrow">Chosen Style</div>
+        <h4>{{ template_meta.name }}</h4>
+        <p>The iframe below is the exact selected template. The business created from this page will keep this same structure on its saved live subdomain.</p>
       </div>
       <iframe src="{{ preview_url }}" title="Template preview"></iframe>
     </section>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Profile | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.wrap{max-width:1140px;margin:0 auto;padding:18px}.hero{padding:28px;border-radius:30px;background:linear-gradient(135deg,#17222f,#243f37 58%,#c19028);color:#fff}.hero h1{margin:0 0 10px;font-size:clamp(38px,7vw,68px);line-height:.92;letter-spacing:-.05em}.hero p{margin:0;max-width:720px;color:#e5e7eb;line-height:1.7}
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:18px}.card{background:#fff;border:1px solid #d0d5dd;border-radius:28px;padding:24px;box-shadow:0 20px 60px rgba(15,23,42,.08)}label{display:block;font-weight:700;margin:14px 0 8px}input,textarea,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}textarea{min-height:96px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.msg{margin-bottom:14px;padding:14px 16px;border-radius:18px;background:#ecfdf3;border:1px solid #bbf7d0;color:#166534}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}.actions a,.actions button{padding:14px 16px;border-radius:16px;font-weight:800;text-decoration:none;border:0}.primary{background:#111827;color:#fff}.ghost{background:#efe3cf;color:#171717}
+    @media(max-width:920px){.grid,.grid2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Business branding profile</h1>
+      <p>Upload your logo, set the business details that should appear on invoices and quotations, and choose separate default templates for each document type.</p>
+    </section>
+    <div class="grid">
+      <section class="card">
+        {% if success %}<div class="msg">{{ success }}</div>{% endif %}
+        <form method="POST" enctype="multipart/form-data">
+          <label>Business name</label>
+          <input name="business_name" value="{{ user.business_name or '' }}">
+          <label>Business logo</label>
+          <input type="file" name="business_logo" accept="image/*">
+          <div class="grid2">
+            <div><label>Business phone</label><input name="business_phone" value="{{ user.business_phone or '' }}"></div>
+            <div><label>Tax/VAT number</label><input name="business_tax_number" value="{{ user.business_tax_number or '' }}"></div>
+          </div>
+          <label>Business address</label>
+          <textarea name="business_address">{{ user.business_address or '' }}</textarea>
+          <label>Payment details</label>
+          <textarea name="payment_details">{{ user.payment_details or '' }}</textarea>
+          <div class="grid2">
+            <div>
+              <label>Default invoice template</label>
+              <select name="selected_invoice_template">
+                {% for t in invoice_templates %}<option value="{{ t.slug }}" {% if t.slug == user.selected_invoice_template %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+              </select>
+            </div>
+            <div>
+              <label>Default quotation template</label>
+              <select name="selected_quotation_template">
+                {% for t in quotation_templates %}<option value="{{ t.slug }}" {% if t.slug == user.selected_quotation_template %}selected{% endif %}>{{ t.name }}</option>{% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="primary" type="submit">Save profile</button>
+            <a class="ghost" href="/free-tools/dashboard">Back to dashboard</a>
+          </div>
+        </form>
+      </section>
+      <section class="card">
+        <h2>Branding summary</h2>
+        <p>Your saved business profile is used automatically on free-tool invoices and quotations, including the real PDF generator.</p>
+        {% if user.business_logo_url %}
+        <p><img src="{{ user.business_logo_url }}" alt="Business logo" style="max-width:140px;max-height:140px;border-radius:18px;border:1px solid #d0d5dd;padding:10px;background:#fff"></p>
+        {% endif %}
+        <p><strong>Business name:</strong> {{ user.business_name or 'Not set yet' }}</p>
+        <p><strong>Business phone:</strong> {{ user.business_phone or 'Not set yet' }}</p>
+        <p><strong>Invoice template:</strong> {{ (invoice_templates|selectattr('slug', 'equalto', user.selected_invoice_template)|first).name if user.selected_invoice_template else 'Modern Clean' }}</p>
+        <p><strong>Quotation template:</strong> {{ (quotation_templates|selectattr('slug', 'equalto', user.selected_quotation_template)|first).name if user.selected_quotation_template else 'Modern Clean' }}</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

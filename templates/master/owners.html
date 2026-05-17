@@ -1,0 +1,33 @@
+{% extends "master/base.html" %}
+{% block title %}Business Owners{% endblock %}
+{% block header_title %}Website Owners{% endblock %}
+{% block content %}
+<div class="card">
+    <table>
+        <thead>
+            <tr>
+                <th>Owner Name</th>
+                <th>Email</th>
+                <th>Business</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for owner in owners %}
+            <tr>
+                <td style="font-weight: 600;">{{ owner.owner_name }}</td>
+                <td>{{ owner.email }}</td>
+                <td>{{ owner.business_name }}</td>
+                <td>{{ owner.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <form action="{{ url_for('master_impersonate_owner', owner_id=owner.id) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-outline" style="padding: 4px 8px;">Impersonate</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "master/base.html" %}
+{% block title %}System Health{% endblock %}
+{% block header_title %}Server & Infrastructure{% endblock %}
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: {% if health.neon_connected %}#dcfce7{% else %}#fee2e2{% endif %}; color: {% if health.neon_connected %}#22c55e{% else %}#ef4444{% endif %};">
+            <i class="fas fa-database"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Neon DB</h3>
+            <p>{% if health.neon_connected %}Connected{% else %}Disconnected{% endif %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: {% if health.supabase_connected %}#dcfce7{% else %}#f1f5f9{% endif %}; color: {% if health.supabase_connected %}#22c55e{% else %}#64748b{% endif %};">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Supabase</h3>
+            <p>{% if health.supabase_connected %}Active{% else %}Optional{% endif %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: {% if health.uploads_writable %}#dcfce7{% else %}#fee2e2{% endif %}; color: {% if health.uploads_writable %}#22c55e{% else %}#ef4444{% endif %};">
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Uploads Folder</h3>
+            <p>{% if health.uploads_writable %}Writable{% else %}Locked{% endif %}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: {% if health.pdf_service %}#dcfce7{% else %}#fee2e2{% endif %}; color: {% if health.pdf_service %}#22c55e{% else %}#ef4444{% endif %};">
+            <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="stat-info">
+            <h3>PDF Service</h3>
+            <p>{% if health.pdf_service %}Available{% else %}Missing{% endif %}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 20px;">Environment Details</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        <div>
+            <h3 style="font-size: 1rem; color: #64748b; margin-bottom: 12px;">Resources</h3>
+            <p><strong>Installed Templates:</strong> {{ health.template_count }}</p>
+            <p><strong>Python Version:</strong> {{ sys_version if sys_version else '3.x' }}</p>
+            <p><strong>OS Platform:</strong> {{ os_platform if os_platform else 'Darwin/Linux' }}</p>
+        </div>
+        <div>
+            <h3 style="font-size: 1rem; color: #64748b; margin-bottom: 12px;">Security</h3>
+            <p><strong>Debug Mode:</strong> {{ config.DEBUG }}</p>
+            <p><strong>Secret Key:</strong> Set</p>
+            <p><strong>Database:</strong> PostgreSQL via Psycopg2</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

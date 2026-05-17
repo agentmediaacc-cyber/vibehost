@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ template_meta.name }} Sample Preview | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#eef2f7;color:#101828}.app{display:grid;grid-template-columns:minmax(340px,520px) 1fr;min-height:100vh}.panel{padding:22px;background:#fff;border-right:1px solid #d0d5dd;overflow-y:auto}.preview{padding:22px}.hero{padding:20px;border-radius:24px;background:linear-gradient(135deg,#17222f,#243f37 58%,#c19028);color:#fff;margin-bottom:18px}.hero h1{margin:0 0 8px;font-size:34px;letter-spacing:-.04em}.hero p{margin:0;color:#e5e7eb;line-height:1.65}
+    label{display:block;font-weight:700;margin:14px 0 8px}input,textarea,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px;background:#fff}textarea{min-height:96px}.grid2,.grid3{display:grid;gap:12px}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}.card{padding:20px;border-radius:24px;background:#f8fafc;border:1px solid #dbe3ed}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.actions button,.actions a{padding:14px 16px;border-radius:16px;font-weight:800;text-decoration:none;border:0;cursor:pointer}.primary{background:#111827;color:#fff}.ghost{background:#efe3cf;color:#171717}
+    .preview-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;padding:16px 18px;border-radius:22px;background:#fff;border:1px solid #d0d5dd}.preview-top p{margin:4px 0 0;color:#667085;line-height:1.55}.frame{width:100%;height:calc(100vh - 112px);border:0;border-radius:28px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.12)}
+    .small{font-size:13px;color:#667085;line-height:1.55}
+    @media(max-width:1080px){.app{grid-template-columns:1fr}.frame{height:760px}}@media(max-width:720px){.panel,.preview{padding:16px}.grid2,.grid3{grid-template-columns:1fr}.frame{height:680px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel">
+      <div class="hero">
+        <h1>{{ document_type|title }} sample preview</h1>
+        <p>Use your own business details, upload a logo, and see a full A4 sample preview with the VibeHost watermark before creating an account.</p>
+      </div>
+      <form method="POST" enctype="multipart/form-data">
+        <div class="card">
+          <label>Document type</label>
+          <select name="document_type">
+            <option value="invoice" {% if document_type == 'invoice' %}selected{% endif %}>Invoice</option>
+            <option value="quotation" {% if document_type == 'quotation' %}selected{% endif %}>Quotation</option>
+          </select>
+          <label>Business name</label>
+          <input name="business_name" value="{{ request.form.get('business_name', 'VibeHost Business') }}">
+          <label>Business logo</label>
+          <input type="file" name="business_logo" accept="image/*">
+          <div class="grid2">
+            <div><label>Business email</label><input name="business_email" value="{{ request.form.get('business_email', 'hello@vibehostbusiness.com') }}"></div>
+            <div><label>Business phone</label><input name="business_phone" value="{{ request.form.get('business_phone', '+264 81 000 0000') }}"></div>
+          </div>
+          <label>Business address</label>
+          <input name="business_address" value="{{ request.form.get('business_address', 'Windhoek, Namibia') }}">
+          <div class="grid2">
+            <div><label>Tax/VAT number</label><input name="business_tax_number" value="{{ request.form.get('business_tax_number', '') }}"></div>
+            <div><label>Document number</label><input name="document_number" value="{{ request.form.get('document_number', '') }}"></div>
+          </div>
+          <label>Payment details</label>
+          <textarea name="payment_details">{{ request.form.get('payment_details', 'Bank name, account number and payment notes.') }}</textarea>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="grid2">
+            <div><label>Customer name</label><input name="customer_name" value="{{ request.form.get('customer_name', 'Customer Name') }}"></div>
+            <div><label>Customer email</label><input name="customer_email" value="{{ request.form.get('customer_email', 'customer@example.com') }}"></div>
+          </div>
+          <div class="grid2">
+            <div><label>Customer phone</label><input name="customer_phone" value="{{ request.form.get('customer_phone', '+264 81 000 0000') }}"></div>
+            <div><label>Customer address</label><input name="customer_address" value="{{ request.form.get('customer_address', 'Client address') }}"></div>
+          </div>
+          {% for row in range(1, 4) %}
+          <div class="grid3">
+            <div><label>Item {{ row }}</label><input name="item_name" value="{{ request.form.getlist('item_name')[row-1] if request.form.getlist('item_name')|length >= row else ['Consultation package','Delivery support','Priority handling'][row-1] }}"></div>
+            <div><label>Quantity {{ row }}</label><input name="quantity" value="{{ request.form.getlist('quantity')[row-1] if request.form.getlist('quantity')|length >= row else ['1','2','1'][row-1] }}"></div>
+            <div><label>Unit price {{ row }}</label><input name="unit_price" value="{{ request.form.getlist('unit_price')[row-1] if request.form.getlist('unit_price')|length >= row else ['850','250','120'][row-1] }}"></div>
+          </div>
+          {% endfor %}
+          <div class="grid2">
+            <div><label>{% if document_type == 'quotation' %}Valid until{% else %}Due date{% endif %}</label><input type="date" name="{{ 'valid_until' if document_type == 'quotation' else 'due_date' }}" value="{{ request.form.get('valid_until' if document_type == 'quotation' else 'due_date', '') }}"></div>
+            <div><label>Tax percentage</label><input name="tax_percentage" value="{{ request.form.get('tax_percentage', '15') }}"></div>
+          </div>
+          <label>Discount</label>
+          <input name="discount" value="{{ request.form.get('discount', '0') }}">
+          <label>Notes</label>
+          <textarea name="notes">{{ request.form.get('notes', 'Add delivery notes, payment notes or service information here.') }}</textarea>
+          <label>Terms</label>
+          <textarea name="terms">{{ request.form.get('terms', 'Approval and payment terms will appear here on the final document.') }}</textarea>
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit">Update sample preview</button>
+          <button class="ghost" type="submit" formaction="/free-tools/sample/{{ document_type }}/{{ template_slug }}/download" formmethod="POST">Download sample PDF</button>
+        </div>
+        <p class="small">Guests can create a sample preview only. Create a free account to save records and keep working from your dashboard.</p>
+      </form>
+    </section>
+
+    <section class="preview">
+      <div class="preview-top">
+        <div>
+          <strong>Sample preview with VibeHost watermark</strong>
+          <p>{{ template_meta.name }} is ready for a full A4 preview and watermarked sample PDF download.</p>
+        </div>
+        <a class="ghost" href="/free-tools/register?template={{ template_slug }}">Create free account</a>
+      </div>
+      <iframe class="frame" srcdoc="{{ preview_html|e }}"></iframe>
+    </section>
+  </div>
+</body>
+</html>

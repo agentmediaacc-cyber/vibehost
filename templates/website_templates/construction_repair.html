@@ -1,246 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ business.business_name }} | Construction & Repair</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root{
+      --primary: {{ site.primary_color if site and site.primary_color else '#30271d' }};
+      --secondary: {{ site.secondary_color if site and site.secondary_color else '#f0b64d' }};
+      --accent: {{ site.accent_color if site and site.accent_color else '#d97706' }};
+      --sand:#faf5ed;
+      --ink:#2e2418;
+      --muted:#756351;
+      --card:#ffffff;
+      --line:#e6d9c6;
+      --font:{{ site.font_family if site and site.font_family else "'Trebuchet MS', Verdana, sans-serif" }};
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f8fafc;color:#111827}
-    a{text-decoration:none}
-    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #e5e7eb}
-    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
-    .logo{width:48px;height:48px;border-radius:18px;background:#78350f;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
-    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
-    .quote-btn{background:#d97706;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
-    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .hero-main{min-height:450px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#facc15,transparent 28%),linear-gradient(135deg,#78350f,#111827);color:white;display:flex;flex-direction:column;justify-content:center}
-    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
-    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
-    .hero p{font-size:18px;color:#fef3c7;line-height:1.6;max-width:660px}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
-    .primary{background:#facc15;color:#111827}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
-    .side{display:grid;gap:18px}
-    .card{border-radius:30px;padding:24px;background:white;border:1px solid #e5e7eb;box-shadow:0 18px 50px rgba(120,53,15,.12)}
-    .card.dark{background:#451a03;color:white}.card h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.card p{color:#92400e}.card.dark p{color:#fde68a}
-    .wrap{max-width:1180px;margin:auto;padding:18px}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
-    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#92400e;margin:6px 0 0}
-    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-    .cat{background:white;border:1px solid #e5e7eb;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(120,53,15,.07)}
-    .cat span{display:block;font-size:30px;margin-bottom:8px}
+    body{margin:0;background:linear-gradient(180deg,#f8f4ed,#fffdfa);color:var(--ink);font-family:var(--font)}
+    a{text-decoration:none;color:inherit}
+    .hero{max-width:1320px;margin:0 auto;padding:18px;display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+    .lead{background:linear-gradient(180deg,#30271d,#483524);color:#fff;border-radius:36px;padding:28px;display:flex;flex-direction:column;gap:20px}
+    .top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:58px;height:58px;border-radius:22px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-weight:900;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a,.quote-btn{padding:12px 15px;border-radius:999px;background:rgba(255,255,255,.10);font-size:13px;font-weight:900;border:1px solid rgba(255,255,255,.14)}
+    .quote-btn{background:var(--secondary);color:#2e2418;border-color:transparent}
+    .eyebrow{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.10);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:900}
+    .lead h1{font-size:clamp(46px,8vw,90px);line-height:.9;letter-spacing:-.08em;margin:0}
+    .lead p{max-width:620px;color:#eadcc6;font-size:18px;line-height:1.7;margin:0}
+    .cta{display:flex;flex-wrap:wrap;gap:12px}
+    .cta a{padding:15px 18px;border-radius:16px;font-weight:900}
+    .cta .primary{background:var(--secondary);color:#2e2418}
+    .cta .ghost{background:rgba(255,255,255,.10);color:#fff}
+    .quote-panel{background:#fff;border:1px solid var(--line);border-radius:36px;padding:24px;box-shadow:0 24px 70px rgba(48,39,29,.10)}
+    .quote-panel h2{margin:0 0 10px;font-size:34px;letter-spacing:-.05em}
+    .quote-panel p{margin:0;color:var(--muted);line-height:1.6}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+    .field{padding:14px;border-radius:18px;background:#fbf7f0;border:1px solid var(--line)}
+    .field span{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+    .field strong{display:block;margin-top:6px}
+    .send{display:block;text-align:center;padding:15px 18px;border-radius:16px;background:var(--accent);color:#fff;font-weight:900}
+    .wrap{max-width:1320px;margin:0 auto;padding:0 18px 28px}
+    .section{padding:26px 0}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px}
+    .section-head h3{margin:0;font-size:34px;letter-spacing:-.05em}
+    .section-head p{margin:6px 0 0;color:var(--muted);max-width:720px;line-height:1.6}
     .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .service{background:white;border:1px solid #e5e7eb;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(120,53,15,.09)}
-    .photo{height:190px;background:linear-gradient(135deg,#fde68a,#e5e7eb);display:flex;align-items:center;justify-content:center;font-size:54px}
-    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#92400e;line-height:1.45}
-    .price{font-size:23px;font-weight:1000;color:#b45309}.tag{display:inline-block;margin:10px 0;background:#fef3c7;color:#92400e;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
-    .service button{width:100%;border:0;background:#d97706;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
-    .locked{opacity:.58;filter:grayscale(.5)}
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .panel{background:#451a03;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#111827;border:1px solid #e5e7eb}
-    .panel p{color:#fde68a}.panel.light p{color:#92400e}
-    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#fffbeb}
-    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .tool{background:white;border:1px solid #e5e7eb;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(120,53,15,.08)}
-    .tool b{font-size:18px}.tool p{color:#92400e;line-height:1.55}
-    .estimate{position:fixed;right:18px;bottom:18px;width:365px;max-width:calc(100vw - 36px);background:white;border:1px solid #e5e7eb;border-radius:28px;box-shadow:0 28px 80px rgba(120,53,15,.25);padding:18px;z-index:30}
-    .estimate h3{margin:0 0 10px}.estimate-line{display:flex;justify-content:space-between;border-bottom:1px solid #e5e7eb;padding:10px 0;color:#92400e}
-    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#b45309}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
-    footer{text-align:center;padding:38px 18px;color:#92400e}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.services{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.grid2{grid-template-columns:1fr}.navlinks{display:none}}
-    @media(max-width:560px){.services,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.estimate{position:static;width:auto;margin:18px}.section-head{display:block}}
+    .service{background:#fff;border:1px solid var(--line);border-radius:30px;padding:22px;box-shadow:0 18px 50px rgba(48,39,29,.07)}
+    .service h4{margin:0 0 10px;font-size:26px;letter-spacing:-.04em}
+    .service p{margin:0;color:var(--muted);line-height:1.6}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .gallery article{min-height:220px;border-radius:28px;overflow:hidden;position:relative}
+    .gallery img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery span{position:absolute;left:12px;bottom:12px;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.88);font-size:11px;font-weight:900}
+    .estimate-area{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px}
+    .estimate-card,.timeline{background:#fff;border:1px solid var(--line);border-radius:30px;padding:22px}
+    .estimate-rows,.timeline-list{display:grid;gap:10px;margin-top:14px}
+    .estimate-rows div{display:flex;justify-content:space-between;gap:12px;padding:14px;border-radius:18px;background:#fbf7f0;border:1px solid #ede0cd}
+    .step{display:grid;grid-template-columns:auto 1fr;gap:12px}
+    .step b{display:block;font-size:18px}
+    .marker{width:16px;height:16px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 6px rgba(217,119,6,.14);margin-top:4px}
+    .footer{margin-top:18px;padding:24px;border-radius:28px;background:#2e2418;color:#eadcc6;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+    .footer strong{display:block;font-size:22px}
+    .footer a{padding:14px 18px;border-radius:16px;background:#16a34a;color:#fff;font-weight:900}
+    @media(max-width:1020px){
+      .hero,.services,.gallery,.estimate-area{grid-template-columns:1fr}
+      .fields{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .nav{display:none}
+      .footer{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="nav">
-    <div class="brand">
-      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}🏗️{% endif %}</div>
-      <div>{{ business.business_name }}</div>
-    </div>
-    <nav class="navlinks">
-      <a href="#services">Services</a>
-      <a href="#projects">Projects</a>
-      <a href="#quotes">Quotes</a>
-      <a href="#admin">Contractor Tools</a>
-    </nav>
-    <a class="quote-btn" href="#estimateBox">🏗️ Get Quote</a>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-main">
-    <div class="badge">Construction & Repair • {{ business.town or "Namibia" }}</div>
-    <h1>{{ business.business_name }}</h1>
-    <p>{{ business.description or "Professional building, renovations, repairs, maintenance, quotations, project galleries and contractor management tools." }}</p>
-    <div class="btns">
-      <a class="btn primary" href="#services">🧱 View Services</a>
-      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 WhatsApp Quote</a>
-    </div>
-  </div>
-
-  <div class="side">
-    <div class="card dark">
-      <h3>Project quotation</h3>
-      <p>Customers can request material, labour and project estimates from your website.</p>
-      <b>Quote-ready</b>
-    </div>
-    <div class="card">
-      <h3>Emergency repairs</h3>
-      <p>Show urgent repair services for plumbing, electricity, roofing and maintenance.</p>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-
-  <div class="section-head">
-    <div>
-      <h2>Service categories</h2>
-      <p>Help clients quickly choose the work they need.</p>
-    </div>
-  </div>
-
-  <div class="categories">
-    <div class="cat"><span>🏠</span>Building</div>
-    <div class="cat"><span>🧱</span>Renovation</div>
-    <div class="cat"><span>🔧</span>Repairs</div>
-    <div class="cat"><span>🚿</span>Plumbing</div>
-    <div class="cat"><span>💡</span>Electrical</div>
-    <div class="cat"><span>🏗️</span>Projects</div>
-  </div>
-
-  <div class="section-head" id="services">
-    <div>
-      <h2>Construction services</h2>
-      <p>Free trial shows 3 services. Upgrade unlocks full project pages, estimates and reports.</p>
-    </div>
-  </div>
-
-  <section class="services">
-
-    <div class="service">
-      <div class="photo">🏠</div>
-      <div class="info">
-        <h3>House Building</h3>
-        <p>New builds, extensions and structural work.</p>
-        <span class="price">Quote</span><br>
-        <span class="tag">Site visit</span>
-        <button>Request Building Quote</button>
+  <section class="hero">
+    <article class="lead">
+      <div class="top">
+        <div class="brand">
+          <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" alt="{{ business.business_name }} logo">{% else %}🏗️{% endif %}</div>
+          <div>
+            <strong>{{ business.business_name }}</strong>
+            <div>{{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</div>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#services">Services</a>
+          <a href="#gallery">Projects</a>
+          <a href="#estimate">Estimate</a>
+          <a href="#timeline">Timeline</a>
+          <a class="quote-btn" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Request quote</a>
+        </nav>
       </div>
-    </div>
-
-    <div class="service">
-      <div class="photo">🧱</div>
-      <div class="info">
-        <h3>Renovations</h3>
-        <p>Home, office and commercial renovations.</p>
-        <span class="price">Quote</span><br>
-        <span class="tag">Popular</span>
-        <button>Request Renovation</button>
+      <div class="eyebrow">Contractor layout{% if request and request.path.startswith('/templates/preview/') %} · Sample preview{% endif %}</div>
+      <h1>{{ site.hero_title if site and site.hero_title else business.business_name }}</h1>
+      <p>{{ business.description or 'A bold contractor website with quote request flow, project services grid, before-after gallery, estimate section and job timeline.' }}</p>
+      <div class="cta">
+        <a class="primary" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Get a quote</a>
+        <a class="ghost" href="#gallery">View project work</a>
       </div>
-    </div>
+    </article>
 
-    <div class="service">
-      <div class="photo">🔧</div>
-      <div class="info">
-        <h3>Repairs & Maintenance</h3>
-        <p>Plumbing, electrical, roofing and general repairs.</p>
-        <span class="price">From N$350</span><br>
-        <span class="tag">Emergency</span>
-        <button>Request Repair</button>
+    <aside class="quote-panel">
+      <h2>Request quote form</h2>
+      <p>Turn the hero into a practical estimator entry point instead of a passive banner.</p>
+      <div class="fields">
+        <div class="field"><span>Project type</span><strong>Build / repair / renovation</strong></div>
+        <div class="field"><span>Site area</span><strong>{{ business.town or 'Project location' }}</strong></div>
+        <div class="field"><span>Materials</span><strong>Estimate required</strong></div>
+        <div class="field"><span>Timeline</span><strong>Preferred completion</strong></div>
       </div>
-    </div>
-
-    <div class="service locked">
-      <div class="photo">🔒</div>
-      <div class="info">
-        <h3>More Services Locked</h3>
-        <p>Unlock unlimited services and project galleries.</p>
-        <span class="price">Upgrade</span><br>
-        <span class="tag">Trial limit</span>
-        <button>Unlock Services</button>
-      </div>
-    </div>
-
+      <a class="send" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Send project request</a>
+    </aside>
   </section>
 
-  <div class="section-head" id="quotes">
-    <div>
-      <h2>Quotations & project planning</h2>
-      <p>Built for contractors, builders, repair teams and maintenance businesses.</p>
-    </div>
-  </div>
-
-  <section class="grid2">
-
-    <div class="panel">
-      <h2>Quote request flow</h2>
-      <p>Customers can submit project details for pricing.</p>
-
-      <div class="rows">
-        <div class="row"><span>Site visit request</span><b>Ready</b></div>
-        <div class="row"><span>Material estimate</span><b>Ready</b></div>
-        <div class="row"><span>Labour estimate</span><b>Ready</b></div>
-        <div class="row"><span>Emergency repair</span><b>Ready</b></div>
+  <main class="wrap">
+    <section class="section" id="services">
+      <div class="section-head">
+        <div>
+          <h3>Project services grid</h3>
+          <p>Use strong, high-trust service cards for building, renovation and urgent repair categories.</p>
+        </div>
       </div>
-    </div>
-
-    <div class="panel light" id="projects">
-      <h2>Project gallery</h2>
-      <p>Show completed work, before/after photos and customer trust proof.</p>
-
-      <div class="rows">
-        <div class="row"><span>Trial gallery</span><b>3 photos</b></div>
-        <div class="row"><span>Before/after</span><b>Ready</b></div>
-        <div class="row"><span>Project albums</span><b>Paid plan</b></div>
-        <div class="row"><span>Client reviews</span><b>Paid plan</b></div>
+      <div class="services">
+        <article class="service"><h4>New builds</h4><p>Residential and commercial construction from planning to handover.</p></article>
+        <article class="service"><h4>Renovations</h4><p>Interior upgrades, extensions and layout transformations.</p></article>
+        <article class="service"><h4>Repairs & maintenance</h4><p>Roofing, plumbing, electrical and emergency support jobs.</p></article>
       </div>
-    </div>
+    </section>
 
-  </section>
+    <section class="section" id="gallery">
+      <div class="section-head">
+        <div>
+          <h3>Before / after project gallery</h3>
+          <p>Show work proof visually so the site feels like a real contractor portfolio.</p>
+        </div>
+      </div>
+      <div class="gallery">
+        <article><img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80" alt="Construction project"><span>Site progress</span></article>
+        <article><img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80" alt="Construction project"><span>Renovation finish</span></article>
+        <article><img src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&w=1200&q=80" alt="Construction project"><span>Repair turnaround</span></article>
+      </div>
+    </section>
 
-  <div class="section-head" id="admin">
-    <div>
-      <h2>Contractor admin system preview</h2>
-      <p>These features are prepared for the business owner dashboard.</p>
-    </div>
-  </div>
+    <section class="section">
+      <div class="estimate-area">
+        <article class="estimate-card" id="estimate">
+          <h3>Materials & labour estimate</h3>
+          <div class="estimate-rows">
+            <div><span>Site visit</span><strong>N$ 250</strong></div>
+            <div><span>Labour projection</span><strong>Quoted per phase</strong></div>
+            <div><span>Materials schedule</span><strong>Prepared after inspection</strong></div>
+          </div>
+        </article>
+        <article class="timeline" id="timeline">
+          <h3>Project timeline</h3>
+          <div class="timeline-list">
+            <div class="step"><div class="marker"></div><div><b>Scope review</b><span>Client shares project need and site details.</span></div></div>
+            <div class="step"><div class="marker"></div><div><b>Estimate issued</b><span>Labour, material and timing plan prepared.</span></div></div>
+            <div class="step"><div class="marker"></div><div><b>Work phase</b><span>Team executes project with progress updates.</span></div></div>
+            <div class="step"><div class="marker"></div><div><b>Final handover</b><span>Project closeout, invoice and completion sign-off.</span></div></div>
+          </div>
+        </article>
+      </div>
+    </section>
 
-  <section class="tools">
-
-    <div class="tool"><b>🧾 Quotation builder</b><p>Create professional quotes with labour, materials, transport and tax lines.</p></div>
-    <div class="tool"><b>🏗️ Project manager</b><p>Track project stage, budget, client approval and completion status.</p></div>
-    <div class="tool"><b>📦 Material list</b><p>Add materials, quantities, supplier notes and estimated costs.</p></div>
-    <div class="tool"><b>👷 Team manager</b><p>Assign workers, tasks, timelines and job notes.</p></div>
-    <div class="tool"><b>🧾 Invoices & receipts</b><p>Create project invoices, deposits, balances and payment reminders.</p></div>
-    <div class="tool"><b>📊 Reports</b><p>Quotes, project revenue, unpaid invoices, active jobs and completed work.</p></div>
-
-  </section>
-
-</main>
-
-<div class="estimate" id="estimateBox">
-  <h3>🏗️ Quote preview</h3>
-
-  <div class="estimate-line"><span>Site visit</span><b>N$250</b></div>
-  <div class="estimate-line"><span>Labour estimate</span><b>N$1,200</b></div>
-  <div class="estimate-line"><span>Materials</span><b>Quote</b></div>
-
-  <div class="total">Estimate: N$1,450+</div>
-
-  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">
-    Send Quote Request
-  </a>
-</div>
-
-<footer>
-  <b>{{ business.business_name }}</b><br>
-  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
-  Construction website powered by VibeHost
-</footer>
-
+    {% include "website_templates/_dynamic_business_section.html" %}
+    {% include "website_templates/_customer_links.html" %}
+    <footer class="footer">
+      <div>
+        <strong>{{ business.business_name }}</strong>
+        <span>{{ business.email }} · {{ business.phone }} · {{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</span>
+      </div>
+      <a href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Request a quote</a>
+    </footer>
+  </main>
 </body>
 </html>

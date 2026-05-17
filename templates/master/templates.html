@@ -1,0 +1,51 @@
+{% extends "master/base.html" %}
+{% block title %}Templates{% endblock %}
+{% block header_title %}System Templates{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 20px;">Website Templates</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        {% for t in website_templates %}
+        <div style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                <h3 style="margin: 0; font-size: 1.125rem;">{{ t.name }}</h3>
+                <span class="badge {% if t.active %}badge-success{% else %}badge-danger{% endif %}">{{ 'Active' if t.active else 'Inactive' }}</span>
+            </div>
+            <p style="font-size: 0.875rem; color: #64748b; margin-bottom: 16px;">{{ t.description }}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="badge badge-info">{{ t.category|title }}</span>
+                <span style="font-size: 0.75rem; color: #94a3b8;">{{ t.slug }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 20px;">Document Templates</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+        <div>
+            <h3 style="font-size: 1rem; color: #64748b; margin-bottom: 16px;">Invoice Templates</h3>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                {% for t in doc_templates.invoice %}
+                <li style="padding: 12px; background: #f8fafc; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span>{{ t.name }}</span>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">{{ t.slug }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h3 style="font-size: 1rem; color: #64748b; margin-bottom: 16px;">Quotation Templates</h3>
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                {% for t in doc_templates.quotation %}
+                <li style="padding: 12px; background: #f8fafc; border-radius: 8px; display: flex; justify-content: space-between;">
+                    <span>{{ t.name }}</span>
+                    <span style="font-size: 0.75rem; color: #94a3b8;">{{ t.slug }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

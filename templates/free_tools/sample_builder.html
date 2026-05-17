@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ template_meta.name }} Sample Preview | VibeHost</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;background:#f4f6fb;color:#101828}.app{display:grid;grid-template-columns:minmax(340px,520px) 1fr;min-height:100vh}.panel{padding:22px;background:#fff;border-right:1px solid #d0d5dd;overflow-y:auto}.preview{padding:22px;background:#eef2f7}label{display:block;font-weight:700;margin:14px 0 8px}input,textarea,select{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:16px}textarea{min-height:90px}.grid2,.grid3{display:grid;gap:12px}.grid2{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:repeat(3,1fr)}button{margin-top:18px;padding:15px 18px;border:0;border-radius:16px;background:#111827;color:#fff;font-weight:800}.note{margin-top:14px;font-size:13px;color:#667085;line-height:1.6}.preview-frame{width:100%;height:calc(100vh - 44px);background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 20px 60px rgba(15,23,42,.10);border:0}.cta{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px;background:#fff;border:1px solid #d0d5dd;border-radius:22px;padding:16px 18px}.cta a{padding:12px 14px;border-radius:16px;background:#111827;color:#fff;text-decoration:none;font-weight:700}
+    @media(max-width:1080px){.app{grid-template-columns:1fr}.preview-frame{height:720px}}@media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}.panel,.preview{padding:16px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="panel">
+      <h1>{{ template_meta.name }} sample preview</h1>
+      <p>Create a sample invoice or quotation with your own details. This sample preview includes a VibeHost watermark.</p>
+      <form method="POST">
+        <label>Document type</label>
+        <select name="document_type"><option value="invoice">Invoice</option><option value="quotation">Quotation</option></select>
+        <label>Business name</label><input name="business_name" placeholder="VibeHost Business">
+        <div class="grid2">
+          <div><label>Customer name</label><input name="customer_name"></div>
+          <div><label>Customer email</label><input name="customer_email"></div>
+        </div>
+        <div class="grid3">
+          <div><label>Item 1</label><input name="item_name" value="Service package"></div>
+          <div><label>Quantity 1</label><input name="quantity" value="1"></div>
+          <div><label>Unit price 1</label><input name="unit_price" value="850"></div>
+        </div>
+        <div class="grid3">
+          <div><label>Item 2</label><input name="item_name" value="Delivery support"></div>
+          <div><label>Quantity 2</label><input name="quantity" value="2"></div>
+          <div><label>Unit price 2</label><input name="unit_price" value="250"></div>
+        </div>
+        <div class="grid3">
+          <div><label>Item 3</label><input name="item_name" value="Priority handling"></div>
+          <div><label>Quantity 3</label><input name="quantity" value="1"></div>
+          <div><label>Unit price 3</label><input name="unit_price" value="120"></div>
+        </div>
+        <div class="grid2">
+          <div><label>Tax percentage</label><input name="tax_percentage" value="15"></div>
+          <div><label>Discount</label><input name="discount" value="0"></div>
+        </div>
+        <label>Notes</label><textarea name="notes">Add payment terms, delivery notes or service details here.</textarea>
+        <button type="submit">Update sample preview</button>
+        <div class="note">Create a free account to remove the watermark from future upgrades, save records and download your documents later.</div>
+      </form>
+    </section>
+    <section class="preview">
+      <div class="cta">
+        <div><strong>Sample preview with VibeHost watermark</strong><br><span style="color:#667085">Use this design with your own account to save and manage records.</span></div>
+        <a href="/free-tools/register?template={{ template_meta.slug }}">Create free account to remove watermark and download</a>
+      </div>
+      <iframe class="preview-frame" srcdoc="{{ preview_html|e }}"></iframe>
+    </section>
+  </div>
+</body>
+</html>

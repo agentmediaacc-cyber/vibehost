@@ -1,0 +1,63 @@
+{% extends "owner/base.html" %}
+{% block title %}Stock Control{% endblock %}
+{% block page_heading %}Stock Control{% endblock %}
+{% block page_intro %}Monitor current stock, low-stock pressure and every movement recorded against this business.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="table-card">
+    <h2>Current Stock</h2>
+    {% if products %}
+    <table class="table">
+      <thead><tr><th>Name</th><th>Category</th><th>Current</th><th>Status</th><th>Adjust</th></tr></thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td><strong>{{ product.name }}</strong></td>
+          <td>{{ product.category or "General" }}</td>
+          <td>{% if (product.stock_quantity or 0) <= 3 %}<span class="chip warn">{{ product.stock_quantity or 0 }}</span>{% else %}<span class="chip good">{{ product.stock_quantity or 0 }}</span>{% endif %}</td>
+          <td>{{ product.status or "active" }}</td>
+          <td>
+            <form class="mini-form" method="POST" action="/owner/stock/{{ product.id }}/adjust">
+              <select name="movement_type">
+                <option value="stock_in">Stock In</option>
+                <option value="stock_out">Stock Out</option>
+                <option value="sale">Sale</option>
+                <option value="return">Return</option>
+                <option value="adjustment">Adjustment</option>
+              </select>
+              <input type="number" name="quantity" value="1" min="1">
+              <input type="text" name="note" placeholder="Note">
+              <button type="submit">Apply</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty">No stock-controlled items yet.</div>
+    {% endif %}
+  </section>
+  <section class="table-card">
+    <h2>Movement History</h2>
+    {% if movements %}
+    <div class="cards">
+      {% for movement in movements %}
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ movement.product_name or "Unknown item" }}</h3>
+            <div class="meta">{{ movement.movement_type }} · Quantity {{ movement.quantity }}</div>
+          </div>
+          <span class="chip dark">{{ movement.created_at }}</span>
+        </div>
+        <p class="meta" style="margin-top:10px;">{{ movement.note or "No note supplied." }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">Stock movements will appear here after your first adjustment.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

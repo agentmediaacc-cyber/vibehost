@@ -1,0 +1,35 @@
+{% extends "owner/base.html" %}
+{% block title %}Delivery and Bookings{% endblock %}
+{% block page_heading %}Delivery and Booking Management{% endblock %}
+{% block page_intro %}Manage dispatch, assigned staff and delivery progress for incoming business orders or booking requests.{% endblock %}
+{% block content %}
+<section class="table-card" style="margin-top:18px;">
+  <h2>Delivery Queue</h2>
+  {% if orders %}
+  <div class="cards">
+    {% for order in orders %}
+    <article class="item">
+      <div class="item-top">
+        <div>
+          <h3>{{ order.customer_name or "Website order" }}</h3>
+          <div class="meta">{{ order.order_type or "enquiry" }} · {{ order.customer_phone or order.customer_email or "No contact supplied" }}</div>
+        </div>
+        <span class="chip">{{ order.delivery_status or "pending" }}</span>
+      </div>
+      <p class="meta" style="margin-top:10px;">{{ order.delivery_address or order.message or "No delivery details supplied." }}</p>
+      <form class="grid" method="POST" action="/owner/delivery/{{ order.id }}/update" style="margin-top:12px;">
+        <div><label>Delivery Method</label><input name="delivery_method" value="{{ order.delivery_method or '' }}"></div>
+        <div><label>Delivery Time</label><input name="delivery_time" value="{{ order.delivery_time or '' }}"></div>
+        <div class="full"><label>Delivery Address</label><input name="delivery_address" value="{{ order.delivery_address or '' }}"></div>
+        <div><label>Assigned Staff</label><input name="assigned_staff" value="{{ order.assigned_staff or '' }}"></div>
+        <div><label>Delivery Status</label><select name="delivery_status">{% for status in ['pending','preparing','ready','out_for_delivery','delivered','failed'] %}<option value="{{ status }}" {% if order.delivery_status == status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select></div>
+        <div class="full"><button class="button" type="submit">Save Delivery Update</button></div>
+      </form>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty">No orders available for delivery handling yet.</div>
+  {% endif %}
+</section>
+{% endblock %}

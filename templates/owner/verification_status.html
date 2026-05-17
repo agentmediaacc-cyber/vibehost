@@ -1,0 +1,44 @@
+{% extends "owner/base.html" %}
+{% block title %}Verification Status{% endblock %}
+{% block page_heading %}Verification Status{% endblock %}
+{% block page_intro %}Your owner account is active, but the business must be verified before VibeHost enables customer orders, products and document workflows.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="table-card">
+    <h2>Business Review</h2>
+    <div class="cards">
+      <article class="item">
+        <div class="item-top">
+          <div>
+            <h3>{{ business.business_name }}</h3>
+            <div class="meta">{{ business.subdomain }} · {{ business.town }}, {{ business.region }}</div>
+          </div>
+          <span class="chip {% if (verification.status or business.verification_status) == 'approved' %}good{% elif (verification.status or business.verification_status) == 'rejected' %}warn{% else %}dark{% endif %}">{{ verification.status or business.verification_status or 'pending' }}</span>
+        </div>
+        <p class="meta" style="margin-top:10px;">{% if (verification.status or business.verification_status) == 'approved' %}Verification is complete. Owner selling and customer order features are unlocked.{% elif (verification.status or business.verification_status) == 'rejected' %}Verification was rejected. Review the notes below, then upload corrected files.{% else %}Verification is pending. A master admin will review the uploaded documents before activation.{% endif %}</p>
+      </article>
+      {% if verification.admin_notes %}
+      <article class="item"><h3>Admin Notes</h3><div class="meta">{{ verification.admin_notes }}</div></article>
+      {% endif %}
+    </div>
+    <div class="toolbar" style="margin-top:16px;">
+      {% if (verification.status or business.verification_status) != 'approved' %}
+      <a href="/owner/verification">Upload or Re-upload Documents</a>
+      {% endif %}
+      <a class="alt" href="/owner/site-editor">Edit Basic Profile</a>
+      <a class="alt" href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">View Website Preview</a>
+      {% if (verification.status or business.verification_status) == 'approved' %}
+      <a href="/owner/dashboard">Open Full Dashboard</a>
+      {% endif %}
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Locked Until Approval</h2>
+    <div class="cards" style="margin-top:14px;">
+      <div class="item"><strong>Products and services</strong><div class="meta">Publishing live items is blocked until approval.</div></div>
+      <div class="item"><strong>Public orders</strong><div class="meta">Website enquiry forms stay disabled while verification is pending or rejected.</div></div>
+      <div class="item"><strong>Invoices, quotations, stock and delivery</strong><div class="meta">Operational tools unlock after the business is approved.</div></div>
+    </div>
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | {{ business.business_name }}</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#0f172a}.wrap{max-width:980px;margin:0 auto;padding:22px}.hero,.card{background:#fff;border:1px solid #d9e2ee;border-radius:28px;box-shadow:0 20px 60px rgba(15,23,42,.08)}.hero{padding:26px;background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff}.card{padding:24px;margin-top:18px}form{display:grid;gap:14px}input{width:100%;padding:14px;border-radius:14px;border:1px solid #cbd5e1}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btn{padding:14px 16px;border:0;border-radius:14px;background:#111827;color:#fff;font-weight:800}.error{margin-top:14px;padding:14px;border-radius:14px;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}@media(max-width:720px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1 style="margin:0 0 8px;">Create your customer account</h1>
+      <p style="margin:0;color:#dbeafe;">This account belongs only to {{ business.business_name }} and lets you track your own orders and documents.</p>
+    </section>
+    <section class="card">
+      {% if error %}<div class="error">{{ error }}</div>{% endif %}
+      <form method="POST">
+        <input name="full_name" placeholder="Full name" required>
+        <div class="grid">
+          <input name="email" type="email" placeholder="Email" required>
+          <input name="phone" placeholder="Phone">
+        </div>
+        <div class="grid">
+          <input name="password" type="password" placeholder="Password" required>
+          <input name="confirm_password" type="password" placeholder="Confirm password" required>
+        </div>
+        <button class="btn" type="submit">Create Account</button>
+      </form>
+      <p style="margin-top:16px;">Already registered? <a href="/customer/login">Customer Login</a></p>
+    </section>
+  </div>
+</body>
+</html>

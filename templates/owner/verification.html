@@ -1,0 +1,50 @@
+{% extends "owner/base.html" %}
+{% block title %}Business Verification{% endblock %}
+{% block page_heading %}Business Verification{% endblock %}
+{% block page_intro %}Upload proof of business ownership, owner ID and proof of address so VibeHost can unlock selling, orders and live activation for this business.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="form-card">
+    <h2>Upload Verification Documents</h2>
+    <p>Allowed files: PDF, PNG, JPG, JPEG. Files are saved per business and reviewed by a master admin.</p>
+    {% if error %}<div class="banner danger">{{ error }}</div>{% endif %}
+    {% if success %}<div class="banner">{{ success }}</div>{% endif %}
+    {% if verification.admin_notes and verification.status == 'rejected' %}
+    <div class="banner danger">Admin notes: {{ verification.admin_notes }}</div>
+    {% endif %}
+    <form class="grid" method="POST" enctype="multipart/form-data">
+      <div class="full"><label>Proof of Business Ownership / Registration</label><input type="file" name="business_registration" accept=".pdf,.png,.jpg,.jpeg" required></div>
+      <div class="full"><label>Owner ID Document</label><input type="file" name="owner_id_document" accept=".pdf,.png,.jpg,.jpeg" required></div>
+      <div class="full"><label>Proof of Residential / Business Address</label><input type="file" name="proof_of_address" accept=".pdf,.png,.jpg,.jpeg" required></div>
+      <div class="full"><button class="button" type="submit">Submit Verification</button></div>
+    </form>
+  </section>
+  <section class="table-card">
+    <h2>Current Status</h2>
+    <div class="cards">
+      <article class="item">
+        <h3>Status</h3>
+        <div class="chips"><span class="chip {% if verification.status == 'approved' %}good{% elif verification.status == 'rejected' %}warn{% else %}dark{% endif %}">{{ verification.status or business.verification_status or "pending" }}</span></div>
+      </article>
+      {% if verification.business_registration_url or verification.owner_id_url or verification.proof_of_address_url %}
+      <article class="item">
+        <h3>Uploaded Files</h3>
+        <div class="toolbar" style="margin-top:12px;">
+          {% if verification.business_registration_url %}<a href="/owner/verification/file/business_registration" target="_blank">Business Registration</a>{% endif %}
+          {% if verification.owner_id_url %}<a class="alt" href="/owner/verification/file/owner_id" target="_blank">Owner ID</a>{% endif %}
+          {% if verification.proof_of_address_url %}<a class="alt" href="/owner/verification/file/proof_of_address" target="_blank">Proof of Address</a>{% endif %}
+        </div>
+      </article>
+      {% endif %}
+      <article class="item">
+        <h3>What unlocks after approval</h3>
+        <div class="meta">Products and services, public enquiries and customer orders, invoices and quotations, delivery, stock, staff, marketing and full website activation.</div>
+      </article>
+      <article class="item">
+        <h3>Preview Website</h3>
+        <div class="toolbar" style="margin-top:12px;"><a href="{{ site.live_url if site and site.live_url else '#' }}" target="_blank">Open Website Preview</a><a class="alt" href="/owner/verification/status">View Status Page</a></div>
+      </article>
+    </div>
+  </section>
+</section>
+{% endblock %}

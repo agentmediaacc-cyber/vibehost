@@ -1,0 +1,45 @@
+{% extends "owner/base.html" %}
+{% block title %}Marketing{% endblock %}
+{% block page_heading %}Marketing and Homepage Adverts{% endblock %}
+{% block page_intro %}Create homepage specials, promotions and advert cards that can surface on the public site and in printable previews.{% endblock %}
+{% block content %}
+<section class="main-grid">
+  <section class="form-card">
+    <h2>Create Advert</h2>
+    {% if error %}<div class="banner danger">{{ error }}</div>{% endif %}
+    {% if success %}<div class="banner">{{ success }}</div>{% endif %}
+    <form class="grid" method="POST" enctype="multipart/form-data">
+      <div><label>Title</label><input name="title" required></div>
+      <div><label>Image</label><input type="file" name="image" accept="image/*"></div>
+      <div class="full"><label>Description</label><textarea name="description"></textarea></div>
+      <div><label>Button Text</label><input name="button_text" value="Learn More"></div>
+      <div><label>Button URL</label><input name="button_url" placeholder="https:// or /path"></div>
+      <div><label>Status</label><select name="status"><option value="active">active</option><option value="draft">draft</option></select></div>
+      <div class="full"><button class="button" type="submit">Save Advert</button></div>
+    </form>
+  </section>
+  <section class="table-card">
+    <h2>Marketing Preview</h2>
+    {% if adverts %}
+    <div class="cards">
+      {% for advert in adverts %}
+      <article class="item" style="background:linear-gradient(135deg,#0f172a,#1d4ed8);color:#fff;">
+        <div class="item-top">
+          <div>
+            <h3>{{ advert.title }}</h3>
+            <div class="meta" style="color:#dbeafe;">{{ advert.description or "No description supplied." }}</div>
+          </div>
+          <span class="chip" style="background:rgba(255,255,255,.14);color:#fff;">{{ advert.status or "active" }}</span>
+        </div>
+        <div class="toolbar" style="margin-top:12px;">
+          <a href="{{ advert.button_url or ('https://wa.me/' ~ (business.whatsapp or '')|replace('+','')) }}" target="_blank">{{ advert.button_text or "Learn More" }}</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty">No adverts created yet.</div>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

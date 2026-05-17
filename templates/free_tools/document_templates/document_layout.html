@@ -1,0 +1,741 @@
+{% set is_quote = document_type == "quotation" %}
+{% set doc_heading = "QUOTATION" if is_quote else "INVOICE" %}
+{% set date_value = valid_until if is_quote else due_date %}
+{% set date_label = "Valid Until" if is_quote else "Due Date" %}
+{% set total_label = "Estimated Total" if is_quote else "Amount Due" %}
+{% set action_label = "Accept Quote" if is_quote else "Payment Details" %}
+{% set split_index = ((items|length) + 1) // 2 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ doc_heading }} {{ document_number }}</title>
+  <style>
+    @page { size: A4; margin: 12mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #ece7df; color: #171717; }
+    .print-page { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; position: relative; overflow: hidden; }
+    .watermark { position: absolute; pointer-events: none; text-transform: uppercase; letter-spacing: .25em; font-weight: 700; opacity: .08; }
+    .muted { color: #5f5f5f; }
+    .tiny { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+    .money { white-space: nowrap; }
+    .logo { max-width: 96px; max-height: 96px; object-fit: contain; }
+    .meta-grid, .two-col, .three-col, .four-col { display: grid; gap: 16px; }
+    .meta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four-col { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card { border: 1px solid #ded8cf; border-radius: 18px; padding: 16px; }
+    .line { height: 1px; background: currentColor; opacity: .18; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 11px 10px; vertical-align: top; }
+    .right { text-align: right; }
+    .center { text-align: center; }
+    .signature-box { border-top: 1px solid currentColor; padding-top: 10px; min-height: 56px; }
+    .footer-note { font-size: 11px; line-height: 1.6; }
+    .approval-box { border: 1px dashed currentColor; padding: 14px; border-radius: 16px; }
+    .pill { display: inline-block; border-radius: 999px; padding: 7px 12px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    .barcode { display: flex; gap: 3px; align-items: end; height: 34px; }
+    .barcode span { width: 3px; background: #101010; border-radius: 2px 2px 0 0; }
+    .barcode span:nth-child(odd) { height: 100%; }
+    .barcode span:nth-child(even) { height: 58%; }
+    .route-arrow { font-size: 30px; font-weight: 700; }
+    .totals-stack { margin-left: auto; width: min(100%, 290px); }
+    .totals-stack .row { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; }
+    .totals-stack .total { font-size: 22px; font-weight: 700; }
+    .receipt-table td { padding: 6px 0; border-bottom: 1px dashed #bbb; }
+    .receipt-table td:last-child { text-align: right; }
+    .slim { max-width: 122mm; }
+    .no-break { page-break-inside: avoid; }
+    @media print {
+      body { background: #fff; }
+      .print-page { width: 100%; min-height: auto; }
+    }
+    @media (max-width: 980px) {
+      .print-page { width: 100%; min-height: auto; }
+    }
+    @media (max-width: 760px) {
+      .meta-grid, .two-col, .three-col, .four-col { grid-template-columns: 1fr; }
+    }
+
+    .layout-modern_clean { font-family: "Trebuchet MS", Verdana, sans-serif; padding: 18mm; color: #111827; }
+    .layout-modern_clean .watermark { right: 12mm; top: 118mm; font-size: 52px; transform: rotate(-24deg); color: #2563eb; }
+    .layout-modern_clean table th { border-bottom: 2px solid #dbe4f0; text-align: left; color: #64748b; font-size: 11px; }
+    .layout-modern_clean table td { border-bottom: 1px solid #ebf0f5; }
+    .layout-modern_clean .meta-card { background: #f8fbff; border: 1px solid #dbe4f0; border-radius: 20px; padding: 16px; }
+
+    .layout-luxury_gold { font-family: Georgia, "Times New Roman", serif; background: #fffdfa; color: #17120a; }
+    .layout-luxury_gold .topband { background: linear-gradient(180deg, #101010, #1f1a12); color: #f5df9e; padding: 18mm 18mm 14mm; text-align: center; }
+    .layout-luxury_gold .gold-line { height: 5px; background: linear-gradient(90deg, #7f5e18, #f3d37c, #7f5e18); }
+    .layout-luxury_gold .body { padding: 14mm 18mm 18mm; }
+    .layout-luxury_gold .watermark { left: 50%; top: 44%; transform: translate(-50%, -50%) rotate(-18deg); font-size: 68px; color: #b88a22; }
+    .layout-luxury_gold .elegant-table th { text-transform: uppercase; letter-spacing: .14em; font-size: 10px; color: #8d6a21; border-bottom: 1px solid #d5c29a; }
+    .layout-luxury_gold .elegant-table td { border-bottom: 1px solid #efe4c8; }
+    .layout-luxury_gold .footer-band { background: #14110d; color: #e7d4a1; padding: 12mm 18mm; }
+
+    .layout-corporate_blue { font-family: "Helvetica Neue", Arial, sans-serif; display: grid; grid-template-columns: 58mm 1fr; min-height: 297mm; color: #0f172a; }
+    .layout-corporate_blue .sidebar { background: linear-gradient(180deg, #0f4db8, #17306b); color: #fff; padding: 18mm 12mm; }
+    .layout-corporate_blue .main { padding: 16mm 16mm 18mm; background: #fff; }
+    .layout-corporate_blue .watermark { right: 16mm; bottom: 18mm; transform: rotate(-90deg); font-size: 36px; color: #1d4ed8; }
+    .layout-corporate_blue .meta-panel { background: #eef5ff; border: 1px solid #cbdcf7; border-radius: 18px; padding: 16px; }
+    .layout-corporate_blue table th { background: #e8f1ff; color: #33558f; text-transform: uppercase; font-size: 10px; letter-spacing: .14em; }
+    .layout-corporate_blue table td { border-bottom: 1px solid #e5edf8; }
+
+    .layout-retail_receipt { font-family: "Courier New", monospace; padding: 12mm 0; background: #f1f1f1; }
+    .layout-retail_receipt .slip { width: 86mm; margin: 0 auto; background: #fff; padding: 14mm 8mm 12mm; box-shadow: 0 0 0 1px #d8d8d8; }
+    .layout-retail_receipt .watermark { left: 50%; top: 52%; transform: translate(-50%, -50%) rotate(-90deg); font-size: 34px; color: #222; }
+    .layout-retail_receipt .tear { border-top: 2px dashed #bbb; margin: 9px 0; }
+
+    .layout-restaurant_order { font-family: Georgia, "Times New Roman", serif; padding: 16mm; background: #fff8f1; color: #431407; }
+    .layout-restaurant_order .hero { background: linear-gradient(135deg, #6f260d, #dd7a22); color: #fff5eb; border-radius: 26px; padding: 18mm 16mm 14mm; }
+    .layout-restaurant_order .watermark { right: 10mm; top: 22mm; font-size: 34px; color: #fff1e5; transform: rotate(-12deg); opacity: .12; }
+    .layout-restaurant_order .menu-table th { background: #fff0dd; color: #9a3412; border-bottom: 1px solid #f4c38f; text-transform: uppercase; font-size: 10px; }
+    .layout-restaurant_order .menu-table td { border-bottom: 1px solid #f9dcc0; }
+
+    .layout-transport_trip { font-family: "Trebuchet MS", Verdana, sans-serif; padding: 16mm; background: #f3f8fe; color: #10233f; }
+    .layout-transport_trip .masthead { background: linear-gradient(135deg, #0f172a, #1c84c6); color: #fff; border-radius: 28px; padding: 16mm; }
+    .layout-transport_trip .route-box { background: #fff; border: 2px solid #b8d7f2; border-radius: 24px; padding: 16px; }
+    .layout-transport_trip .watermark { left: 12mm; bottom: 18mm; font-size: 40px; color: #0ea5e9; transform: rotate(-18deg); }
+    .layout-transport_trip table th { background: #dff1ff; color: #0f4f7d; font-size: 10px; text-transform: uppercase; letter-spacing: .14em; }
+    .layout-transport_trip table td { border-bottom: 1px solid #d9ebf8; }
+
+    .layout-construction_progress { font-family: "Trebuchet MS", Verdana, sans-serif; padding: 16mm; background: #fbf7ef; color: #292524; }
+    .layout-construction_progress .header { border: 2px solid #d6a33a; border-radius: 28px; padding: 16mm; background: linear-gradient(135deg, #fff8ea, #fff1c9); }
+    .layout-construction_progress .stage-box { background: #2c2418; color: #fff2cd; border-radius: 22px; padding: 16px; }
+    .layout-construction_progress .watermark { right: 12mm; top: 140mm; font-size: 48px; color: #ca8a04; transform: rotate(-28deg); }
+    .layout-construction_progress table th { background: #f8edd0; color: #7c5c1c; text-transform: uppercase; font-size: 10px; }
+    .layout-construction_progress table td { border-bottom: 1px solid #ead9b3; }
+
+    .layout-medical_statement { font-family: Arial, sans-serif; padding: 16mm; background: #f5fdf8; color: #16422b; }
+    .layout-medical_statement .header { display: flex; justify-content: space-between; gap: 18px; align-items: start; margin-bottom: 14mm; }
+    .layout-medical_statement .patient-box { background: #fff; border: 1px solid #b7e5c8; border-radius: 20px; padding: 16px; }
+    .layout-medical_statement .watermark { left: 14mm; top: 118mm; font-size: 46px; color: #16a34a; transform: rotate(-22deg); }
+    .layout-medical_statement table th { color: #2d7b4d; text-transform: uppercase; font-size: 10px; border-bottom: 2px solid #b7e5c8; }
+    .layout-medical_statement table td { border-bottom: 1px solid #dff3e6; }
+
+    .layout-school_fees { font-family: Georgia, "Times New Roman", serif; padding: 16mm; background: #fffdf0; color: #1e3a8a; }
+    .layout-school_fees .banner { background: linear-gradient(135deg, #2045aa, #f0be2c); color: #fff; border-radius: 26px; padding: 16mm; }
+    .layout-school_fees .student-card { background: #fff; border: 1px solid #e8d37d; border-radius: 18px; padding: 16px; }
+    .layout-school_fees .watermark { right: 10mm; bottom: 22mm; font-size: 42px; color: #1d4ed8; transform: rotate(-18deg); }
+    .layout-school_fees table th { background: #eef4ff; color: #294c94; text-transform: uppercase; font-size: 10px; }
+    .layout-school_fees table td { border-bottom: 1px solid #efe3ad; }
+
+    .layout-minimalist_black { font-family: "Helvetica Neue", Arial, sans-serif; padding: 16mm; background: #fff; color: #090909; }
+    .layout-minimalist_black .mega { font-size: 66px; line-height: .9; font-weight: 900; letter-spacing: -.08em; margin: 0; }
+    .layout-minimalist_black .watermark { right: -8mm; top: 40mm; font-size: 72px; color: #111; transform: rotate(90deg); }
+    .layout-minimalist_black .meta-box { border: 2px solid #111; padding: 14px; }
+    .layout-minimalist_black table th { text-transform: uppercase; font-size: 10px; letter-spacing: .16em; border-bottom: 2px solid #111; }
+    .layout-minimalist_black table td { border-bottom: 1px solid #d4d4d4; }
+    .layout-minimalist_black .totals-panel { background: #0b0b0b; color: #fff; padding: 18px; min-height: 150px; }
+  </style>
+</head>
+<body>
+  {% if layout_key == "modern_clean" %}
+  <main class="print-page layout-modern_clean">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <div class="two-col no-break" style="align-items:start;">
+      <div>
+        {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo">{% endif %}
+        <div class="tiny muted">{{ doc_heading }}</div>
+        <h1 style="margin:8px 0 10px;font-size:34px;letter-spacing:-.05em;">{{ business_name }}</h1>
+        <div class="muted">{{ business_email }}{% if business_phone %} · {{ business_phone }}{% endif %}</div>
+        <div class="muted" style="margin-top:6px;">{{ business_address }}{% if business_tax_number %} · Tax/VAT {{ business_tax_number }}{% endif %}</div>
+      </div>
+      <div class="meta-card">
+        <div class="tiny muted">{{ doc_heading }} Details</div>
+        <div style="font-size:26px;font-weight:700;margin-top:8px;">{{ document_number }}</div>
+        <div class="meta-grid" style="margin-top:14px;">
+          <div><div class="tiny muted">Issue Date</div><div>{{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div></div>
+          <div><div class="tiny muted">{{ date_label }}</div><div>{{ date_value.strftime('%d %b %Y') if date_value else '' }}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="two-col no-break" style="margin-top:20mm;">
+      <div class="card">
+        <div class="tiny muted">{% if is_quote %}Prepared For{% else %}Bill To{% endif %}</div>
+        <div style="font-size:20px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+        <div class="muted" style="margin-top:6px;">{{ customer_email }}</div>
+        <div class="muted">{{ customer_phone }}</div>
+        <div class="muted">{{ customer_address }}</div>
+      </div>
+      <div class="card">
+        <div class="tiny muted">{% if is_quote %}Approval{% else %}Summary{% endif %}</div>
+        <div style="margin-top:8px;line-height:1.7;">
+          {% if is_quote %}
+          Review the quotation, confirm the scope, and use the approval space below to accept the quoted amount.
+          {% else %}
+          This invoice presents billed line items, payment terms, and the final amount due in a clean printable layout.
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <table style="margin-top:18mm;">
+      <thead><tr><th>Item</th><th class="right">Qty</th><th class="right">Unit</th><th class="right">Total</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="totals-stack" style="margin-top:16mm;">
+      <div class="row"><span>Subtotal</span><span class="money">N$ {{ "%.2f"|format(subtotal) }}</span></div>
+      <div class="row"><span>Tax</span><span class="money">N$ {{ "%.2f"|format(tax) }}</span></div>
+      <div class="row"><span>Discount</span><span class="money">N$ {{ "%.2f"|format(discount) }}</span></div>
+      <div class="row total"><span>{{ total_label }}</span><span class="money">N$ {{ "%.2f"|format(total) }}</span></div>
+    </div>
+    <div class="two-col" style="margin-top:18mm;align-items:start;">
+      <div>
+        <div class="tiny muted">Notes</div>
+        <div style="margin-top:8px;line-height:1.7;">{{ notes }}</div>
+      </div>
+      <div>
+        <div class="tiny muted">{{ action_label }}</div>
+        <div style="margin-top:8px;line-height:1.7;">{{ payment_details if not is_quote else terms }}</div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:16px;">
+          Accept Quote: Name ____________________  Signature ____________________  Date ____________________
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+  {% elif layout_key == "luxury_gold" %}
+  <main class="print-page layout-luxury_gold">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="topband">
+      {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin:0 auto 10px;display:block;">{% endif %}
+      <div class="tiny" style="color:#f3d37c;">Exclusive {{ doc_heading }}</div>
+      <h1 style="margin:10px 0 6px;font-size:38px;letter-spacing:.02em;">{{ business_name }}</h1>
+      <div style="max-width:130mm;margin:0 auto;color:#dbc995;">{{ business_address }}</div>
+    </section>
+    <div class="gold-line"></div>
+    <section class="body">
+      <div class="two-col no-break" style="align-items:end;">
+        <div>
+          <div class="tiny muted" style="color:#8d6a21;">Client</div>
+          <div style="font-size:24px;margin-top:8px;">{{ customer_name }}</div>
+          <div class="muted" style="margin-top:8px;">{{ customer_email }} · {{ customer_phone }}</div>
+          <div class="muted">{{ customer_address }}</div>
+        </div>
+        <div class="right">
+          <div class="tiny muted" style="color:#8d6a21;">Reference</div>
+          <div style="font-size:32px;letter-spacing:.06em;margin-top:8px;">{{ document_number }}</div>
+          <div style="margin-top:10px;">Issued {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+        </div>
+      </div>
+      <div class="line" style="margin:14mm 0;color:#c49d3e;"></div>
+      <table class="elegant-table">
+        <thead><tr><th>Description</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Amount</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="two-col" style="margin-top:16mm;align-items:start;">
+        <div>
+          <div class="tiny muted" style="color:#8d6a21;">Message</div>
+          <div style="margin-top:10px;line-height:1.8;">{{ notes }}</div>
+          <div style="margin-top:18px;line-height:1.8;">{{ terms }}</div>
+        </div>
+        <div class="card" style="border-color:#d6bc81;background:#fffaf0;">
+          <div class="totals-stack">
+            <div class="row"><span>Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+            <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+            <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+            <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="footer-band">
+      <div class="two-col">
+        <div>{{ payment_details if not is_quote else "Accept Quote and return signed approval to confirm production or delivery scheduling." }}</div>
+        <div class="right">{% if is_quote %}Approval Signature ____________________{% else %}Prepared with premium billing presentation{% endif %}</div>
+      </div>
+    </section>
+  </main>
+  {% elif layout_key == "corporate_blue" %}
+  <main class="print-page layout-corporate_blue">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <aside class="sidebar">
+      {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="background:#fff;border-radius:16px;padding:8px;">{% endif %}
+      <div class="tiny" style="color:#cfe4ff;margin-top:6px;">Corporate Document</div>
+      <h1 style="margin:10px 0 14px;font-size:30px;line-height:1;">{{ business_name }}</h1>
+      <div style="line-height:1.8;">{{ business_email }}<br>{{ business_phone }}<br>{{ business_address }}</div>
+      <div class="card" style="margin-top:20mm;background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.18);">
+        <div class="tiny" style="color:#d7e8ff;">Business Info</div>
+        <div style="margin-top:10px;">Tax/VAT: {{ business_tax_number or "Available on request" }}</div>
+        <div style="margin-top:10px;">{{ "Proposal validity and approval are included in the main body." if is_quote else "Payment routing and balances are included in the main body." }}</div>
+      </div>
+    </aside>
+    <section class="main">
+      <div class="meta-panel no-break">
+        <div class="two-col" style="align-items:end;">
+          <div>
+            <div class="tiny muted">Document Type</div>
+            <div style="font-size:34px;font-weight:800;margin-top:6px;">{{ doc_heading }}</div>
+          </div>
+          <div class="right">
+            <div style="font-size:22px;font-weight:700;">{{ document_number }}</div>
+            <div class="muted" style="margin-top:6px;">Issue Date {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+            <div class="muted">{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="two-col no-break" style="margin-top:16mm;">
+        <div class="card">
+          <div class="tiny muted">{% if is_quote %}Prepared For{% else %}Bill To{% endif %}</div>
+          <div style="font-size:22px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+          <div class="muted" style="margin-top:6px;">{{ customer_email }}<br>{{ customer_phone }}<br>{{ customer_address }}</div>
+        </div>
+        <div class="card">
+          <div class="tiny muted">{% if is_quote %}Decision Summary{% else %}Finance Summary{% endif %}</div>
+          <div style="line-height:1.8;margin-top:8px;">{{ notes }}</div>
+        </div>
+      </div>
+      <table style="margin-top:16mm;">
+        <thead><tr><th>Line Item</th><th class="right">Units</th><th class="right">Price</th><th class="right">Line Total</th></tr></thead>
+        <tbody>
+          {% for item in items %}
+          <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="two-col" style="margin-top:14mm;align-items:start;">
+        <div>
+          <div class="tiny muted">Terms</div>
+          <div style="margin-top:8px;line-height:1.7;">{{ terms }}</div>
+          {% if is_quote %}
+          <div class="approval-box" style="margin-top:16px;">Accept Quote: Authorized by ____________________  Signature ____________________</div>
+          {% else %}
+          <div class="tiny muted" style="margin-top:16px;">Payment Details</div>
+          <div style="margin-top:8px;line-height:1.7;">{{ payment_details }}</div>
+          {% endif %}
+        </div>
+        <div class="meta-panel">
+          <div class="totals-stack">
+            <div class="row"><span>Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+            <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+            <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+            <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  {% elif layout_key == "retail_receipt" or layout_key == "retail_quote" %}
+  <main class="print-page layout-retail_receipt">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="slip">
+      <div class="center">
+        {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin:0 auto 8px;display:block;">{% endif %}
+        <div style="font-size:22px;font-weight:700;">{{ business_name }}</div>
+        <div style="font-size:12px;margin-top:4px;">{{ business_address }}</div>
+        <div style="font-size:12px;">{{ business_phone }} · {{ business_email }}</div>
+      </div>
+      <div class="tear"></div>
+      <div class="center tiny">{{ doc_heading }}</div>
+      <div class="center" style="font-size:14px;font-weight:700;margin-top:6px;">{{ document_number }}</div>
+      <div class="barcode" style="margin:10px auto 4px;justify-content:center;">
+        {% for _ in range(22) %}<span></span>{% endfor %}
+      </div>
+      <div class="center" style="font-size:11px;">Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }} · {{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+      <div class="tear"></div>
+      <div style="font-size:12px;">Customer: {{ customer_name }}</div>
+      <div style="font-size:12px;">Reference: {{ customer_phone or customer_email }}</div>
+      <div class="tear"></div>
+      <table class="receipt-table">
+        <tbody>
+          {% for item in items %}
+          <tr><td>{{ item.item_name }} x{{ item.quantity }}</td><td>N$ {{ "%.2f"|format(item.total) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="tear"></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;"><span>Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px;"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+      <div class="tear"></div>
+      <div style="display:flex;justify-content:space-between;align-items:end;">
+        <span style="font-size:14px;font-weight:700;">{{ total_label }}</span>
+        <span style="font-size:24px;font-weight:700;">N$ {{ "%.2f"|format(total) }}</span>
+      </div>
+      <div class="tear"></div>
+      <div style="font-size:11px;line-height:1.7;">{{ notes }}</div>
+      <div style="font-size:11px;line-height:1.7;margin-top:8px;">{{ terms }}</div>
+      <div style="font-size:11px;line-height:1.7;margin-top:8px;">{{ "Accept Quote at the counter or by signed approval." if is_quote else payment_details }}</div>
+    </section>
+  </main>
+  {% elif layout_key == "restaurant_order" or layout_key == "restaurant_catering" %}
+  <main class="print-page layout-restaurant_order">
+    <section class="hero">
+      {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+      <div class="two-col">
+        <div>
+          <div class="pill" style="background:rgba(255,255,255,.16);color:#fff;">{{ doc_heading }}</div>
+          <h1 style="margin:10px 0 6px;font-size:34px;">{{ business_name }}</h1>
+          <div>{{ business_address }}</div>
+          <div style="margin-top:6px;">{{ business_phone }} · {{ business_email }}</div>
+        </div>
+        <div class="right">
+          {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="background:#fff;border-radius:16px;padding:6px;">{% endif %}
+          <div style="margin-top:8px;font-size:24px;font-weight:700;">{{ document_number }}</div>
+          <div>Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+        </div>
+      </div>
+    </section>
+    <div class="two-col" style="margin-top:14mm;">
+      <div class="card" style="background:#fff;border-color:#f1c08a;">
+        <div class="tiny muted" style="color:#9a3412;">Customer / Event</div>
+        <div style="font-size:22px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+        <div class="muted" style="margin-top:8px;">{{ customer_phone }} · {{ customer_email }}</div>
+        <div class="muted">{{ customer_address }}</div>
+        <div style="margin-top:12px;">{{ "Event and catering details included below for approval." if is_quote else "Delivery or pickup instructions included below for fulfilment." }}</div>
+      </div>
+      <div class="card" style="background:#fff7ee;border-color:#f1c08a;">
+        <div class="tiny muted" style="color:#9a3412;">Service Details</div>
+        <div class="three-col" style="margin-top:10px;">
+          <div><strong>Mode</strong><br>{{ "Catering Quote" if is_quote else "Order Invoice" }}</div>
+          <div><strong>{{ date_label }}</strong><br>{{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+          <div><strong>Event Ref</strong><br>{{ document_number }}</div>
+        </div>
+        <div style="margin-top:12px;"><strong>Delivery / Pickup</strong><br>{{ notes }}</div>
+      </div>
+    </div>
+    <table class="menu-table" style="margin-top:14mm;">
+      <thead><tr><th>Menu Item</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Line Total</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="two-col" style="margin-top:14mm;">
+      <div>
+        <div class="tiny muted" style="color:#9a3412;">Kitchen Notes</div>
+        <div style="line-height:1.8;margin-top:8px;">{{ terms }}</div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:16px;border-color:#dd7a22;">Accept Quote: Event approval signature ____________________</div>
+        {% endif %}
+      </div>
+      <div class="card" style="background:#fff;border-color:#f1c08a;">
+        <div class="totals-stack">
+          <div class="row"><span>Food Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Service Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% elif layout_key == "transport_trip" %}
+  <main class="print-page layout-transport_trip">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="masthead">
+      <div class="two-col">
+        <div>
+          <div class="pill" style="background:rgba(255,255,255,.14);color:#fff;">{{ doc_heading }}</div>
+          <h1 style="margin:10px 0 6px;font-size:34px;">{{ business_name }}</h1>
+          <div>{{ business_email }} · {{ business_phone }}</div>
+          <div style="margin-top:6px;">{{ business_address }}</div>
+        </div>
+        <div class="right">
+          {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="background:#fff;padding:8px;border-radius:14px;">{% endif %}
+          <div style="font-size:26px;font-weight:700;margin-top:8px;">{{ document_number }}</div>
+          <div>Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+        </div>
+      </div>
+    </section>
+    <div class="route-box no-break" style="margin-top:14mm;">
+      <div class="three-col" style="align-items:center;">
+        <div><div class="tiny muted">Pickup</div><div style="font-size:22px;font-weight:700;margin-top:6px;">{{ customer_address or "City Pickup Point" }}</div></div>
+        <div class="center route-arrow">→</div>
+        <div><div class="tiny muted">Dropoff</div><div style="font-size:22px;font-weight:700;margin-top:6px;">{{ notes or "Destination" }}</div></div>
+      </div>
+    </div>
+    <div class="three-col no-break" style="margin-top:12mm;">
+      <div class="card"><div class="tiny muted">Passenger</div><div style="margin-top:8px;font-size:20px;font-weight:700;">{{ customer_name }}</div><div class="muted">{{ customer_phone }}</div></div>
+      <div class="card"><div class="tiny muted">Vehicle</div><div style="margin-top:8px;">Executive Shuttle</div><div class="muted">Driver assigned on confirmation</div></div>
+      <div class="card"><div class="tiny muted">Booking Reference</div><div style="margin-top:8px;">{{ document_number }}</div><div class="muted">{{ "Estimate validity shown on this quote." if is_quote else "Trip booking linked to this invoice." }}</div></div>
+    </div>
+    <table style="margin-top:14mm;">
+      <thead><tr><th>Trip Cost Breakdown</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="two-col" style="margin-top:14mm;">
+      <div>
+        <div class="tiny muted">Trip Terms</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ terms }}</div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:16px;border-color:#60bde9;">Accept Quote: Pickup approval signature ____________________</div>
+        {% else %}
+        <div class="tiny muted" style="margin-top:16px;">Payment Details</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ payment_details }}</div>
+        {% endif %}
+      </div>
+      <div class="card">
+        <div class="totals-stack">
+          <div class="row"><span>Base Fare</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Tax / Fees</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% elif layout_key == "construction_progress" or layout_key == "construction_estimate" %}
+  <main class="print-page layout-construction_progress">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="header">
+      <div class="two-col">
+        <div>
+          <div class="tiny muted" style="color:#8c691f;">Project {{ doc_heading }}</div>
+          <h1 style="margin:8px 0 6px;font-size:34px;">{{ business_name }}</h1>
+          <div>{{ business_phone }} · {{ business_email }}</div>
+          <div style="margin-top:6px;">{{ business_address }}</div>
+        </div>
+        <div class="right">
+          {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin-left:auto;">{% endif %}
+          <div style="font-size:28px;font-weight:700;margin-top:8px;">{{ document_number }}</div>
+          <div>Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+        </div>
+      </div>
+    </section>
+    <div class="two-col no-break" style="margin-top:12mm;align-items:start;">
+      <div class="card">
+        <div class="tiny muted" style="color:#8c691f;">Client / Project</div>
+        <div style="font-size:22px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+        <div class="muted" style="margin-top:8px;">{{ customer_phone }} · {{ customer_email }}</div>
+        <div class="muted">{{ customer_address }}</div>
+      </div>
+      <div class="stage-box">
+        <div class="tiny" style="color:#f9dfa2;">Project Stage</div>
+        <div style="font-size:24px;font-weight:700;margin-top:8px;">{{ "Estimate Review" if is_quote else "Progress Billing" }}</div>
+        <div style="margin-top:8px;line-height:1.7;">{{ notes }}</div>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:12mm;align-items:start;">
+      <div>
+        <div class="tiny muted" style="color:#8c691f;margin-bottom:8px;">Materials</div>
+        <table>
+          <thead><tr><th>Material</th><th class="right">Qty</th><th class="right">Amount</th></tr></thead>
+          <tbody>
+            {% for item in items[:split_index] %}
+            <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="tiny muted" style="color:#8c691f;margin-bottom:8px;">Labour</div>
+        <table>
+          <thead><tr><th>Labour</th><th class="right">Qty</th><th class="right">Amount</th></tr></thead>
+          <tbody>
+            {% for item in items[split_index:] %}
+            <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="two-col" style="margin-top:12mm;align-items:start;">
+      <div class="card">
+        <div class="tiny muted" style="color:#8c691f;">Terms</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ terms }}</div>
+        <div class="two-col" style="margin-top:16px;">
+          <div class="signature-box">Client Signature</div>
+          <div class="signature-box">Contractor Signature</div>
+        </div>
+      </div>
+      <div class="card" style="background:#fffaf0;">
+        <div class="totals-stack">
+          <div class="row"><span>Materials + Labour</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Deposit / Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ "Quote Total" if is_quote else "Balance Due" }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% elif layout_key == "medical_statement" or layout_key == "medical_plan" %}
+  <main class="print-page layout-medical_statement">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="header">
+      <div>
+        <div class="tiny muted" style="color:#2d7b4d;">Clinic {{ doc_heading }}</div>
+        <h1 style="margin:8px 0 6px;font-size:34px;">{{ business_name }}</h1>
+        <div>{{ business_phone }} · {{ business_email }}</div>
+        <div style="margin-top:6px;">{{ business_address }}</div>
+      </div>
+      <div class="right">
+        {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin-left:auto;">{% endif %}
+        <div style="font-size:26px;font-weight:700;margin-top:8px;">{{ document_number }}</div>
+        <div>Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+        <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+      </div>
+    </section>
+    <div class="two-col no-break" style="align-items:start;">
+      <div class="patient-box">
+        <div class="tiny muted" style="color:#2d7b4d;">Patient / Customer Details</div>
+        <div style="font-size:22px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+        <div class="muted" style="margin-top:8px;">{{ customer_email }}</div>
+        <div class="muted">{{ customer_phone }}</div>
+        <div class="muted">{{ customer_address }}</div>
+      </div>
+      <div class="patient-box">
+        <div class="tiny muted" style="color:#2d7b4d;">Service Summary</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ notes }}</div>
+      </div>
+    </div>
+    <table style="margin-top:14mm;">
+      <thead><tr><th>Service Date</th><th>Consultation / Service</th><th class="right">Qty</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</td><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="two-col" style="margin-top:14mm;">
+      <div>
+        <div class="tiny muted" style="color:#2d7b4d;">Clinical Notes / Terms</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ terms }}</div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:16px;border-color:#7cc695;">Accept Quote: Patient approval ____________________</div>
+        {% endif %}
+      </div>
+      <div class="patient-box">
+        <div class="totals-stack">
+          <div class="row"><span>Services</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-note" style="margin-top:16mm;color:#3b7b57;">Private health information should be handled confidentially and stored according to your clinic privacy process.</div>
+  </main>
+  {% elif layout_key == "school_fees" %}
+  <main class="print-page layout-school_fees">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <section class="banner">
+      <div class="two-col">
+        <div>
+          <div class="pill" style="background:rgba(255,255,255,.16);color:#fff;">{{ doc_heading }}</div>
+          <h1 style="margin:10px 0 6px;font-size:34px;">{{ business_name }}</h1>
+          <div>{{ business_address }}</div>
+        </div>
+        <div class="right">
+          {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin-left:auto;background:#fff;padding:8px;border-radius:14px;">{% endif %}
+          <div style="font-size:26px;font-weight:700;margin-top:8px;">{{ document_number }}</div>
+          <div>Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+          <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+        </div>
+      </div>
+    </section>
+    <div class="two-col no-break" style="margin-top:14mm;">
+      <div class="student-card">
+        <div class="tiny muted" style="color:#294c94;">Student Details</div>
+        <div style="font-size:22px;font-weight:700;margin-top:8px;">{{ customer_name }}</div>
+        <div class="muted" style="margin-top:8px;">Parent/Guardian: {{ customer_email or "parent@example.com" }}</div>
+        <div class="muted">Contact: {{ customer_phone }}</div>
+        <div class="muted">Address: {{ customer_address }}</div>
+      </div>
+      <div class="student-card">
+        <div class="tiny muted" style="color:#294c94;">Term / Grade</div>
+        <div style="margin-top:8px;line-height:1.8;">Term billing and academic fee schedule summary for the selected learner.</div>
+        <div class="three-col" style="margin-top:12px;">
+          <div><strong>Term</strong><br>Current</div>
+          <div><strong>Grade</strong><br>Registered</div>
+          <div><strong>Status</strong><br>{{ "Pending Acceptance" if is_quote else "Payment Due" }}</div>
+        </div>
+      </div>
+    </div>
+    <table style="margin-top:14mm;">
+      <thead><tr><th>Fee Schedule</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="two-col" style="margin-top:14mm;">
+      <div>
+        <div class="tiny muted" style="color:#294c94;">Notes / Terms</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ notes }}</div>
+        <div style="margin-top:10px;line-height:1.8;">{{ terms }}</div>
+      </div>
+      <div class="student-card">
+        <div class="totals-stack">
+          <div class="row"><span>Fees</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Discount / Bursary</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ "Quote Balance" if is_quote else "Balance Due" }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:14px;border-color:#d9b63c;">Accept Quote: Parent signature ____________________</div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+  {% else %}
+  <main class="print-page layout-minimalist_black">
+    {% if watermark %}<div class="watermark">VibeHost Watermark</div>{% endif %}
+    <div class="two-col no-break" style="align-items:start;">
+      <div>
+        <p class="mega">{{ doc_heading }}</p>
+        <div class="tiny muted" style="color:#666;margin-top:8px;">{{ business_name }}</div>
+      </div>
+      <div class="meta-box">
+        {% if business_logo_url %}<img class="logo" src="{{ business_logo_url }}" alt="{{ business_name }} logo" style="margin-bottom:10px;">{% endif %}
+        <div><strong>{{ document_number }}</strong></div>
+        <div style="margin-top:8px;">Issue {{ issue_date.strftime('%d %b %Y') if issue_date else '' }}</div>
+        <div>{{ date_label }} {{ date_value.strftime('%d %b %Y') if date_value else '' }}</div>
+      </div>
+    </div>
+    <div class="line" style="margin:12mm 0;color:#111;"></div>
+    <div class="four-col no-break">
+      <div class="card" style="border-color:#111;"><div class="tiny muted">Business</div><div style="margin-top:8px;">{{ business_email }}<br>{{ business_phone }}</div></div>
+      <div class="card" style="border-color:#111;"><div class="tiny muted">{% if is_quote %}Prepared For{% else %}Bill To{% endif %}</div><div style="margin-top:8px;">{{ customer_name }}</div></div>
+      <div class="card" style="border-color:#111;"><div class="tiny muted">Address</div><div style="margin-top:8px;">{{ customer_address }}</div></div>
+      <div class="card" style="border-color:#111;"><div class="tiny muted">Reference</div><div style="margin-top:8px;">{{ customer_phone or customer_email }}</div></div>
+    </div>
+    <table style="margin-top:14mm;">
+      <thead><tr><th>Item</th><th class="right">Qty</th><th class="right">Unit</th><th class="right">Amount</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr><td>{{ item.item_name }}</td><td class="right">{{ item.quantity }}</td><td class="right">N$ {{ "%.2f"|format(item.unit_price) }}</td><td class="right">N$ {{ "%.2f"|format(item.total) }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="two-col" style="margin-top:14mm;align-items:start;">
+      <div>
+        <div class="tiny muted">Notes</div>
+        <div style="margin-top:8px;line-height:1.8;">{{ notes }}</div>
+        <div style="margin-top:12px;line-height:1.8;">{{ terms }}</div>
+        {% if is_quote %}
+        <div class="approval-box" style="margin-top:16px;border-color:#111;">Accept Quote: Name ____________________  Signature ____________________</div>
+        {% endif %}
+      </div>
+      <div class="totals-panel">
+        <div class="totals-stack" style="width:100%;">
+          <div class="row"><span>Subtotal</span><span>N$ {{ "%.2f"|format(subtotal) }}</span></div>
+          <div class="row"><span>Tax</span><span>N$ {{ "%.2f"|format(tax) }}</span></div>
+          <div class="row"><span>Discount</span><span>N$ {{ "%.2f"|format(discount) }}</span></div>
+          <div class="row total"><span>{{ total_label }}</span><span>N$ {{ "%.2f"|format(total) }}</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+  {% endif %}
+</body>
+</html>

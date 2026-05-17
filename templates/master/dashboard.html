@@ -1,0 +1,214 @@
+{% extends "master/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block header_title %}System Overview{% endblock %}
+
+{% block content %}
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #e0f2fe; color: #0ea5e9;">
+            <i class="fas fa-globe"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Total Websites</h3>
+            <p>{{ total_websites }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #22c55e;">
+            <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Active Trials</h3>
+            <p>{{ active_trials }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #fee2e2; color: #ef4444;">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Expired Trials</h3>
+            <p>{{ expired_trials }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #fef9c3; color: #eab308;">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Paid Websites</h3>
+            <p>{{ paid_websites }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #dcfce7; color: #16a34a;">
+            <i class="fas fa-shield-check"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Verified Businesses</h3>
+            <p>{{ verified_businesses }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+            <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Pending Verification</h3>
+            <p>{{ pending_verifications }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: #fee2e2; color: #dc2626;">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="stat-info">
+            <h3>Customer Accounts</h3>
+            <p>{{ customer_accounts_count }}</p>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <div>
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; font-size: 1.25rem;">Recent Websites</h2>
+                <a href="{{ url_for('master_websites') }}" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.875rem;">View All</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Business</th>
+                        <th>Subdomain</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for site in recent_websites %}
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">{{ site.business_name }}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">{{ site.website_type }}</div>
+                        </td>
+                        <td>{{ site.subdomain }}</td>
+                        <td>
+                            <span class="badge {% if site.status == 'active' %}badge-success{% elif site.status == 'trial' %}badge-info{% else %}badge-danger{% endif %}">
+                                {{ site.status|title }}
+                            </span>
+                        </td>
+                        <td style="font-size: 0.875rem; color: #64748b;">{{ site.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('master_website_detail', business_id=site.id) }}" class="btn btn-outline" style="padding: 4px 8px;"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0; font-size: 1.25rem;">Recent Documents</h2>
+                <a href="{{ url_for('master_documents') }}" class="btn btn-outline" style="padding: 6px 12px; font-size: 0.875rem;">View All</a>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in recent_documents %}
+                    <tr>
+                        <td style="font-weight: 600;">{{ doc.document_number }}</td>
+                        <td>{{ doc.customer_name }}</td>
+                        <td style="font-weight: 600;">NAD {{ "{:,.2f}".format(doc.total) }}</td>
+                        <td>
+                            <span class="badge {% if doc.status == 'paid' %}badge-success{% elif doc.status == 'sent' %}badge-info{% else %}badge-warning{% endif %}">
+                                {{ doc.status|title }}
+                            </span>
+                        </td>
+                        <td style="font-size: 0.875rem; color: #64748b;">{{ doc.created_at.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <div class="card" style="border-left: 4px solid #ef4444;">
+            <h2 style="margin: 0 0 16px; font-size: 1.125rem; color: #991b1b;">Trial Expiry Alerts</h2>
+            {% if trial_expiry_alerts %}
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for alert in trial_expiry_alerts %}
+                <li style="padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="font-weight: 600; font-size: 0.9375rem;">{{ alert.business_name }}</div>
+                    <div style="font-size: 0.8125rem; color: #ef4444;">Expires: {{ alert.trial_expires_at.strftime('%Y-%m-%d') }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p style="color: #64748b; font-size: 0.875rem;">No trials expiring in the next 3 days.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2 style="margin: 0 0 16px; font-size: 1.125rem;">Recent Verifications</h2>
+            {% if recent_verifications %}
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                {% for item in recent_verifications %}
+                <a href="{{ url_for('master_verification_detail', verification_id=item.id) }}" style="display:block; padding:12px; border:1px solid #e2e8f0; border-radius:10px; text-decoration:none; color:inherit;">
+                    <div style="font-weight:700;">{{ item.business_name }}</div>
+                    <div style="font-size:0.8125rem; color:#64748b;">{{ item.owner_email or 'No owner email' }}</div>
+                    <div style="margin-top:6px;">
+                        <span class="badge {% if item.status == 'approved' %}badge-success{% elif item.status == 'rejected' %}badge-danger{% else %}badge-warning{% endif %}">{{ item.status|title }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="color:#64748b; font-size:0.875rem;">No verification submissions yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <h2 style="margin: 0 0 16px; font-size: 1.125rem;">System Quick Stats</h2>
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Website Owners</span>
+                    <span style="font-weight: 700;">{{ website_owners }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Free Tool Users</span>
+                    <span style="font-weight: 700;">{{ free_tool_users }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Total Documents</span>
+                    <span style="font-weight: 700;">{{ total_documents }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Invoices</span>
+                    <span style="font-weight: 700;">{{ invoices_count }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Quotations</span>
+                    <span style="font-weight: 700;">{{ quotations_count }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 0.875rem;">Rejected Verification</span>
+                    <span style="font-weight: 700;">{{ rejected_verifications }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

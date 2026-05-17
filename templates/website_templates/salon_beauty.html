@@ -1,231 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ business.business_name }} | Salon & Beauty</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root{
+      --primary: {{ site.primary_color if site and site.primary_color else '#7a2048' }};
+      --secondary: {{ site.secondary_color if site and site.secondary_color else '#f8c7da' }};
+      --accent: {{ site.accent_color if site and site.accent_color else '#ec4899' }};
+      --rose:#fff4f7;
+      --ink:#351425;
+      --muted:#8d4768;
+      --card:#ffffff;
+      --line:#f2cfe0;
+      --font:{{ site.font_family if site and site.font_family else "Georgia, 'Times New Roman', serif" }};
+    }
     *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#fff1f2;color:#111827}
-    a{text-decoration:none}
-    .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #fecdd3}
-    .nav{max-width:1180px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .brand{display:flex;gap:12px;align-items:center;font-weight:1000}
-    .logo{width:48px;height:48px;border-radius:18px;background:#9f1239;color:white;display:flex;align-items:center;justify-content:center;font-weight:1000}
-    .navlinks{display:flex;gap:14px;font-weight:900;font-size:14px}
-    .book-btn{background:#e11d48;color:white;padding:12px 16px;border-radius:16px;font-weight:1000}
-    .hero{max-width:1180px;margin:20px auto;padding:22px 18px 0;display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .hero-main{min-height:450px;border-radius:36px;padding:44px;background:radial-gradient(circle at top left,#f9a8d4,transparent 28%),linear-gradient(135deg,#9f1239,#db2777);color:white;display:flex;flex-direction:column;justify-content:center}
-    .badge{display:inline-flex;width:max-content;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.26);padding:8px 12px;border-radius:999px;font-weight:1000;font-size:13px}
-    h1{font-size:clamp(42px,7vw,78px);line-height:.9;letter-spacing:-.07em;margin:18px 0}
-    .hero p{font-size:18px;color:#ffe4e6;line-height:1.6;max-width:660px}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:15px 18px;border-radius:16px;font-weight:1000}
-    .primary{background:#facc15;color:#4c0519}.ghost{background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.24)}
-    .side{display:grid;gap:18px}
-    .card{border-radius:30px;padding:24px;background:white;border:1px solid #fecdd3;box-shadow:0 18px 50px rgba(159,18,57,.12)}
-    .card.dark{background:#4c0519;color:white}.card h3{font-size:30px;letter-spacing:-.05em;margin:0 0 8px}.card p{color:#9f1239}.card.dark p{color:#fecdd3}
-    .wrap{max-width:1180px;margin:auto;padding:18px}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin:24px 0 14px}
-    .section-head h2{font-size:36px;letter-spacing:-.05em;margin:0}.section-head p{color:#9f1239;margin:6px 0 0}
-    .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-    .cat{background:white;border:1px solid #fecdd3;border-radius:22px;padding:18px;text-align:center;font-weight:1000;box-shadow:0 12px 30px rgba(159,18,57,.07)}
-    .cat span{display:block;font-size:30px;margin-bottom:8px}
-    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .service{background:white;border:1px solid #fecdd3;border-radius:28px;overflow:hidden;box-shadow:0 16px 45px rgba(159,18,57,.09)}
-    .photo{height:190px;background:linear-gradient(135deg,#fbcfe8,#ffe4e6);display:flex;align-items:center;justify-content:center;font-size:54px}
-    .info{padding:17px}.info h3{margin:0 0 7px}.info p{color:#9f1239;line-height:1.45}
-    .price{font-size:23px;font-weight:1000;color:#be123c}.tag{display:inline-block;margin:10px 0;background:#fce7f3;color:#9d174d;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:1000}
-    .service button{width:100%;border:0;background:#e11d48;color:white;border-radius:15px;padding:14px;font-weight:1000;cursor:pointer}
-    .locked{opacity:.58;filter:grayscale(.5)}
-    .booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .panel{background:#4c0519;color:white;border-radius:30px;padding:28px}.panel.light{background:white;color:#111827;border:1px solid #fecdd3}
-    .panel p{color:#fecdd3}.panel.light p{color:#9f1239}
-    .rows{display:grid;gap:10px;margin-top:15px}.row{display:flex;justify-content:space-between;background:rgba(255,255,255,.12);padding:13px;border-radius:15px}.panel.light .row{background:#fff1f2}
-    .tools{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .tool{background:white;border:1px solid #fecdd3;border-radius:26px;padding:22px;box-shadow:0 16px 42px rgba(159,18,57,.08)}
-    .tool b{font-size:18px}.tool p{color:#9f1239;line-height:1.55}
-    .booking{position:fixed;right:18px;bottom:18px;width:360px;max-width:calc(100vw - 36px);background:white;border:1px solid #fecdd3;border-radius:28px;box-shadow:0 28px 80px rgba(159,18,57,.25);padding:18px;z-index:30}
-    .booking h3{margin:0 0 10px}.booking-line{display:flex;justify-content:space-between;border-bottom:1px solid #fecdd3;padding:10px 0;color:#9f1239}
-    .total{font-size:23px;font-weight:1000;margin:14px 0;color:#be123c}.checkout{display:block;text-align:center;background:#16a34a;color:white;border-radius:16px;padding:14px;font-weight:1000}
-    footer{text-align:center;padding:38px 18px;color:#9f1239}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}.services{grid-template-columns:repeat(2,1fr)}.categories{grid-template-columns:repeat(3,1fr)}.tools,.booking-grid{grid-template-columns:1fr}.navlinks{display:none}}
-    @media(max-width:560px){.services,.categories{grid-template-columns:1fr}.hero-main{padding:28px}.booking{position:static;width:auto;margin:18px}.section-head{display:block}}
+    body{margin:0;background:linear-gradient(180deg,#fff7fa,#fff1f6);color:var(--ink);font-family:var(--font)}
+    a{text-decoration:none;color:inherit}
+    .shell{max-width:1280px;margin:0 auto;padding:18px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-bottom:14px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:58px;height:58px;border-radius:22px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;overflow:hidden}
+    .logo img{width:100%;height:100%;object-fit:cover}
+    .brand strong{display:block;font-size:21px}
+    .brand span{display:block;color:var(--muted);font-size:13px}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a,.book{padding:12px 15px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:900}
+    .book{background:var(--primary);color:#fff;border-color:transparent}
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+    .copy{border-radius:36px;padding:30px;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;box-shadow:0 24px 70px rgba(122,32,72,.08)}
+    .eyebrow{display:inline-flex;padding:8px 12px;border-radius:999px;background:#fff2f7;color:var(--primary);font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:900}
+    .copy h1{font-size:clamp(46px,8vw,92px);line-height:.9;letter-spacing:-.08em;margin:18px 0 16px}
+    .copy p{max-width:560px;color:var(--muted);font-size:18px;line-height:1.7}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+    .cta a{padding:15px 18px;border-radius:16px;font-weight:900}
+    .cta .primary{background:var(--primary);color:#fff}
+    .cta .secondary{background:#fff2f7;color:var(--primary)}
+    .portrait{min-height:640px;border-radius:36px;overflow:hidden;position:relative;background:
+      linear-gradient(180deg, rgba(122,32,72,.10), rgba(122,32,72,.26)),
+      url('{{ site.background_image_url if site and site.background_image_url else "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1600&q=80" }}') center/cover}
+    .portfolio-note{position:absolute;right:20px;bottom:20px;max-width:290px;padding:18px;border-radius:26px;background:rgba(255,247,250,.92);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.8)}
+    .portfolio-note strong{display:block;font-size:24px;letter-spacing:-.04em}
+    .section{padding:26px 0}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px}
+    .section-head h3{margin:0;font-size:34px;letter-spacing:-.05em}
+    .section-head p{margin:6px 0 0;color:var(--muted);max-width:660px;line-height:1.6}
+    .services{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+    .price-list,.team-card,.appointments,.gallery{background:#fff;border:1px solid var(--line);border-radius:30px;padding:22px}
+    .price-list table{width:100%;border-collapse:collapse;margin-top:12px}
+    .price-list td{padding:14px 0;border-bottom:1px solid #f5d9e5}
+    .price-list td:last-child{text-align:right;font-weight:900;color:var(--primary)}
+    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .team-grid article{padding:16px;border-radius:22px;background:#fff5f8;border:1px solid #f4d5e3}
+    .appointments{background:linear-gradient(180deg,#fff8fb,#fff0f6)}
+    .appoint-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+    .appoint-grid div{padding:14px;border-radius:18px;background:#fff;border:1px solid #f4d5e3}
+    .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .gallery-grid article{min-height:190px;border-radius:24px;overflow:hidden;position:relative}
+    .gallery-grid img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery-grid span{position:absolute;left:12px;bottom:12px;padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.88);font-size:11px;font-weight:900}
+    .footer{margin-top:18px;padding:24px;border-radius:28px;background:#351425;color:#ffe7f0;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+    .footer strong{display:block;font-size:22px}
+    .footer a{padding:14px 18px;border-radius:16px;background:#16a34a;color:#fff;font-weight:900}
+    @media(max-width:1020px){
+      .hero,.services,.team-grid{grid-template-columns:1fr}
+      .portrait{min-height:420px}
+    }
+    @media(max-width:760px){
+      .nav{display:none}
+      .copy h1{font-size:50px}
+      .appoint-grid,.gallery-grid,.footer{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="nav">
-    <div class="brand">
-      <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" style="width:100%;height:100%;object-fit:cover;border-radius:18px">{% else %}💅{% endif %}</div>
-      <div>{{ business.business_name }}</div>
-    </div>
-    <nav class="navlinks">
-      <a href="#services">Services</a>
-      <a href="#booking">Appointments</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#admin">Salon Tools</a>
-    </nav>
-    <a class="book-btn" href="#bookingBox">💅 Book Now</a>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-main">
-    <div class="badge">Salon & Beauty • {{ business.town or "Windhoek" }}</div>
-    <h1>{{ business.business_name }}</h1>
-    <p>{{ business.description or "Beauty, grooming, hair, nails, makeup and appointment bookings — built for premium salons and beauty professionals." }}</p>
-    <div class="btns">
-      <a class="btn primary" href="#services">✨ View Services</a>
-      <a class="btn ghost" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">💬 WhatsApp Booking</a>
-    </div>
-  </div>
-
-  <div class="side">
-    <div class="card dark">
-      <h3>Beauty package</h3>
-      <p>Promote hair, nails, makeup and spa specials directly on the homepage.</p>
-      <b>From N$350</b>
-    </div>
-    <div class="card">
-      <h3>Easy appointment booking</h3>
-      <p>Customers can choose service type, preferred date, stylist and WhatsApp confirmation.</p>
-    </div>
-  </div>
-</section>
-
-<main class="wrap">
-  <div class="section-head">
-    <div>
-      <h2>Beauty categories</h2>
-      <p>Show customers exactly what your salon offers.</p>
-    </div>
-  </div>
-
-  <div class="categories">
-    <div class="cat"><span>💇</span>Hair</div>
-    <div class="cat"><span>💅</span>Nails</div>
-    <div class="cat"><span>💄</span>Makeup</div>
-    <div class="cat"><span>🧖</span>Spa</div>
-    <div class="cat"><span>🧔</span>Barber</div>
-    <div class="cat"><span>🎁</span>Packages</div>
-  </div>
-
-  <div class="section-head" id="services">
-    <div>
-      <h2>Popular services</h2>
-      <p>Free trial shows 3 service cards. Upgrade unlocks full price list, staff calendar and bookings.</p>
-    </div>
-  </div>
-
-  <section class="services">
-    <div class="service">
-      <div class="photo">💇</div>
-      <div class="info">
-        <h3>Hair Styling</h3>
-        <p>Wash, styling, treatment or custom salon service.</p>
-        <span class="price">From N$250</span><br>
-        <span class="tag">Popular</span>
-        <button>Book Hair Service</button>
+  <div class="shell">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">{% if business.logo_url %}<img src="{{ business.logo_url }}" alt="{{ business.business_name }} logo">{% else %}💅{% endif %}</div>
+        <div>
+          <strong>{{ business.business_name }}</strong>
+          <span>{{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</span>
+        </div>
       </div>
-    </div>
+      <nav class="nav">
+        <a href="#services">Service menu</a>
+        <a href="#team">Beauticians</a>
+        <a href="#appointments">Appointments</a>
+        <a href="#gallery">Before / after</a>
+      </nav>
+      <a class="book" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Book on WhatsApp</a>
+    </header>
 
-    <div class="service">
-      <div class="photo">💅</div>
-      <div class="info">
-        <h3>Nails & Beauty</h3>
-        <p>Manicure, pedicure, nail art and beauty care.</p>
-        <span class="price">From N$180</span><br>
-        <span class="tag">Available</span>
-        <button>Book Nails</button>
+    <section class="hero">
+      <article class="copy">
+        <div class="eyebrow">Beauty portfolio{% if request and request.path.startswith('/templates/preview/') %} · Sample preview{% endif %}</div>
+        <h1>{{ site.hero_title if site and site.hero_title else business.business_name }}</h1>
+        <p>{{ business.description or 'A beauty-focused website with split hero storytelling, service price list, stylist cards, appointments and before-after gallery.' }}</p>
+        <div class="cta">
+          <a class="primary" href="#services">View service prices</a>
+          <a class="secondary" href="#gallery">See transformations</a>
+        </div>
+      </article>
+      <article class="portrait">
+        <div class="portfolio-note">
+          <strong>Soft luxury salon feel</strong>
+          <p>Use a portfolio-driven first impression instead of a generic service block.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section" id="services">
+      <div class="section-head">
+        <div>
+          <h3>Service price list</h3>
+          <p>Present services like a real salon menu, then let the client move naturally into staff choice and booking.</p>
+        </div>
       </div>
-    </div>
-
-    <div class="service">
-      <div class="photo">💄</div>
-      <div class="info">
-        <h3>Makeup Package</h3>
-        <p>Event, bridal or professional makeup booking.</p>
-        <span class="price">From N$400</span><br>
-        <span class="tag">Premium</span>
-        <button>Request Makeup</button>
+      <div class="services">
+        <article class="price-list">
+          <table>
+            <tr><td>Hair styling and finish</td><td>From N$ 250</td></tr>
+            <tr><td>Nails and manicure set</td><td>From N$ 180</td></tr>
+            <tr><td>Bridal or event makeup</td><td>From N$ 400</td></tr>
+            <tr><td>Luxury treatment package</td><td>Custom quote</td></tr>
+          </table>
+        </article>
+        <article class="team-card" id="team">
+          <h3>Stylists & beauty team</h3>
+          <div class="team-grid">
+            <article><strong>Hair specialist</strong><p>Colour, treatment and premium styling.</p></article>
+            <article><strong>Nail artist</strong><p>Classic, gel and detailed nail work.</p></article>
+            <article><strong>Makeup artist</strong><p>Event-ready looks and bridal prep.</p></article>
+          </div>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <div class="service locked">
-      <div class="photo">🔒</div>
-      <div class="info">
-        <h3>More Services Locked</h3>
-        <p>Unlock unlimited services and staff schedules.</p>
-        <span class="price">Upgrade</span><br>
-        <span class="tag">Trial limit</span>
-        <button>Unlock Services</button>
+    <section class="section">
+      <div class="services">
+        <article class="appointments" id="appointments">
+          <h3>Appointment booking section</h3>
+          <div class="appoint-grid">
+            <div><strong>Preferred date</strong><p>Flexible weekday or weekend scheduling.</p></div>
+            <div><strong>Chosen service</strong><p>Hair, nails, makeup or treatment package.</p></div>
+            <div><strong>Stylist request</strong><p>Match client preference to team schedule.</p></div>
+            <div><strong>Confirmation</strong><p>Send by WhatsApp and keep the flow personal.</p></div>
+          </div>
+        </article>
+        <article class="gallery" id="gallery">
+          <h3>Before / after gallery</h3>
+          <div class="gallery-grid">
+            <article><img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=900&q=80" alt="Beauty result"><span>Hair finish</span></article>
+            <article><img src="https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=900&q=80" alt="Beauty result"><span>Makeup look</span></article>
+          </div>
+        </article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="section-head" id="booking">
-    <div>
-      <h2>Appointment & price list preview</h2>
-      <p>Built for salons, barbers, nail techs, makeup artists and spas.</p>
-    </div>
+    {% include "website_templates/_dynamic_business_section.html" %}
+    {% include "website_templates/_customer_links.html" %}
+    <footer class="footer">
+      <div>
+        <strong>{{ business.business_name }}</strong>
+        <span>{{ business.email }} · {{ business.phone }} · {{ business.town or 'Windhoek' }}, {{ business.region or 'Namibia' }}</span>
+      </div>
+      <a href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Request appointment</a>
+    </footer>
   </div>
-
-  <section class="booking-grid">
-    <div class="panel">
-      <h2>Appointment types</h2>
-      <p>Customers choose what they want to book.</p>
-      <div class="rows">
-        <div class="row"><span>Walk-in request</span><b>Ready</b></div>
-        <div class="row"><span>Date/time booking</span><b>Ready</b></div>
-        <div class="row"><span>Stylist selection</span><b>Paid plan</b></div>
-        <div class="row"><span>Deposit booking</span><b>Paid plan</b></div>
-      </div>
-    </div>
-
-    <div class="panel light" id="gallery">
-      <h2>Beauty gallery</h2>
-      <p>Show hairstyles, nails, makeup results, before/after photos and client transformations.</p>
-      <div class="rows">
-        <div class="row"><span>Trial gallery</span><b>3 photos</b></div>
-        <div class="row"><span>Before/after</span><b>Ready</b></div>
-        <div class="row"><span>Instagram style grid</span><b>Paid plan</b></div>
-        <div class="row"><span>Portfolio albums</span><b>Paid plan</b></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="section-head" id="admin">
-    <div>
-      <h2>Salon admin system preview</h2>
-      <p>These features are prepared for the business owner dashboard.</p>
-    </div>
-  </div>
-
-  <section class="tools">
-    <div class="tool"><b>📅 Appointment calendar</b><p>Manage bookings, time slots, cancellations and customer requests.</p></div>
-    <div class="tool"><b>💇 Staff & stylist manager</b><p>Add stylists, services, working hours and assignment rules.</p></div>
-    <div class="tool"><b>💰 Price list manager</b><p>Add services, prices, duration, deposits and package deals.</p></div>
-    <div class="tool"><b>🖼️ Portfolio gallery</b><p>Upload hairstyle, nail, makeup and before/after photos.</p></div>
-    <div class="tool"><b>🧾 Invoices & receipts</b><p>Create receipts, quotations and service invoices for customers.</p></div>
-    <div class="tool"><b>📊 Reports</b><p>Appointments, revenue, top services, unpaid deposits and customer activity.</p></div>
-  </section>
-</main>
-
-<div class="booking" id="bookingBox">
-  <h3>💅 Appointment preview</h3>
-  <div class="booking-line"><span>Hair Styling</span><b>N$250</b></div>
-  <div class="booking-line"><span>Nails add-on</span><b>N$180</b></div>
-  <div class="booking-line"><span>Deposit</span><b>N$100</b></div>
-  <div class="total">Estimate: N$430</div>
-  <a class="checkout" href="https://wa.me/{{ business.whatsapp|replace('+','') }}">Send Booking Request</a>
-</div>
-
-<footer>
-  <b>{{ business.business_name }}</b><br>
-  {{ business.email }} · {{ business.phone }} · {{ business.town or "Namibia" }}<br>
-  Salon website powered by VibeHost
-</footer>
-
 </body>
 </html>
